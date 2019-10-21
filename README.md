@@ -1,6 +1,9 @@
 # Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst
 Waardepapieren AZURE ACI met ICTU/Belastingdienst
 
+
+`type: Microsoft.ContainerInstance/containerGroups`
+
 ![kubernetes](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/kubernetes.PNG)
 
 https://sietseringers.net/
