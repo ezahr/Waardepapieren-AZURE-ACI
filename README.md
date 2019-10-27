@@ -52,3 +52,13 @@ properties:
       port: '8080'
 tags: null
 type: Microsoft.ContainerInstance/containerGroups
+
+
+
+***
+
+|nr|image|
+|---|---------------------------------------------|
+|1|docker pull boscp08/waardepapieren_mock-nlx:1.0|  
+|2|docker pull boscp08/waardepapieren_service:1.0|  
+|3|docker pull boscp08/waardepapieren_clerk-frontend:1.0|
