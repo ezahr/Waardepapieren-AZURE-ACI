@@ -15,7 +15,7 @@ Misschien kan bas hem packagen op docker hub
 ![azure]https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/bevrijden-regelingen-master.zip)
 
 
-apiVersion: 2018-06-01
+`apiVersion: 2018-06-01
 location: westeurope
 name: lab
 properties:
@@ -51,7 +51,7 @@ properties:
     - protocol: tcp
       port: '8080'
 tags: null
-type: Microsoft.ContainerInstance/containerGroups
+type: Microsoft.ContainerInstance/containerGroups`
 
 
 
@@ -62,4 +62,4 @@ type: Microsoft.ContainerInstance/containerGroups
 |1|docker pull boscp08/waardepapieren_mock-nlx:1.0|  
 |2|docker pull boscp08/waardepapieren_service:1.0|  
 |3|docker pull boscp08/waardepapieren_clerk-frontend:1.0|
-![quovadis](https://github.com/boscp08/Workbook_Docker_fundamentals/blob/master/pictures/D40A342D-7434-4D4D-9414-C4EB48C44C1A.png)
+But... how to start a container. 
