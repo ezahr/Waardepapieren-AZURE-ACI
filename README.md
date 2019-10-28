@@ -15,7 +15,7 @@ Misschien kan bas hem packagen op docker hub
 ![azure]https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/bevrijden-regelingen-master.zip)
 
 
-`apiVersion: 2018-06-01
+```apiVersion: 2018-06-01
 location: westeurope
 name: lab
 properties:
@@ -51,7 +51,8 @@ properties:
     - protocol: tcp
       port: '8080'
 tags: null
-type: Microsoft.ContainerInstance/containerGroups`
+type: Microsoft.ContainerInstance/containerGroups
+```
 
 
 
