@@ -62,3 +62,4 @@ type: Microsoft.ContainerInstance/containerGroups
 |1|docker pull boscp08/waardepapieren_mock-nlx:1.0|  
 |2|docker pull boscp08/waardepapieren_service:1.0|  
 |3|docker pull boscp08/waardepapieren_clerk-frontend:1.0|
+![quovadis](https://github.com/boscp08/Workbook_Docker_fundamentals/blob/master/pictures/D40A342D-7434-4D4D-9414-C4EB48C44C1A.png)
