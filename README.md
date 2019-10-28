@@ -1071,4 +1071,58 @@ For more examples and ideas, visit:
  https://docs.docker.com/get-started/
 ```
 
+```
+boscp08@myDockerVM:~$ `groupadd docker`
+groupadd: group 'docker' already exists
+boscp08@myDockerVM:~$ `sudo usermod -aG docker boscp08`
+boscp08@myDockerVM:~$ docker run hello-world
+docker: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post http://%2Fvar%2Frun%2Fdocker.sock/v1.40/containers/create: dial unix /var/run/docker.sock: connect: permission denied.
+See 'docker run --help'.
+**boscp08@myDockerVM**:~$ `exit`
+logout
+Connection to 40.117.233.34 closed.
+boscp08@ubuntu:~$ `ssh boscp08@40.117.233.34`
+Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 5.0.0-1023-azure x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Mon Oct 28 21:35:57 UTC 2019
+
+  System load:  0.0               Processes:              109
+  Usage of /:   6.1% of 28.90GB   Users logged in:        0
+  Memory usage: 13%               IP address for eth0:    10.0.0.4
+  Swap usage:   0%                IP address for docker0: 172.17.0.1
+
+
+1 package can be updated.
+1 update is a security update.
+
+Last login: Mon Oct 28 21:22:30 2019 from 86.86.102.241
+boscp08@myDockerVM:~$ docker run hello-world
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+```
+set to go... hope the run will be okay
+
 
