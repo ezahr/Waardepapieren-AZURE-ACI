@@ -1139,3 +1139,23 @@ Resolving deltas: 100% (1060/1060), done.
 ```
 
 `cd waardepapieren`
+
+## Create a docker-compose.yml configuration file
+
+Create a docker-compose.yml configuration file to define the Docker containers to run on the VM. The file specifies the image to run on each container, necessary environment variables and dependencies, ports, and the links between containers. For details on yml file syntax, see Compose file reference.  Create a docker-compose.yml file. Use your favorite text editor to add some data to the file. The following example creates the file with a prompt for sensible-editor to pick an editor that you wish to use. bash
+
+`sensible-editor docker-compose.yml`
+boscp08@myDockerVM:~/wordpress$ `cat docker-compose.yml `
+```
+wordpress:
+  image: wordpress
+  links:
+    - db:mysql
+  ports:
+    - 80:80
+
+db:
+  image: mariadb
+  environment:
+    MYSQL_ROOT_PASSWORD: welcome01
+```
