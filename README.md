@@ -1159,3 +1159,76 @@ db:
   environment:
     MYSQL_ROOT_PASSWORD: welcome01
 ```
+
+## Start the containers with Compose
+
+In the same directory as your docker-compose.yml file, run the following command (depending on your environment, you might need to run docker-compose using sudo): bash
+
+`sudo docker-compose up -d`
+
+This command starts the Docker containers specified in docker-compose.yml. It takes a minute or two for this step to complete. You'll see output similar to the following:
+
+```
+boscp08@myDockerVM:~/wordpress$ sudo docker-compose up -d
+Pulling db (mariadb:latest)...
+latest: Pulling from library/mariadb
+22e816666fd6: Pull complete
+079b6d2a1e53: Pull complete
+11048ebae908: Pull complete
+c58094023a2e: Pull complete
+1e8f13102fa0: Pull complete
+8c1425d731a6: Pull complete
+14e6f69e6aab: Pull complete
+c90c2f3858cf: Pull complete
+b78202ba9229: Pull complete
+cadce28d1b9c: Pull complete
+6fb2c5af5492: Pull complete
+7a59522b36b8: Pull complete
+722b05c4c4b1: Pull complete
+bd4039b5406f: Pull complete
+Digest: sha256:7b371982ac83beee40bee645c6efab1bc9113abbce9cbc95bf3eddac268adf57
+Status: Downloaded newer image for mariadb:latest
+Pulling wordpress (wordpress:latest)...
+latest: Pulling from library/wordpress
+8d691f585fa8: Pull complete
+cba12d3fd8b1: Pull complete
+cda54d6474c8: Pull complete
+412447ed0729: Pull complete
+84de6fc539c3: Pull complete
+d67567ed6145: Pull complete
+22ca6c438da4: Pull complete
+aaaf25e57dd6: Pull complete
+fbccd385090a: Pull complete
+15b403f621d7: Pull complete
+1cae2d7071d0: Pull complete
+5c0cbd6e0573: Pull complete
+1b48a6c1e889: Pull complete
+855d31502496: Pull complete
+10805e670603: Pull complete
+e8bb78a1b6fd: Pull complete
+2ad26d4ff931: Pull complete
+98da1a26f856: Pull complete
+9cbdfce1994c: Pull complete
+a872c625da6b: Pull complete
+f36709107bb2: Pull complete
+Digest: sha256:aca0d10bb5150afc6fe9c0d3e792cbb3f3979ddb9143e5b1034c6c6ecd292b95
+Status: Downloaded newer image for wordpress:latest
+Creating wordpress_db_1 ... 
+Creating wordpress_db_1 ... done
+Creating wordpress_wordpress_1 ... 
+Creating wordpress_wordpress_1 ... done
+```
+
+boscp08@myDockerVM:~/wordpress$ `docker images`
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+wordpress           latest              c3a1256d5af5        3 days ago          537MB
+mariadb             latest              a9e108e8ee8a        10 days ago         356MB
+hello-world         latest              fce289e99eb9        10 months ago       1.84kB
+boscp08@myDockerVM:~/wordpress$ `docker container ps -a`
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS                NAMES
+50605225d4b3        wordpress           "docker-entrypoint.s…"   30 seconds ago      Up 28 seconds               0.0.0.0:80->80/tcp   wordpress_wordpress_1
+cf3dd97ca629        mariadb             "docker-entrypoint.s…"   48 seconds ago      Up 30 seconds               3306/tcp             wordpress_db_1
+f25c2b354c36        hello-world         "/hello"                 21 minutes ago      Exited (0) 21 minutes ago                        frosty_euler
+bac07eb1a279        hello-world         "/hello"                 30 minutes ago      Exited (0) 30 minutes ago                        zealous_hertz
+
+
