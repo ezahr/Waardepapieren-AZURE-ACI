@@ -248,7 +248,7 @@ az vm open-port --port 80 \
   
  It takes a few minutes for the VM to be created, the packages to install, and the app to start. There are background tasks that continue to run after the Azure CLI returns you to the prompt. When the VM has been created, take note of the **publicIpAddress** displayed by the Azure CLI.
 
-publicIpAddress": "40.121.146.69",  
+publicIpAddress": "40.121.146.69", 👇 
 
 
 ```
@@ -274,6 +274,9 @@ SSH key files '/home/boscp08/.ssh/id_rsa' and '/home/boscp08/.ssh/id_rsa.pub' ha
 boscp08@ubuntu:~$ az vm open-port --port 80 \
 >     --resource-group myDockerGroup \
 > --name myDockerVM
+```
+[enter] 👉 
+```
 {
   "defaultSecurityRules": [
     {
