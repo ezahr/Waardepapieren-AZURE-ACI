@@ -514,8 +514,14 @@ Permission denied (publickey).  😡
 https://www.reddit.com/r/AZURE/comments/7f0htz/cant_ssh_into_ubuntu_vm_permission_denied/
 https://docs.microsoft.com/en-us/azure/virtual-machines/linux/mac-create-ssh-keys
 
+## SSH Issue
+SSH into your VM  With the public key deployed on your Azure VM, and the private key on your local system, SSH into your VM using the IP address or DNS name of your VM. In the following command, replace azureuser and myvm.westus.cloudapp.azure.com with the administrator user name and the fully qualified domain name (or IP address):bash
 
+`ssh azureuser@myvm.westus.cloudapp.azure.com`
 
+If you specified a passphrase when you created your key pair, enter that passphrase when prompted during the login process. The VM is added to your ~/.ssh/known_hosts file, and you won't be asked to connect again until either the public key on your Azure VM changes or the server name is removed from ~/.ssh/known_hosts.If the VM is using the just-in-time access policy, you need to request access before you can connect to the VM. For more information about the just-in-time policy, see Manage virtual machine access using the just in time policy.
+
+## docker-compose ... close very close now
 
 ` sudo apt install docker-compose` 
 
