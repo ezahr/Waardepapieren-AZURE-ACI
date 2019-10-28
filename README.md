@@ -503,6 +503,21 @@ boscp08@ubuntu:~$ az vm open-port --port 80 \
 ```
 
 
+## Install Compose
+
+SSH to your new Docker host VM. Provide your own IP address.
+bash ssh azureuser@10.10.111.11 Install Compose on the VM. bash
+
+
+` ssh boscp08@40.121.146.69` 
+Permission denied (publickey).  😡 
+https://www.reddit.com/r/AZURE/comments/7f0htz/cant_ssh_into_ubuntu_vm_permission_denied/
+https://docs.microsoft.com/en-us/azure/virtual-machines/linux/mac-create-ssh-keys
+
+
+
+
+` sudo apt install docker-compose` 
 
 
 
