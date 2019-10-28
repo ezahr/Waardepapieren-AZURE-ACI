@@ -67,3 +67,125 @@ type: Microsoft.ContainerInstance/containerGroups
 |2|docker pull boscp08/waardepapieren_service:1.0|  
 |3|docker pull boscp08/waardepapieren_clerk-frontend:1.0|
 But... how to start a container. 
+
+
+***
+
+https://docs.microsoft.com/en-us/azure/virtual-machines/linux/docker-compose-quickstart
+
+`G:\VM_backup\ubuntu-19.04-desktop-amd64.iso`
+
+create Docker host with Azure CLI
+20191028	azure-cli-latest De Azure CLI installeren met apt
+
+`curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash`
+
+Gebruik apt-get upgrade om het CLI-pakket bij te werken. Deze opdracht voert een upgrade uit voor alle geïnstalleerde pakketten in uw systeem waarvan de afhankelijkheid nog niet is gewijzigd. Als u alleen de CLI wilt upgraden, gebruikt u apt-get install.
+
+ `sudo apt-get update && sudo apt-get upgrade `
+
+ `sudo apt-get update && sudo apt-get install --only-upgrade -y azure-cli `  
+```
+boscp08@boscp08-virtual-machine:~$ curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+[sudo] password for boscp08:         
+Sorry, try again.
+[sudo] password for boscp08:         
+apt-get update
+Hit:1 http://archive.canonical.com/ubuntu bionic InRelease
+Hit:2 http://security.ubuntu.com/ubuntu bionic-security InRelease                                                                                   
+Hit:3 http://archive.ubuntu.com/ubuntu bionic InRelease                                                                                             
+Get:4 http://archive.ubuntu.com/ubuntu bionic-updates InRelease [88,7 kB]                                                             
+Ign:5 http://packages.linuxmint.com tina InRelease                                
+Hit:6 http://packages.linuxmint.com tina Release                                                      
+Get:7 http://archive.ubuntu.com/ubuntu bionic-backports InRelease [74,6 kB]                           
+Get:9 http://archive.ubuntu.com/ubuntu bionic-updates/main amd64 DEP-11 Metadata [295 kB]
+Get:10 http://archive.ubuntu.com/ubuntu bionic-updates/universe amd64 DEP-11 Metadata [254 kB]
+Get:11 http://archive.ubuntu.com/ubuntu bionic-updates/multiverse amd64 DEP-11 Metadata [2468 B]
+Get:12 http://archive.ubuntu.com/ubuntu bionic-backports/universe amd64 DEP-11 Metadata [7916 B]
+Fetched 722 kB in 1s (576 kB/s)                       
+Reading package lists... Done
+apt-get install -y apt-transport-https lsb-release gnupg curl
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+lsb-release is already the newest version (9.20170808ubuntu1).
+curl is already the newest version (7.58.0-2ubuntu3.8).
+gnupg is already the newest version (2.2.4-1ubuntu1.2).
+apt-transport-https is already the newest version (1.6.12).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+set +v
+curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.asc.gpg
+gpg: WARNING: unsafe ownership on homedir '/home/boscp08/.gnupg'
+set +v
+CLI_REPO=$(lsb_release -cs)
+echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ ${CLI_REPO} main" \
+    > /etc/apt/sources.list.d/azure-cli.list
+apt-get update
+Hit:1 http://security.ubuntu.com/ubuntu bionic-security InRelease
+Ign:2 https://packages.microsoft.com/repos/azure-cli tina InRelease                                                      
+Err:3 https://packages.microsoft.com/repos/azure-cli tina Release                                                        
+  404  Not Found [IP: 13.80.10.205 443]
+Hit:4 http://archive.canonical.com/ubuntu bionic InRelease          
+Hit:5 http://archive.ubuntu.com/ubuntu bionic InRelease                                                  
+Hit:6 http://archive.ubuntu.com/ubuntu bionic-updates InRelease                                                                       
+Hit:7 http://archive.ubuntu.com/ubuntu bionic-backports InRelease                                                                    
+Ign:8 http://packages.linuxmint.com tina InRelease                       
+Hit:9 http://packages.linuxmint.com tina Release
+Reading package lists... Done
+E: The repository 'https://packages.microsoft.com/repos/azure-cli tina Release' does not have a Release file.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+
+boscp08@boscp08-virtual-machine:~$ sudo apt-get update && sudo apt-get install --only-upgrade -y azure-cli
+Hit:1 http://archive.canonical.com/ubuntu bionic InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu bionic InRelease                                                                                             
+Hit:3 http://archive.ubuntu.com/ubuntu bionic-updates InRelease                                                                                     
+Get:4 http://security.ubuntu.com/ubuntu bionic-security InRelease [88,7 kB]                                                                         
+Hit:5 http://archive.ubuntu.com/ubuntu bionic-backports InRelease                                                                                   
+Ign:6 https://packages.microsoft.com/repos/azure-cli tina InRelease                                                                                 
+Err:7 https://packages.microsoft.com/repos/azure-cli tina Release                                                                        
+  404  Not Found [IP: 13.80.10.205 443]
+Ign:8 http://packages.linuxmint.com tina InRelease                                  
+Hit:9 http://packages.linuxmint.com tina Release   
+Get:11 http://security.ubuntu.com/ubuntu bionic-security/main i386 Packages [386 kB]
+Get:12 http://security.ubuntu.com/ubuntu bionic-security/main amd64 Packages [541 kB]
+Get:13 http://security.ubuntu.com/ubuntu bionic-security/main amd64 DEP-11 Metadata [38,5 kB]
+Get:14 http://security.ubuntu.com/ubuntu bionic-security/universe i386 Packages [595 kB]
+Get:15 http://security.ubuntu.com/ubuntu bionic-security/universe amd64 Packages [616 kB]
+Get:16 http://security.ubuntu.com/ubuntu bionic-security/universe amd64 DEP-11 Metadata [42,1 kB]
+Get:17 http://security.ubuntu.com/ubuntu bionic-security/multiverse amd64 DEP-11 Metadata [2464 B]
+Reading package lists... Done                           
+E: The repository 'https://packages.microsoft.com/repos/azure-cli tina Release' does not have a Release file.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+```
+
+Nu u de Azure CLI hebt geïnstalleerd, kunt u een korte rondleiding volgen om kennis te maken met de functies en veelgebruikte opdrachten.
+
+`az login ` 
+
+bosch.peter@outlook.com   :)
+
+```
+boscp08@ubuntu:~$ az login
+Note, we have launched a browser for you to login. For old experience with device code, use "az login --use-device-code"
+You have logged in. Now let us find all the subscriptions to which you have access...
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "cfcb03ea-255b-42f8-beca-2d4ac30779bb",
+    "isDefault": true,
+    "name": "Gratis versie",
+    "state": "Enabled",
+    "tenantId": "62123322-502d-493f-b543-503672043240",
+    "user": {
+      "name": "bosch.peter@outlook.com",
+      "type": "user"
+    }
+  }
+]
+
+```
+
+
+
