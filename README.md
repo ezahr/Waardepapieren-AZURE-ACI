@@ -215,7 +215,7 @@ boscp08@ubuntu:~$ az group create --name myDockerGroup --location eastus
   "type": "Microsoft.Resources/resourceGroups"
 ```
 
-:;):
+😸
 ```
 boscp08@ubuntu:~$ sensible-editor cloud-init.txt
 
@@ -231,5 +231,5 @@ boscp08@ubuntu:~$ cat cloud-init.txt
 
 
 ```
-
+ 
 
