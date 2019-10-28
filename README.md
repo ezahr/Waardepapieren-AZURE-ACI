@@ -73,10 +73,18 @@ But... how to start a container.
 
 https://docs.microsoft.com/en-us/azure/virtual-machines/linux/docker-compose-quickstart
 
-`G:\VM_backup\ubuntu-19.04-desktop-amd64.iso`
 
-create Docker host with Azure CLI
-20191028	azure-cli-latest De Azure CLI installeren met apt
+# Get started with Docker and Compose to define and run a multi-container application in Azure
+  
+With Compose, you use a simple text file to define an application consisting of multiple Docker containers. You then spin up your application in a single command that does everything to deploy your defined environment. As an example, this article shows you how to quickly set up a WordPress blog with a backend MariaDB SQL database on an Ubuntu VM. You can also use Compose to set up more complex applications. This article was last tested on 10/28/2019 using the Azure Cloud Shell and the Azure CLI version 2.0.58.
+Create Docker host with Azure CLI
+
+
+# Install the latest Azure CLI and log in to an Azure account using az login.
+https://docs.microsoft.com/nl-nl/cli/azure/install-azure-cli-apt?view=azure-cli-latest
+
+##  virtual-machines/linux
+`G:\VM_backup\ubuntu-19.04-desktop-amd64.iso`
 
 `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash`
 
@@ -186,6 +194,8 @@ You have logged in. Now let us find all the subscriptions to which you have acce
 ]
 
 ```
+## Create Docker host with Azure CLI
 
+First, create a resource group for your Docker environment with az group create. The following example creates a resource group named myResourceGroup in the eastus location:
 
-
+`az group create --name myDockerGroup --location eastus`
