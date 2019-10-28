@@ -66,7 +66,8 @@ type: Microsoft.ContainerInstance/containerGroups
 |1|docker pull boscp08/waardepapieren_mock-nlx:1.0|  
 |2|docker pull boscp08/waardepapieren_service:1.0|  
 |3|docker pull boscp08/waardepapieren_clerk-frontend:1.0|
-But... how to start a container. 
+But... how to start a container.  Ask Pim Otte / Bas Kaptijn  :shipit:
+
 
 
 ***
