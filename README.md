@@ -1220,15 +1220,21 @@ Creating wordpress_wordpress_1 ... done
 ```
 
 boscp08@myDockerVM:~/wordpress$ `docker images`
+
+```
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 wordpress           latest              c3a1256d5af5        3 days ago          537MB
 mariadb             latest              a9e108e8ee8a        10 days ago         356MB
 hello-world         latest              fce289e99eb9        10 months ago       1.84kB
+```
+
+`docker container prune`
 boscp08@myDockerVM:~/wordpress$ `docker container ps -a`
+
+```
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS                NAMES
 50605225d4b3        wordpress           "docker-entrypoint.s…"   30 seconds ago      Up 28 seconds               0.0.0.0:80->80/tcp   wordpress_wordpress_1
 cf3dd97ca629        mariadb             "docker-entrypoint.s…"   48 seconds ago      Up 30 seconds               3306/tcp             wordpress_db_1
-f25c2b354c36        hello-world         "/hello"                 21 minutes ago      Exited (0) 21 minutes ago                        frosty_euler
-bac07eb1a279        hello-world         "/hello"                 30 minutes ago      Exited (0) 30 minutes ago                        zealous_hertz
 
+```
 
