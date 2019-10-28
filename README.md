@@ -1238,3 +1238,8 @@ cf3dd97ca629        mariadb             "docker-entrypoint.s…"   48 seconds ag
 
 ```
 
+You can now connect to WordPress directly on the VM on port 80. Open a web browser and enter the IP address name of your VM. You should now see the WordPress start screen, where you can complete the installation and get started with the application.
+
+http://40.117.233.34/wp-admin/install.php  Error establishing a database connection    😡 
+
+https://www.youtube.com/watch?v=uPTemVX1nnQ
