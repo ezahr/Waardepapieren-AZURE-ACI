@@ -538,9 +538,12 @@ az vm create \
 az vm open-port --port 80 \
     --resource-group myDockerGroup \
 	--name myDockerVM
-	```
 ```
-oscp08@ubuntu:~$ az vm create \
+
+recreate admin-username boscp08
+
+```
+boscp08@ubuntu:~$ az vm create \
 >     --resource-group myDockerGroup \
 >     --name myDockerVM \
 >     --image UbuntuLTS \
@@ -817,14 +820,15 @@ See "man sudo_root" for details.
 boscp08@myDockerVM:~$ 
 ```
 
+
+
 `docker -v`
 **Docker version 19.03.4, build 9013bf583a**
 
 
 ## docker-compose ... 
 
-` sudo apt install docker-compose` 
-
+`sudo apt install docker-compose` 
 
 ```
 boscp08@myDockerVM:~$ sudo apt install docker-compose
