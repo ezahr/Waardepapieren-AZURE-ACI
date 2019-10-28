@@ -527,10 +527,541 @@ https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-manage
 boscp08@ubuntu:~$ `az vm delete --resource-group  myDockerGroup --name myDockerVM `
 **Are you sure you want to perform this operation? (y/n): y**
 
+```
+az vm create \
+    --resource-group myDockerGroup \
+    --name myDockerVM \
+    --image UbuntuLTS \
+    --admin-username boscp08 \
+    --generate-ssh-keys \
+    --custom-data cloud-init.txt
+az vm open-port --port 80 \
+    --resource-group myDockerGroup \
+	--name myDockerVM
+	```
+```
+oscp08@ubuntu:~$ az vm create \
+>     --resource-group myDockerGroup \
+>     --name myDockerVM \
+>     --image UbuntuLTS \
+>     --admin-username boscp08 \
+>     --generate-ssh-keys \
+>     --custom-data cloud-init.txt
+ - Running ..
+{
+  "fqdns": "",
+  "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Compute/virtualMachines/myDockerVM",
+  "location": "eastus",
+  "macAddress": "00-0D-3A-55-28-2C",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.4",
+  "publicIpAddress": "40.117.233.34",
+  "resourceGroup": "myDockerGroup",
+  "zones": ""
+}
+boscp08@ubuntu:~$ az vm open-port --port 80 \
+>     --resource-group myDockerGroup \
+> --name myDockerVM
+{
+  "defaultSecurityRules": [
+    {
+      "access": "Allow",
+      "description": "Allow inbound traffic from all VMs in VNET",
+      "destinationAddressPrefix": "VirtualNetwork",
+      "destinationAddressPrefixes": [],
+      "destinationApplicationSecurityGroups": null,
+      "destinationPortRange": "*",
+      "destinationPortRanges": [],
+      "direction": "Inbound",
+      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
+      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/AllowVnetInBound",
+      "name": "AllowVnetInBound",
+      "priority": 65000,
+      "protocol": "*",
+      "provisioningState": "Succeeded",
+      "resourceGroup": "myDockerGroup",
+      "sourceAddressPrefix": "VirtualNetwork",
+      "sourceAddressPrefixes": [],
+      "sourceApplicationSecurityGroups": null,
+      "sourcePortRange": "*",
+      "sourcePortRanges": [],
+      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+    },
+    {
+      "access": "Allow",
+      "description": "Allow inbound traffic from azure load balancer",
+      "destinationAddressPrefix": "*",
+      "destinationAddressPrefixes": [],
+      "destinationApplicationSecurityGroups": null,
+      "destinationPortRange": "*",
+      "destinationPortRanges": [],
+      "direction": "Inbound",
+      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
+      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound",
+      "name": "AllowAzureLoadBalancerInBound",
+      "priority": 65001,
+      "protocol": "*",
+      "provisioningState": "Succeeded",
+      "resourceGroup": "myDockerGroup",
+      "sourceAddressPrefix": "AzureLoadBalancer",
+      "sourceAddressPrefixes": [],
+      "sourceApplicationSecurityGroups": null,
+      "sourcePortRange": "*",
+      "sourcePortRanges": [],
+      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+    },
+    {
+      "access": "Deny",
+      "description": "Deny all inbound traffic",
+      "destinationAddressPrefix": "*",
+      "destinationAddressPrefixes": [],
+      "destinationApplicationSecurityGroups": null,
+      "destinationPortRange": "*",
+      "destinationPortRanges": [],
+      "direction": "Inbound",
+      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
+      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/DenyAllInBound",
+      "name": "DenyAllInBound",
+      "priority": 65500,
+      "protocol": "*",
+      "provisioningState": "Succeeded",
+      "resourceGroup": "myDockerGroup",
+      "sourceAddressPrefix": "*",
+      "sourceAddressPrefixes": [],
+      "sourceApplicationSecurityGroups": null,
+      "sourcePortRange": "*",
+      "sourcePortRanges": [],
+      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+    },
+    {
+      "access": "Allow",
+      "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+      "destinationAddressPrefix": "VirtualNetwork",
+      "destinationAddressPrefixes": [],
+      "destinationApplicationSecurityGroups": null,
+      "destinationPortRange": "*",
+      "destinationPortRanges": [],
+      "direction": "Outbound",
+      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
+      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/AllowVnetOutBound",
+      "name": "AllowVnetOutBound",
+      "priority": 65000,
+      "protocol": "*",
+      "provisioningState": "Succeeded",
+      "resourceGroup": "myDockerGroup",
+      "sourceAddressPrefix": "VirtualNetwork",
+      "sourceAddressPrefixes": [],
+      "sourceApplicationSecurityGroups": null,
+      "sourcePortRange": "*",
+      "sourcePortRanges": [],
+      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+    },
+    {
+      "access": "Allow",
+      "description": "Allow outbound traffic from all VMs to Internet",
+      "destinationAddressPrefix": "Internet",
+      "destinationAddressPrefixes": [],
+      "destinationApplicationSecurityGroups": null,
+      "destinationPortRange": "*",
+      "destinationPortRanges": [],
+      "direction": "Outbound",
+      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
+      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/AllowInternetOutBound",
+      "name": "AllowInternetOutBound",
+      "priority": 65001,
+      "protocol": "*",
+      "provisioningState": "Succeeded",
+      "resourceGroup": "myDockerGroup",
+      "sourceAddressPrefix": "*",
+      "sourceAddressPrefixes": [],
+      "sourceApplicationSecurityGroups": null,
+      "sourcePortRange": "*",
+      "sourcePortRanges": [],
+      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+    },
+    {
+      "access": "Deny",
+      "description": "Deny all outbound traffic",
+      "destinationAddressPrefix": "*",
+      "destinationAddressPrefixes": [],
+      "destinationApplicationSecurityGroups": null,
+      "destinationPortRange": "*",
+      "destinationPortRanges": [],
+      "direction": "Outbound",
+      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
+      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/DenyAllOutBound",
+      "name": "DenyAllOutBound",
+      "priority": 65500,
+      "protocol": "*",
+      "provisioningState": "Succeeded",
+      "resourceGroup": "myDockerGroup",
+      "sourceAddressPrefix": "*",
+      "sourceAddressPrefixes": [],
+      "sourceApplicationSecurityGroups": null,
+      "sourcePortRange": "*",
+      "sourcePortRanges": [],
+      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+    }
+  ],
+  "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
+  "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG",
+  "location": "eastus",
+  "name": "myDockerVMNSG",
+  "networkInterfaces": [
+    {
+      "dnsSettings": null,
+      "enableAcceleratedNetworking": null,
+      "enableIpForwarding": null,
+      "etag": null,
+      "hostedWorkloads": null,
+      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkInterfaces/myDockerVMVMNic",
+      "ipConfigurations": null,
+      "location": null,
+      "macAddress": null,
+      "name": null,
+      "networkSecurityGroup": null,
+      "primary": null,
+      "privateEndpoint": null,
+      "provisioningState": null,
+      "resourceGroup": "myDockerGroup",
+      "resourceGuid": null,
+      "tags": null,
+      "tapConfigurations": null,
+      "type": null,
+      "virtualMachine": null
+    }
+  ],
+  "provisioningState": "Succeeded",
+  "resourceGroup": "myDockerGroup",
+  "resourceGuid": "35700ba4-503c-48f4-9eb4-3e64690e5fd9",
+  "securityRules": [
+    {
+      "access": "Allow",
+      "description": null,
+      "destinationAddressPrefix": "*",
+      "destinationAddressPrefixes": [],
+      "destinationApplicationSecurityGroups": null,
+      "destinationPortRange": "22",
+      "destinationPortRanges": [],
+      "direction": "Inbound",
+      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
+      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/securityRules/default-allow-ssh",
+      "name": "default-allow-ssh",
+      "priority": 1000,
+      "protocol": "Tcp",
+      "provisioningState": "Succeeded",
+      "resourceGroup": "myDockerGroup",
+      "sourceAddressPrefix": "*",
+      "sourceAddressPrefixes": [],
+      "sourceApplicationSecurityGroups": null,
+      "sourcePortRange": "*",
+      "sourcePortRanges": [],
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "access": "Allow",
+      "description": null,
+      "destinationAddressPrefix": "*",
+      "destinationAddressPrefixes": [],
+      "destinationApplicationSecurityGroups": null,
+      "destinationPortRange": "80",
+      "destinationPortRanges": [],
+      "direction": "Inbound",
+      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
+      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/securityRules/open-port-80",
+      "name": "open-port-80",
+      "priority": 900,
+      "protocol": "*",
+      "provisioningState": "Succeeded",
+      "resourceGroup": "myDockerGroup",
+      "sourceAddressPrefix": "*",
+      "sourceAddressPrefixes": [],
+      "sourceApplicationSecurityGroups": null,
+      "sourcePortRange": "*",
+      "sourcePortRanges": [],
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    }
+  ],
+  "subnets": null,
+  "tags": {},
+  "type": "Microsoft.Network/networkSecurityGroups"
+}
+boscp08@ubuntu:~$ ssh boscp08@40.117.233.34
+The authenticity of host '40.117.233.34 (40.117.233.34)' can't be established.
+ECDSA key fingerprint is SHA256:7rzRRojvC2WtyN+Yaals4J6kercaf7y+u6wWG11DECg.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '40.117.233.34' (ECDSA) to the list of known hosts.
+Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 5.0.0-1023-azure x86_64)
 
-## docker-compose ... close very close now
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+ System information disabled due to load higher than 1.0
+
+1 package can be updated.
+1 update is a security update.
+
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+boscp08@myDockerVM:~$ 
+```
+
+`docker -v`
+**Docker version 19.03.4, build 9013bf583a**
+
+
+## docker-compose ... 
 
 ` sudo apt install docker-compose` 
 
+```
+boscp08@myDockerVM:~$ docker-compose -v
+docker-compose version 1.17.1, build unknown
+```
+boscp08@myDockerVM:~$ sudo apt install docker-compose
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  linux-headers-4.15.0-66
+Use 'sudo apt autoremove' to remove it.
+The following additional packages will be installed:
+  cgroupfs-mount golang-docker-credential-helpers libsecret-1-0 libsecret-common pigz python-asn1crypto python-backports.ssl-match-hostname python-cached-property
+  python-certifi python-cffi-backend python-chardet python-cryptography python-docker python-dockerpty python-dockerpycreds python-docopt python-enum34 python-funcsigs
+  python-functools32 python-idna python-ipaddress python-jsonschema python-mock python-openssl python-pbr python-pkg-resources python-requests python-six python-texttable
+  python-urllib3 python-websocket python-yaml
+Suggested packages:
+  python-cryptography-doc python-cryptography-vectors python-enum34-doc python-funcsigs-doc python-mock-doc python-openssl-doc python-openssl-dbg python-setuptools
+  python-socks python-ntlm
+Recommended packages:
+  docker.io
+The following NEW packages will be installed:
+  cgroupfs-mount docker-compose golang-docker-credential-helpers libsecret-1-0 libsecret-common pigz python-asn1crypto python-backports.ssl-match-hostname
+  python-cached-property python-certifi python-cffi-backend python-chardet python-cryptography python-docker python-dockerpty python-dockerpycreds python-docopt
+  python-enum34 python-funcsigs python-functools32 python-idna python-ipaddress python-jsonschema python-mock python-openssl python-pbr python-pkg-resources python-requests
+  python-six python-texttable python-urllib3 python-websocket python-yaml
+0 upgraded, 33 newly installed, 0 to remove and 1 not upgraded.
+Need to get 2110 kB of archives.
+After this operation, 10.0 MB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 pigz amd64 2.4-1 [57.4 kB]
+Get:2 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 cgroupfs-mount all 1.4 [6320 B]
+Get:3 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 python-backports.ssl-match-hostname all 3.5.0.1-1 [7024 B]
+Get:4 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-pkg-resources all 39.0.1-2 [128 kB]
+Get:5 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 python-cached-property all 1.3.1-1 [7568 B]
+Get:6 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-six all 1.11.0-2 [11.3 kB]
+Get:7 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 libsecret-common all 0.18.6-1 [4452 B]
+Get:8 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 libsecret-1-0 amd64 0.18.6-1 [94.6 kB]
+Get:9 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 golang-docker-credential-helpers amd64 0.5.0-2 [444 kB]
+Get:10 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 python-dockerpycreds all 0.2.1-1 [4138 B]
+Get:11 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-certifi all 2018.1.18-2 [144 kB]
+Get:12 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-chardet all 3.0.4-1 [80.3 kB]
+Get:13 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-idna all 2.6-1 [32.4 kB]
+Get:14 http://azure.archive.ubuntu.com/ubuntu bionic-updates/main amd64 python-urllib3 all 1.22-1ubuntu0.18.04.1 [85.9 kB]
+Get:15 http://azure.archive.ubuntu.com/ubuntu bionic-updates/main amd64 python-requests all 2.18.4-2ubuntu0.1 [58.5 kB]
+Get:16 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 python-websocket all 0.44.0-0ubuntu2 [30.7 kB]
+Get:17 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-ipaddress all 1.0.17-1 [18.2 kB]
+Get:18 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 python-docker all 2.5.1-1 [69.0 kB]
+Get:19 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 python-dockerpty all 0.4.1-1 [10.8 kB]
+Get:20 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 python-docopt all 0.6.2-1build1 [25.6 kB]
+Get:21 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-enum34 all 1.1.6-2 [34.8 kB]
+Get:22 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-functools32 all 3.2.3.2-3 [10.8 kB]
+Get:23 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-funcsigs all 1.0.2-4 [13.5 kB]
+Get:24 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-pbr all 3.1.1-3ubuntu3 [53.7 kB]
+Get:25 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-mock all 2.0.0-3 [47.4 kB]
+Get:26 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-jsonschema all 2.6.0-2 [31.5 kB]
+Get:27 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 python-texttable all 0.9.1-1 [8160 B]
+Get:28 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-yaml amd64 3.12-1build2 [115 kB]
+Get:29 http://azure.archive.ubuntu.com/ubuntu bionic/universe amd64 docker-compose all 1.17.1-2 [76.3 kB]
+Get:30 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-asn1crypto all 0.24.0-1 [72.7 kB]
+Get:31 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-cffi-backend amd64 1.11.5-1 [63.4 kB]
+Get:32 http://azure.archive.ubuntu.com/ubuntu bionic-updates/main amd64 python-cryptography amd64 2.1.4-1ubuntu1.3 [221 kB]
+Get:33 http://azure.archive.ubuntu.com/ubuntu bionic/main amd64 python-openssl all 17.5.0-1ubuntu1 [41.3 kB]
+Fetched 2110 kB in 0s (4835 kB/s)     
+Extracting templates from packages: 100%
+Selecting previously unselected package pigz.
+(Reading database ... 74651 files and directories currently installed.)
+Preparing to unpack .../00-pigz_2.4-1_amd64.deb ...
+Unpacking pigz (2.4-1) ...
+Selecting previously unselected package cgroupfs-mount.
+Preparing to unpack .../01-cgroupfs-mount_1.4_all.deb ...
+Unpacking cgroupfs-mount (1.4) ...
+Selecting previously unselected package python-backports.ssl-match-hostname.
+Preparing to unpack .../02-python-backports.ssl-match-hostname_3.5.0.1-1_all.deb ...
+Unpacking python-backports.ssl-match-hostname (3.5.0.1-1) ...
+Selecting previously unselected package python-pkg-resources.
+Preparing to unpack .../03-python-pkg-resources_39.0.1-2_all.deb ...
+Unpacking python-pkg-resources (39.0.1-2) ...
+Selecting previously unselected package python-cached-property.
+Preparing to unpack .../04-python-cached-property_1.3.1-1_all.deb ...
+Unpacking python-cached-property (1.3.1-1) ...
+Selecting previously unselected package python-six.
+Preparing to unpack .../05-python-six_1.11.0-2_all.deb ...
+Unpacking python-six (1.11.0-2) ...
+Selecting previously unselected package libsecret-common.
+Preparing to unpack .../06-libsecret-common_0.18.6-1_all.deb ...
+Unpacking libsecret-common (0.18.6-1) ...
+Selecting previously unselected package libsecret-1-0:amd64.
+Preparing to unpack .../07-libsecret-1-0_0.18.6-1_amd64.deb ...
+Unpacking libsecret-1-0:amd64 (0.18.6-1) ...
+Selecting previously unselected package golang-docker-credential-helpers.
+Preparing to unpack .../08-golang-docker-credential-helpers_0.5.0-2_amd64.deb ...
+Unpacking golang-docker-credential-helpers (0.5.0-2) ...
+Selecting previously unselected package python-dockerpycreds.
+Preparing to unpack .../09-python-dockerpycreds_0.2.1-1_all.deb ...
+Unpacking python-dockerpycreds (0.2.1-1) ...
+Selecting previously unselected package python-certifi.
+Preparing to unpack .../10-python-certifi_2018.1.18-2_all.deb ...
+Unpacking python-certifi (2018.1.18-2) ...
+Selecting previously unselected package python-chardet.
+Preparing to unpack .../11-python-chardet_3.0.4-1_all.deb ...
+Unpacking python-chardet (3.0.4-1) ...
+Selecting previously unselected package python-idna.
+Preparing to unpack .../12-python-idna_2.6-1_all.deb ...
+Unpacking python-idna (2.6-1) ...
+Selecting previously unselected package python-urllib3.
+Preparing to unpack .../13-python-urllib3_1.22-1ubuntu0.18.04.1_all.deb ...
+Unpacking python-urllib3 (1.22-1ubuntu0.18.04.1) ...
+Selecting previously unselected package python-requests.
+Preparing to unpack .../14-python-requests_2.18.4-2ubuntu0.1_all.deb ...
+Unpacking python-requests (2.18.4-2ubuntu0.1) ...
+Selecting previously unselected package python-websocket.
+Preparing to unpack .../15-python-websocket_0.44.0-0ubuntu2_all.deb ...
+Unpacking python-websocket (0.44.0-0ubuntu2) ...
+Selecting previously unselected package python-ipaddress.
+Preparing to unpack .../16-python-ipaddress_1.0.17-1_all.deb ...
+Unpacking python-ipaddress (1.0.17-1) ...
+Selecting previously unselected package python-docker.
+Preparing to unpack .../17-python-docker_2.5.1-1_all.deb ...
+Unpacking python-docker (2.5.1-1) ...
+Selecting previously unselected package python-dockerpty.
+Preparing to unpack .../18-python-dockerpty_0.4.1-1_all.deb ...
+Unpacking python-dockerpty (0.4.1-1) ...
+Selecting previously unselected package python-docopt.
+Preparing to unpack .../19-python-docopt_0.6.2-1build1_all.deb ...
+Unpacking python-docopt (0.6.2-1build1) ...
+Selecting previously unselected package python-enum34.
+Preparing to unpack .../20-python-enum34_1.1.6-2_all.deb ...
+Unpacking python-enum34 (1.1.6-2) ...
+Selecting previously unselected package python-functools32.
+Preparing to unpack .../21-python-functools32_3.2.3.2-3_all.deb ...
+Unpacking python-functools32 (3.2.3.2-3) ...
+Selecting previously unselected package python-funcsigs.
+Preparing to unpack .../22-python-funcsigs_1.0.2-4_all.deb ...
+Unpacking python-funcsigs (1.0.2-4) ...
+Selecting previously unselected package python-pbr.
+Preparing to unpack .../23-python-pbr_3.1.1-3ubuntu3_all.deb ...
+Unpacking python-pbr (3.1.1-3ubuntu3) ...
+Selecting previously unselected package python-mock.
+Preparing to unpack .../24-python-mock_2.0.0-3_all.deb ...
+Unpacking python-mock (2.0.0-3) ...
+Selecting previously unselected package python-jsonschema.
+Preparing to unpack .../25-python-jsonschema_2.6.0-2_all.deb ...
+Unpacking python-jsonschema (2.6.0-2) ...
+Selecting previously unselected package python-texttable.
+Preparing to unpack .../26-python-texttable_0.9.1-1_all.deb ...
+Unpacking python-texttable (0.9.1-1) ...
+Selecting previously unselected package python-yaml.
+Preparing to unpack .../27-python-yaml_3.12-1build2_amd64.deb ...
+Unpacking python-yaml (3.12-1build2) ...
+Selecting previously unselected package docker-compose.
+Preparing to unpack .../28-docker-compose_1.17.1-2_all.deb ...
+Unpacking docker-compose (1.17.1-2) ...
+Selecting previously unselected package python-asn1crypto.
+Preparing to unpack .../29-python-asn1crypto_0.24.0-1_all.deb ...
+Unpacking python-asn1crypto (0.24.0-1) ...
+Selecting previously unselected package python-cffi-backend.
+Preparing to unpack .../30-python-cffi-backend_1.11.5-1_amd64.deb ...
+Unpacking python-cffi-backend (1.11.5-1) ...
+Selecting previously unselected package python-cryptography.
+Preparing to unpack .../31-python-cryptography_2.1.4-1ubuntu1.3_amd64.deb ...
+Unpacking python-cryptography (2.1.4-1ubuntu1.3) ...
+Selecting previously unselected package python-openssl.
+Preparing to unpack .../32-python-openssl_17.5.0-1ubuntu1_all.deb ...
+Unpacking python-openssl (17.5.0-1ubuntu1) ...
+Setting up python-idna (2.6-1) ...
+Setting up python-texttable (0.9.1-1) ...
+Setting up libsecret-common (0.18.6-1) ...
+Setting up python-functools32 (3.2.3.2-3) ...
+Setting up python-yaml (3.12-1build2) ...
+Setting up python-asn1crypto (0.24.0-1) ...
+Setting up python-certifi (2018.1.18-2) ...
+Setting up cgroupfs-mount (1.4) ...
+Setting up python-pkg-resources (39.0.1-2) ...
+Setting up python-backports.ssl-match-hostname (3.5.0.1-1) ...
+Setting up python-cffi-backend (1.11.5-1) ...
+Setting up python-six (1.11.0-2) ...
+Setting up python-dockerpty (0.4.1-1) ...
+Setting up python-pbr (3.1.1-3ubuntu3) ...
+update-alternatives: using /usr/bin/python2-pbr to provide /usr/bin/pbr (pbr) in auto mode
+Setting up python-enum34 (1.1.6-2) ...
+Setting up python-funcsigs (1.0.2-4) ...
+Setting up python-docopt (0.6.2-1build1) ...
+Setting up python-ipaddress (1.0.17-1) ...
+Setting up libsecret-1-0:amd64 (0.18.6-1) ...
+Setting up pigz (2.4-1) ...
+Setting up python-cached-property (1.3.1-1) ...
+Setting up python-urllib3 (1.22-1ubuntu0.18.04.1) ...
+Setting up python-chardet (3.0.4-1) ...
+Setting up python-mock (2.0.0-3) ...
+Setting up python-websocket (0.44.0-0ubuntu2) ...
+update-alternatives: using /usr/bin/python2-wsdump to provide /usr/bin/wsdump (wsdump) in auto mode
+Setting up golang-docker-credential-helpers (0.5.0-2) ...
+Setting up python-cryptography (2.1.4-1ubuntu1.3) ...
+Setting up python-requests (2.18.4-2ubuntu0.1) ...
+Setting up python-jsonschema (2.6.0-2) ...
+update-alternatives: using /usr/bin/python2-jsonschema to provide /usr/bin/jsonschema (jsonschema) in auto mode
+Setting up python-dockerpycreds (0.2.1-1) ...
+Setting up python-openssl (17.5.0-1ubuntu1) ...
+Setting up python-docker (2.5.1-1) ...
+Setting up docker-compose (1.17.1-2) ...
+Processing triggers for systemd (237-3ubuntu10.31) ...
+Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
+Processing triggers for ureadahead (0.100.0-21) ...
+Processing triggers for libc-bin (2.27-3ubuntu1) ...
+boscp08@myDockerVM:~$ docker-compose -v
+docker-compose version 1.17.1, build unknown
+boscp08@myDockerVM:~$ docker run hello-world
+docker: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post http://%2Fvar%2Frun%2Fdocker.sock/v1.40/containers/create: dial unix /var/run/docker.sock: connect: permission denied.
+See 'docker run --help'.
+boscp08@myDockerVM:~$ sudo docker run hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+1b930d010525: Pull complete 
+Digest: sha256:c3b4ada4687bbaa170745b3e4dd8ac3f194ca95b2d0518b417fb47e5879d9b5f
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+```
 
 
