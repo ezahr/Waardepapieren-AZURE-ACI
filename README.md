@@ -1243,3 +1243,659 @@ You can now connect to WordPress directly on the VM on port 80. Open a web brows
 http://40.117.233.34/wp-admin/install.php  Error establishing a database connection    😡 
 
 https://www.youtube.com/watch?v=uPTemVX1nnQ
+
+# docker-compose -f docker-compose-travis.yml up
+
+```
+boscp08@myDockerVM:~$ cd waardepapieren/
+boscp08@myDockerVM:~/waardepapieren$ ls
+LICENSE    authorization-backend  client-frontend  docker-compose-travis.yml  documentation  pictures  validator-frontend
+README.md  clerk-frontend         demo-certs       docker-compose.yml         mock-nlx       reports   waardepapieren-service
+boscp08@myDockerVM:~/waardepapieren$ nano docker-compose-travis.yml 
+boscp08@myDockerVM:~/waardepapieren$ ls
+LICENSE    authorization-backend  client-frontend  docker-compose-travis.yml  documentation  pictures  validator-frontend
+README.md  clerk-frontend         demo-certs       docker-compose.yml         mock-nlx       reports   waardepapieren-service
+boscp08@myDockerVM:~/waardepapieren$ cd clerk-frontend/
+boscp08@myDockerVM:~/waardepapieren/clerk-frontend$ nano Dockerfile 
+boscp08@myDockerVM:~/waardepapieren/clerk-frontend$ cd ..
+boscp08@myDockerVM:~/waardepapieren$ ls
+LICENSE    authorization-backend  client-frontend  docker-compose-travis.yml  documentation  pictures  validator-frontend
+README.md  clerk-frontend         demo-certs       docker-compose.yml         mock-nlx       reports   waardepapieren-service
+boscp08@myDockerVM:~/waardepapieren$ docker-compose -f docker-compose-travis.yml up
+Creating network "waardepapieren_default" with the default driver
+Building mock-nlx
+Step 1/6 : FROM node:10
+10: Pulling from library/node
+9a0b0ce99936: Extracting [==================================================>]  45.38MB/45.38MB
+db3b6004c61a: Download complete
+f8f075920295: Download complete
+6ef14aff1139: Download complete
+0bbd8b48260f: Download complete                                                              9a0b0ce99936: Pull complete
+6ef14aff1139: Extracting [===================================>               ]  35.13MB/50.07MB
+f8f075920295: Pull complete
+6ef14aff1139: Pull complete
+0bbd8b48260f: Pull complete
+524be717efb1: Pull complete
+5216176a8ae7: Pull complete
+30f1e4a2facd: Pull complete
+823c0b3f4fa2: Pull complete
+Digest: sha256:dabc15ad36a9e0a95862fbdf6ffdad439edc20aa27c7f10456644464e3fb5f08
+Status: Downloaded newer image for node:10
+ ---> e45bc9197ec9
+Step 2/6 : RUN mkdir /app
+ ---> Running in b48a962c8185
+Removing intermediate container b48a962c8185
+ ---> 2cc468a0ab4a
+Step 3/6 : ADD index.js package.json package-lock.json /app/
+ ---> 73d49f850702
+Step 4/6 : WORKDIR /app
+ ---> Running in c32690f26999
+Removing intermediate container c32690f26999
+ ---> 599964180da1
+Step 5/6 : RUN npm install --production
+ ---> Running in 30d1c255c782
+added 48 packages from 36 contributors and audited 121 packages in 1.408s
+found 0 vulnerabilities
+
+Removing intermediate container 30d1c255c782
+ ---> dadd2e42b740
+Step 6/6 : CMD npm start
+ ---> Running in 39e08365db25
+Removing intermediate container 39e08365db25
+ ---> a80140763bd7
+Successfully built a80140763bd7
+Successfully tagged waardepapieren_mock-nlx:latest
+WARNING: Image for service mock-nlx was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+Building waardepapieren-service
+Step 1/9 : FROM node:10
+ ---> e45bc9197ec9
+Step 2/9 : RUN mkdir /app
+ ---> Using cache
+ ---> 2cc468a0ab4a
+Step 3/9 : ADD .babelrc package.json package-lock.json /app/
+ ---> c3b46f131ec6
+Step 4/9 : ADD src/* app/src/
+ ---> 49a0df4714cb
+Step 5/9 : ADD configuration/* app/configuration/
+ ---> 4d66c2c96a30
+Step 6/9 : ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
+ ---> Running in 473173fe4af2
+Removing intermediate container 473173fe4af2
+ ---> 052c634f96fd
+Step 7/9 : WORKDIR /app
+ ---> Running in e125ee8ea793
+Removing intermediate container e125ee8ea793
+ ---> c8b6c2abae74
+Step 8/9 : RUN npm install --production
+ ---> Running in 7ce91726f52a
+
+> websocket@1.0.28 install /app/node_modules/websocket
+> (node-gyp rebuild 2> builderror.log) || (exit 0)
+
+make: Entering directory '/app/node_modules/websocket/build'
+  CXX(target) Release/obj.target/bufferutil/src/bufferutil.o
+  SOLINK_MODULE(target) Release/obj.target/bufferutil.node
+  COPY Release/bufferutil.node
+  CXX(target) Release/obj.target/validation/src/validation.o
+  SOLINK_MODULE(target) Release/obj.target/validation.node
+  COPY Release/validation.node
+make: Leaving directory '/app/node_modules/websocket/build'
+
+> core-js@3.1.4 postinstall /app/node_modules/core-js
+> node scripts/postinstall || echo "ignore"
+
+Thank you for using core-js ( https://github.com/zloirock/core-js ) for polyfilling JavaScript standard library!
+
+The project needs your help! Please consider supporting of core-js on Open Collective or Patreon: 
+> https://opencollective.com/core-js 
+> https://www.patreon.com/zloirock 
+
+Also, the author of core-js ( https://github.com/zloirock ) is looking for a good job -)
+
+
+> core-js-pure@3.1.4 postinstall /app/node_modules/core-js-pure
+> node scripts/postinstall || echo "ignore"
+
+Thank you for using core-js ( https://github.com/zloirock/core-js ) for polyfilling JavaScript standard library!
+
+The project needs your help! Please consider supporting of core-js on Open Collective or Patreon: 
+> https://opencollective.com/core-js 
+> https://www.patreon.com/zloirock 
+
+Also, the author of core-js ( https://github.com/zloirock ) is looking for a good job -)
+
+
+> jsonpath@1.0.1 postinstall /app/node_modules/jsonpath
+> node lib/aesprim.js > generated/aesprim-browser.js
+
+added 307 packages from 153 contributors and audited 2562 packages in 21.201s
+found 2 high severity vulnerabilities
+  run `npm audit fix` to fix them, or `npm audit` for details
+Removing intermediate container 7ce91726f52a
+ ---> bc7498a96d3c
+Step 9/9 : CMD npm start
+ ---> Running in 457a5e2d63ec
+Removing intermediate container 457a5e2d63ec
+ ---> 694c02a84859
+Successfully built 694c02a84859
+Successfully tagged waardepapieren_waardepapieren-service:latest
+WARNING: Image for service waardepapieren-service was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+Building clerk-frontend
+Step 1/15 : FROM node:10
+ ---> e45bc9197ec9
+Step 2/15 : RUN mkdir /app
+ ---> Using cache
+ ---> 2cc468a0ab4a
+Step 3/15 : ADD package.json package-lock.json /app/
+ ---> f19f4d860e3f
+Step 4/15 : ENV REACT_APP_EPHEMERAL_ENDPOINT=https://40.117.233.34:443/api/eph
+ ---> Running in 6e064c72de5c
+Removing intermediate container 6e064c72de5c
+ ---> c6d76b8eb48c
+Step 5/15 : ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://40.117.233.34:443/api/eph-ws
+ ---> Running in a5132824fc74
+Removing intermediate container a5132824fc74
+ ---> c67ea2e87dfe
+Step 6/15 : WORKDIR /app
+ ---> Running in f5940db287e0
+Removing intermediate container f5940db287e0
+ ---> 088da7ca1bf2
+Step 7/15 : RUN npm install --unsafe-perm
+ ---> Running in d2bef45149c0
+
+> canvas@2.5.0 install /app/node_modules/canvas
+> node-pre-gyp install --fallback-to-build
+
+node-pre-gyp WARN Using request for node-pre-gyp https download 
+[canvas] Success: "/app/node_modules/canvas/build/Release/canvas.node" is installed via remote
+
+> core-js@2.6.8 postinstall /app/node_modules/babel-runtime/node_modules/core-js
+> node -e "try { require('./scripts/postinstall'); } catch (e) { /* empty */ }"
+
+Thank you for using core-js ( https://github.com/zloirock/core-js )!
+
+Please consider supporting of core-js on Open Collective or Patreon: 
+> https://opencollective.com/core-js 
+> https://www.patreon.com/zloirock 
+
+Also, the author of core-js ( https://github.com/zloirock ) is looking for a good job -)
+
+
+> core-js-pure@3.1.2 postinstall /app/node_modules/core-js-pure
+> node -e "try { require('./scripts/postinstall'); } catch (e) { /* empty */ }"
+
+Thank you for using core-js ( https://github.com/zloirock/core-js )!
+
+Please consider supporting of core-js on Open Collective or Patreon: 
+> https://opencollective.com/core-js 
+> https://www.patreon.com/zloirock 
+
+Also, the author of core-js ( https://github.com/zloirock ) is looking for a good job -)
+
+
+> cypress@3.4.1 postinstall /app/node_modules/cypress
+> node index.js --exec install
+
+Installing Cypress (version: 3.4.1)
+
+[22:16:11]  Downloading Cypress     [started]
+[22:16:11]  Downloading Cypress      0% 0s [title changed]
+[22:16:12]  Downloading Cypress      5% 2s [title changed]
+[22:16:12]  Downloading Cypress      12% 2s [title changed]
+[22:16:12]  Downloading Cypress      19% 1s [title changed]
+[22:16:12]  Downloading Cypress      25% 1s [title changed]
+[22:16:12]  Downloading Cypress      33% 1s [title changed]
+[22:16:12]  Downloading Cypress      39% 1s [title changed]
+[22:16:12]  Downloading Cypress      48% 1s [title changed]
+[22:16:12]  Downloading Cypress      55% 1s [title changed]
+[22:16:12]  Downloading Cypress      64% 1s [title changed]
+[22:16:12]  Downloading Cypress      70% 0s [title changed]
+[22:16:13]  Downloading Cypress      79% 0s [title changed]
+[22:16:13]  Downloading Cypress      89% 0s [title changed]
+[22:16:13]  Downloading Cypress      97% 0s [title changed]
+[22:16:13]  Downloaded Cypress      [title changed]
+[22:16:13]  Downloaded Cypress      [completed]
+[22:16:13]  Unzipping Cypress       [started]
+[22:16:13]  Unzipping Cypress        0% 0s [title changed]
+[22:16:16]  Unzipping Cypress        1% 291s [title changed]
+[22:16:16]  Unzipping Cypress        1% 292s [title changed]
+[22:16:16]  Unzipping Cypress        1% 293s [title changed]
+[22:16:16]  Unzipping Cypress        1% 294s [title changed]
+[22:16:16]  Unzipping Cypress        1% 295s [title changed]
+[22:16:16]  Unzipping Cypress        1% 296s [title changed]
+[22:16:16]  Unzipping Cypress        1% 297s [title changed]
+[22:16:16]  Unzipping Cypress        1% 298s [title changed]
+[22:16:16]  Unzipping Cypress        1% 299s [title changed]
+[22:16:16]  Unzipping Cypress        1% 300s [title changed]
+[22:16:16]  Unzipping Cypress        1% 301s [title changed]
+[22:16:16]  Unzipping Cypress        1% 302s [title changed]
+[22:16:16]  Unzipping Cypress        1% 303s [title changed]
+[22:16:16]  Unzipping Cypress        1% 304s [title changed]
+[22:16:17]  Unzipping Cypress        1% 305s [title changed]
+[22:16:17]  Unzipping Cypress        1% 306s [title changed]
+[22:16:17]  Unzipping Cypress        1% 307s [title changed]
+[22:16:17]  Unzipping Cypress        1% 308s [title changed]
+[22:16:17]  Unzipping Cypress        1% 309s [title changed]
+[22:16:17]  Unzipping Cypress        1% 310s [title changed]
+[22:16:17]  Unzipping Cypress        1% 311s [title changed]
+[22:16:17]  Unzipping Cypress        1% 312s [title changed]
+[22:16:17]  Unzipping Cypress        1% 313s [title changed]
+[22:16:17]  Unzipping Cypress        1% 314s [title changed]
+[22:16:17]  Unzipping Cypress        1% 315s [title changed]
+[22:16:17]  Unzipping Cypress        1% 316s [title changed]
+[22:16:17]  Unzipping Cypress        1% 317s [title changed]
+[22:16:17]  Unzipping Cypress        1% 318s [title changed]
+[22:16:17]  Unzipping Cypress        1% 319s [title changed]
+[22:16:17]  Unzipping Cypress        1% 320s [title changed]
+[22:16:17]  Unzipping Cypress        1% 321s [title changed]
+[22:16:17]  Unzipping Cypress        1% 322s [title changed]
+[22:16:17]  Unzipping Cypress        1% 323s [title changed]
+[22:16:17]  Unzipping Cypress        1% 324s [title changed]
+[22:16:17]  Unzipping Cypress        1% 325s [title changed]
+[22:16:17]  Unzipping Cypress        1% 326s [title changed]
+[22:16:17]  Unzipping Cypress        1% 327s [title changed]
+[22:16:17]  Unzipping Cypress        1% 328s [title changed]
+[22:16:17]  Unzipping Cypress        1% 329s [title changed]
+[22:16:17]  Unzipping Cypress        1% 330s [title changed]
+[22:16:17]  Unzipping Cypress        1% 331s [title changed]
+[22:16:17]  Unzipping Cypress        1% 332s [title changed]
+[22:16:17]  Unzipping Cypress        1% 333s [title changed]
+[22:16:17]  Unzipping Cypress        1% 334s [title changed]
+[22:16:17]  Unzipping Cypress        1% 335s [title changed]
+[22:16:17]  Unzipping Cypress        1% 336s [title changed]
+[22:16:17]  Unzipping Cypress        1% 337s [title changed]
+[22:16:17]  Unzipping Cypress        1% 338s [title changed]
+[22:16:17]  Unzipping Cypress        1% 339s [title changed]
+[22:16:17]  Unzipping Cypress        1% 340s [title changed]
+[22:16:17]  Unzipping Cypress        1% 341s [title changed]
+[22:16:17]  Unzipping Cypress        1% 342s [title changed]
+[22:16:17]  Unzipping Cypress        1% 343s [title changed]
+[22:16:17]  Unzipping Cypress        1% 344s [title changed]
+[22:16:17]  Unzipping Cypress        1% 345s [title changed]
+[22:16:17]  Unzipping Cypress        1% 346s [title changed]
+[22:16:17]  Unzipping Cypress        1% 347s [title changed]
+[22:16:17]  Unzipping Cypress        1% 348s [title changed]
+[22:16:17]  Unzipping Cypress        1% 349s [title changed]
+[22:16:17]  Unzipping Cypress        1% 350s [title changed]
+[22:16:17]  Unzipping Cypress        1% 351s [title changed]
+[22:16:17]  Unzipping Cypress        1% 352s [title changed]
+[22:16:17]  Unzipping Cypress        1% 353s [title changed]
+[22:16:17]  Unzipping Cypress        1% 354s [title changed]
+[22:16:17]  Unzipping Cypress        1% 355s [title changed]
+[22:16:17]  Unzipping Cypress        1% 356s [title changed]
+[22:16:17]  Unzipping Cypress        1% 357s [title changed]
+[22:16:17]  Unzipping Cypress        1% 358s [title changed]
+[22:16:17]  Unzipping Cypress        1% 359s [title changed]
+[22:16:17]  Unzipping Cypress        1% 360s [title changed]
+[22:16:17]  Unzipping Cypress        1% 361s [title changed]
+[22:16:17]  Unzipping Cypress        1% 362s [title changed]
+[22:16:17]  Unzipping Cypress        1% 363s [title changed]
+[22:16:17]  Unzipping Cypress        1% 364s [title changed]
+[22:16:17]  Unzipping Cypress        1% 365s [title changed]
+[22:16:17]  Unzipping Cypress        2% 181s [title changed]
+[22:16:17]  Unzipping Cypress        2% 182s [title changed]
+[22:16:17]  Unzipping Cypress        2% 183s [title changed]
+[22:16:17]  Unzipping Cypress        2% 184s [title changed]
+[22:16:17]  Unzipping Cypress        2% 185s [title changed]
+[22:16:17]  Unzipping Cypress        2% 186s [title changed]
+[22:16:17]  Unzipping Cypress        2% 187s [title changed]
+[22:16:17]  Unzipping Cypress        2% 188s [title changed]
+[22:16:17]  Unzipping Cypress        2% 189s [title changed]
+[22:16:17]  Unzipping Cypress        2% 190s [title changed]
+[22:16:17]  Unzipping Cypress        2% 191s [title changed]
+[22:16:17]  Unzipping Cypress        2% 192s [title changed]
+[22:16:17]  Unzipping Cypress        2% 193s [title changed]
+[22:16:17]  Unzipping Cypress        2% 194s [title changed]
+[22:16:17]  Unzipping Cypress        2% 195s [title changed]
+[22:16:17]  Unzipping Cypress        2% 196s [title changed]
+[22:16:17]  Unzipping Cypress        2% 197s [title changed]
+[22:16:17]  Unzipping Cypress        2% 198s [title changed]
+[22:16:17]  Unzipping Cypress        2% 199s [title changed]
+[22:16:17]  Unzipping Cypress        2% 200s [title changed]
+[22:16:18]  Unzipping Cypress        2% 201s [title changed]
+[22:16:18]  Unzipping Cypress        2% 202s [title changed]
+[22:16:18]  Unzipping Cypress        2% 203s [title changed]
+[22:16:18]  Unzipping Cypress        2% 204s [title changed]
+[22:16:18]  Unzipping Cypress        2% 205s [title changed]
+[22:16:18]  Unzipping Cypress        2% 206s [title changed]
+[22:16:18]  Unzipping Cypress        2% 207s [title changed]
+[22:16:18]  Unzipping Cypress        2% 208s [title changed]
+[22:16:18]  Unzipping Cypress        2% 209s [title changed]
+[22:16:18]  Unzipping Cypress        2% 210s [title changed]
+[22:16:18]  Unzipping Cypress        2% 211s [title changed]
+[22:16:18]  Unzipping Cypress        2% 212s [title changed]
+[22:16:18]  Unzipping Cypress        2% 213s [title changed]
+[22:16:18]  Unzipping Cypress        2% 214s [title changed]
+[22:16:18]  Unzipping Cypress        2% 215s [title changed]
+[22:16:18]  Unzipping Cypress        2% 216s [title changed]
+[22:16:18]  Unzipping Cypress        2% 217s [title changed]
+[22:16:18]  Unzipping Cypress        3% 143s [title changed]
+[22:16:18]  Unzipping Cypress        3% 144s [title changed]
+[22:16:18]  Unzipping Cypress        3% 145s [title changed]
+[22:16:18]  Unzipping Cypress        3% 146s [title changed]
+[22:16:18]  Unzipping Cypress        3% 147s [title changed]
+[22:16:18]  Unzipping Cypress        3% 148s [title changed]
+[22:16:18]  Unzipping Cypress        3% 149s [title changed]
+[22:16:18]  Unzipping Cypress        3% 150s [title changed]
+[22:16:18]  Unzipping Cypress        3% 151s [title changed]
+[22:16:18]  Unzipping Cypress        3% 152s [title changed]
+[22:16:18]  Unzipping Cypress        3% 153s [title changed]
+[22:16:18]  Unzipping Cypress        3% 154s [title changed]
+[22:16:18]  Unzipping Cypress        3% 155s [title changed]
+[22:16:18]  Unzipping Cypress        3% 156s [title changed]
+[22:16:18]  Unzipping Cypress        3% 157s [title changed]
+[22:16:18]  Unzipping Cypress        3% 158s [title changed]
+[22:16:18]  Unzipping Cypress        3% 159s [title changed]
+[22:16:18]  Unzipping Cypress        3% 160s [title changed]
+[22:16:18]  Unzipping Cypress        3% 161s [title changed]
+[22:16:18]  Unzipping Cypress        3% 162s [title changed]
+[22:16:18]  Unzipping Cypress        3% 163s [title changed]
+[22:16:18]  Unzipping Cypress        3% 164s [title changed]
+[22:16:19]  Unzipping Cypress        3% 165s [title changed]
+[22:16:19]  Unzipping Cypress        3% 166s [title changed]
+[22:16:19]  Unzipping Cypress        3% 167s [title changed]
+[22:16:19]  Unzipping Cypress        4% 124s [title changed]
+[22:16:19]  Unzipping Cypress        4% 125s [title changed]
+[22:16:19]  Unzipping Cypress        4% 126s [title changed]
+[22:16:19]  Unzipping Cypress        4% 127s [title changed]
+[22:16:19]  Unzipping Cypress        4% 128s [title changed]
+[22:16:19]  Unzipping Cypress        4% 129s [title changed]
+[22:16:19]  Unzipping Cypress        4% 130s [title changed]
+[22:16:19]  Unzipping Cypress        4% 131s [title changed]
+[22:16:19]  Unzipping Cypress        4% 132s [title changed]
+[22:16:19]  Unzipping Cypress        4% 133s [title changed]
+[22:16:19]  Unzipping Cypress        4% 134s [title changed]
+[22:16:19]  Unzipping Cypress        4% 135s [title changed]
+[22:16:19]  Unzipping Cypress        4% 136s [title changed]
+[22:16:19]  Unzipping Cypress        4% 137s [title changed]
+[22:16:19]  Unzipping Cypress        4% 138s [title changed]
+[22:16:19]  Unzipping Cypress        5% 109s [title changed]
+[22:16:19]  Unzipping Cypress        5% 110s [title changed]
+[22:16:19]  Unzipping Cypress        5% 111s [title changed]
+[22:16:19]  Unzipping Cypress        5% 112s [title changed]
+[22:16:19]  Unzipping Cypress        5% 113s [title changed]
+[22:16:19]  Unzipping Cypress        5% 114s [title changed]
+[22:16:19]  Unzipping Cypress        5% 115s [title changed]
+[22:16:20]  Unzipping Cypress        5% 116s [title changed]
+[22:16:20]  Unzipping Cypress        5% 117s [title changed]
+[22:16:20]  Unzipping Cypress        5% 118s [title changed]
+[22:16:20]  Unzipping Cypress        5% 119s [title changed]
+[22:16:20]  Unzipping Cypress        5% 120s [title changed]
+[22:16:20]  Unzipping Cypress        5% 121s [title changed]
+[22:16:20]  Unzipping Cypress        6% 100s [title changed]
+[22:16:20]  Unzipping Cypress        6% 101s [title changed]
+[22:16:20]  Unzipping Cypress        6% 102s [title changed]
+[22:16:35]  Unzipping Cypress        6% 330s [title changed]
+[22:16:35]  Unzipping Cypress        6% 331s [title changed]
+[22:16:35]  Unzipping Cypress        6% 332s [title changed]
+[22:16:35]  Unzipping Cypress        6% 333s [title changed]
+[22:16:35]  Unzipping Cypress        6% 334s [title changed]
+[22:16:35]  Unzipping Cypress        6% 335s [title changed]
+[22:16:35]  Unzipping Cypress        7% 284s [title changed]
+[22:16:35]  Unzipping Cypress        7% 285s [title changed]
+[22:16:35]  Unzipping Cypress        7% 286s [title changed]
+[22:16:35]  Unzipping Cypress        7% 287s [title changed]
+[22:16:35]  Unzipping Cypress        7% 288s [title changed]
+[22:16:35]  Unzipping Cypress        7% 289s [title changed]
+[22:16:35]  Unzipping Cypress        8% 250s [title changed]
+[22:16:35]  Unzipping Cypress        8% 251s [title changed]
+[22:16:35]  Unzipping Cypress        8% 252s [title changed]
+[22:16:35]  Unzipping Cypress        8% 253s [title changed]
+[22:16:35]  Unzipping Cypress        8% 254s [title changed]
+[22:16:36]  Unzipping Cypress        9% 224s [title changed]
+[22:16:36]  Unzipping Cypress        9% 225s [title changed]
+[22:16:36]  Unzipping Cypress        9% 226s [title changed]
+[22:16:36]  Unzipping Cypress        9% 227s [title changed]
+[22:16:36]  Unzipping Cypress        9% 228s [title changed]
+[22:16:36]  Unzipping Cypress        10% 203s [title changed]
+[22:16:36]  Unzipping Cypress        10% 204s [title changed]
+[22:16:37]  Unzipping Cypress        10% 213s [title changed]
+[22:16:37]  Unzipping Cypress        10% 214s [title changed]
+[22:16:37]  Unzipping Cypress        10% 215s [title changed]
+[22:16:37]  Unzipping Cypress        11% 193s [title changed]
+[22:16:37]  Unzipping Cypress        11% 194s [title changed]
+[22:16:37]  Unzipping Cypress        11% 195s [title changed]
+[22:16:38]  Unzipping Cypress        11% 196s [title changed]
+[22:16:38]  Unzipping Cypress        12% 178s [title changed]
+[22:16:38]  Unzipping Cypress        12% 179s [title changed]
+[22:16:38]  Unzipping Cypress        12% 180s [title changed]
+[22:16:38]  Unzipping Cypress        13% 165s [title changed]
+[22:16:38]  Unzipping Cypress        13% 166s [title changed]
+[22:16:38]  Unzipping Cypress        13% 167s [title changed]
+[22:16:38]  Unzipping Cypress        14% 153s [title changed]
+[22:16:38]  Unzipping Cypress        14% 154s [title changed]
+[22:16:39]  Unzipping Cypress        14% 155s [title changed]
+[22:16:39]  Unzipping Cypress        14% 156s [title changed]
+[22:16:39]  Unzipping Cypress        15% 143s [title changed]
+[22:16:39]  Unzipping Cypress        15% 144s [title changed]
+[22:16:39]  Unzipping Cypress        15% 145s [title changed]
+[22:16:39]  Unzipping Cypress        15% 146s [title changed]
+[22:16:39]  Unzipping Cypress        16% 135s [title changed]
+[22:16:39]  Unzipping Cypress        16% 136s [title changed]
+[22:16:39]  Unzipping Cypress        16% 137s [title changed]
+[22:16:40]  Unzipping Cypress        16% 138s [title changed]
+[22:16:40]  Unzipping Cypress        16% 139s [title changed]
+[22:16:40]  Unzipping Cypress        17% 129s [title changed]
+[22:16:40]  Unzipping Cypress        17% 130s [title changed]
+[22:16:40]  Unzipping Cypress        17% 131s [title changed]
+[22:16:40]  Unzipping Cypress        18% 122s [title changed]
+[22:16:40]  Unzipping Cypress        18% 123s [title changed]
+[22:16:41]  Unzipping Cypress        18% 124s [title changed]
+[22:16:41]  Unzipping Cypress        19% 116s [title changed]
+[22:16:41]  Unzipping Cypress        19% 117s [title changed]
+[22:16:41]  Unzipping Cypress        20% 110s [title changed]
+[22:16:41]  Unzipping Cypress        20% 111s [title changed]
+[22:16:41]  Unzipping Cypress        21% 105s [title changed]
+[22:16:41]  Unzipping Cypress        21% 106s [title changed]
+[22:16:42]  Unzipping Cypress        22% 100s [title changed]
+[22:16:42]  Unzipping Cypress        22% 101s [title changed]
+[22:16:42]  Unzipping Cypress        23% 95s [title changed]
+[22:16:42]  Unzipping Cypress        23% 96s [title changed]
+[22:16:42]  Unzipping Cypress        23% 97s [title changed]
+[22:16:42]  Unzipping Cypress        24% 91s [title changed]
+[22:16:42]  Unzipping Cypress        24% 92s [title changed]
+[22:16:43]  Unzipping Cypress        25% 88s [title changed]
+[22:16:43]  Unzipping Cypress        25% 89s [title changed]
+[22:16:43]  Unzipping Cypress        26% 84s [title changed]
+[22:16:43]  Unzipping Cypress        26% 85s [title changed]
+[22:16:43]  Unzipping Cypress        27% 81s [title changed]
+[22:16:44]  Unzipping Cypress        27% 82s [title changed]
+[22:16:44]  Unzipping Cypress        28% 78s [title changed]
+[22:16:44]  Unzipping Cypress        28% 79s [title changed]
+[22:16:44]  Unzipping Cypress        29% 75s [title changed]
+[22:16:44]  Unzipping Cypress        29% 76s [title changed]
+[22:16:44]  Unzipping Cypress        30% 72s [title changed]
+[22:16:44]  Unzipping Cypress        30% 73s [title changed]
+[22:16:45]  Unzipping Cypress        31% 70s [title changed]
+[22:16:45]  Unzipping Cypress        32% 67s [title changed]
+[22:16:45]  Unzipping Cypress        32% 68s [title changed]
+[22:16:45]  Unzipping Cypress        33% 65s [title changed]
+[22:16:46]  Unzipping Cypress        33% 66s [title changed]
+[22:16:46]  Unzipping Cypress        34% 63s [title changed]
+[22:16:46]  Unzipping Cypress        35% 61s [title changed]
+[22:16:46]  Unzipping Cypress        36% 59s [title changed]
+[22:16:47]  Unzipping Cypress        37% 57s [title changed]
+[22:16:47]  Unzipping Cypress        38% 55s [title changed]
+[22:16:47]  Unzipping Cypress        39% 53s [title changed]
+[22:16:48]  Unzipping Cypress        39% 54s [title changed]
+[22:16:48]  Unzipping Cypress        40% 51s [title changed]
+[22:16:48]  Unzipping Cypress        40% 52s [title changed]
+[22:16:48]  Unzipping Cypress        41% 50s [title changed]
+[22:16:49]  Unzipping Cypress        41% 51s [title changed]
+[22:16:49]  Unzipping Cypress        42% 49s [title changed]
+[22:16:49]  Unzipping Cypress        42% 50s [title changed]
+[22:16:50]  Unzipping Cypress        43% 48s [title changed]
+[22:16:50]  Unzipping Cypress        44% 46s [title changed]
+[22:16:50]  Unzipping Cypress        44% 47s [title changed]
+[22:16:50]  Unzipping Cypress        45% 45s [title changed]
+[22:16:51]  Unzipping Cypress        45% 46s [title changed]
+[22:16:51]  Unzipping Cypress        46% 44s [title changed]
+[22:16:51]  Unzipping Cypress        46% 45s [title changed]
+[22:16:51]  Unzipping Cypress        47% 43s [title changed]
+[22:16:52]  Unzipping Cypress        48% 42s [title changed]
+[22:16:52]  Unzipping Cypress        49% 40s [title changed]
+[22:16:52]  Unzipping Cypress        49% 41s [title changed]
+[22:16:52]  Unzipping Cypress        50% 39s [title changed]
+[22:16:53]  Unzipping Cypress        51% 38s [title changed]
+[22:16:54]  Unzipping Cypress        51% 39s [title changed]
+[22:16:54]  Unzipping Cypress        52% 37s [title changed]
+[22:16:54]  Unzipping Cypress        52% 38s [title changed]
+[22:16:54]  Unzipping Cypress        53% 36s [title changed]
+[22:16:55]  Unzipping Cypress        53% 37s [title changed]
+[22:16:55]  Unzipping Cypress        54% 35s [title changed]
+[22:16:55]  Unzipping Cypress        54% 36s [title changed]
+[22:16:56]  Unzipping Cypress        55% 35s [title changed]
+[22:16:56]  Unzipping Cypress        56% 33s [title changed]
+[22:16:56]  Unzipping Cypress        56% 34s [title changed]
+[22:16:56]  Unzipping Cypress        57% 32s [title changed]
+[22:16:57]  Unzipping Cypress        57% 33s [title changed]
+[22:16:57]  Unzipping Cypress        58% 31s [title changed]
+[22:16:57]  Unzipping Cypress        58% 32s [title changed]
+[22:16:57]  Unzipping Cypress        59% 30s [title changed]
+[22:16:57]  Unzipping Cypress        59% 31s [title changed]
+[22:16:57]  Unzipping Cypress        60% 29s [title changed]
+[22:16:58]  Unzipping Cypress        60% 30s [title changed]
+[22:16:58]  Unzipping Cypress        61% 28s [title changed]
+[22:16:58]  Unzipping Cypress        61% 29s [title changed]
+[22:16:58]  Unzipping Cypress        62% 27s [title changed]
+[22:16:58]  Unzipping Cypress        62% 28s [title changed]
+[22:16:59]  Unzipping Cypress        63% 26s [title changed]
+[22:16:59]  Unzipping Cypress        63% 27s [title changed]
+[22:16:59]  Unzipping Cypress        64% 26s [title changed]
+[22:16:59]  Unzipping Cypress        65% 25s [title changed]
+[22:17:00]  Unzipping Cypress        66% 24s [title changed]
+[22:17:00]  Unzipping Cypress        67% 23s [title changed]
+[22:17:00]  Unzipping Cypress        68% 22s [title changed]
+[22:17:01]  Unzipping Cypress        69% 21s [title changed]
+[22:17:13]  Unzipping Cypress        69% 27s [title changed]
+[22:17:13]  Unzipping Cypress        70% 26s [title changed]
+[22:17:14]  Unzipping Cypress        71% 25s [title changed]
+[22:17:14]  Unzipping Cypress        72% 24s [title changed]
+[22:17:14]  Unzipping Cypress        73% 23s [title changed]
+[22:17:15]  Unzipping Cypress        74% 22s [title changed]
+[22:17:15]  Unzipping Cypress        75% 21s [title changed]
+[22:17:15]  Unzipping Cypress        76% 20s [title changed]
+[22:17:16]  Unzipping Cypress        77% 19s [title changed]
+[22:17:16]  Unzipping Cypress        78% 18s [title changed]
+[22:17:17]  Unzipping Cypress        79% 17s [title changed]
+[22:17:17]  Unzipping Cypress        80% 16s [title changed]
+[22:17:17]  Unzipping Cypress        81% 15s [title changed]
+[22:17:18]  Unzipping Cypress        82% 14s [title changed]
+[22:17:18]  Unzipping Cypress        83% 13s [title changed]
+[22:17:18]  Unzipping Cypress        84% 12s [title changed]
+[22:17:19]  Unzipping Cypress        85% 11s [title changed]
+[22:17:19]  Unzipping Cypress        85% 12s [title changed]
+[22:17:19]  Unzipping Cypress        86% 11s [title changed]
+[22:17:19]  Unzipping Cypress        87% 10s [title changed]
+[22:17:20]  Unzipping Cypress        88% 9s [title changed]
+[22:17:20]  Unzipping Cypress        89% 8s [title changed]
+[22:17:20]  Unzipping Cypress        90% 7s [title changed]
+[22:17:21]  Unzipping Cypress        91% 7s [title changed]
+[22:17:21]  Unzipping Cypress        92% 6s [title changed]
+[22:17:21]  Unzipping Cypress        93% 5s [title changed]
+[22:17:22]  Unzipping Cypress        94% 4s [title changed]
+[22:17:22]  Unzipping Cypress        95% 4s [title changed]
+[22:17:22]  Unzipping Cypress        96% 3s [title changed]
+[22:17:23]  Unzipping Cypress        97% 2s [title changed]
+[22:17:23]  Unzipping Cypress        98% 1s [title changed]
+[22:17:23]  Unzipping Cypress        99% 1s [title changed]
+[22:17:24]  Unzipping Cypress        100% 0s [title changed]
+[22:17:24]  Unzipped Cypress        [title changed]
+[22:17:24]  Unzipped Cypress        [completed]
+[22:17:24]  Finishing Installation  [started]
+[22:17:24]  Finished Installation   /root/.cache/Cypress/3.4.1 [title changed]
+[22:17:24]  Finished Installation   /root/.cache/Cypress/3.4.1 [completed]
+
+You can now open Cypress by running: node_modules/.bin/cypress open
+
+https://on.cypress.io/installing-cypress
+
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.9 (node_modules/jest-haste-map/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.9: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.9 (node_modules/chokidar/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.9: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.0.6 (node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.0.6: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+
+added 1588 packages from 806 contributors and audited 902711 packages in 136.381s
+found 1 high severity vulnerability
+  run `npm audit fix` to fix them, or `npm audit` for details
+Removing intermediate container d2bef45149c0
+ ---> f8ca99cf7b9d
+Step 8/15 : ADD public /app/public
+ ---> 02c4d605934a
+Step 9/15 : ADD src /app/src
+ ---> 31c84c5d4ea9
+Step 10/15 : ARG CERTIFICATE_HOST
+ ---> Running in ed3e0fe67837
+Removing intermediate container ed3e0fe67837
+ ---> efefdf4ea1de
+Step 11/15 : ENV REACT_APP_CERTIFICATE_HOST=${CERTIFICATE_HOST}
+ ---> Running in 957055d3db2d
+Removing intermediate container 957055d3db2d
+ ---> a8bc605db036
+Step 12/15 : RUN npm run build
+ ---> Running in 8a854408a856
+
+> clerk-frontend@0.2.1 build /app
+> react-scripts build
+
+Creating an optimized production build...
+Browserslist: caniuse-lite is outdated. Please run next command `npm update`
+Compiled with warnings.
+
+./node_modules/@discipl/core/src/connector-loader.js
+Critical dependency: the request of a dependency is an expression
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  288.25 KB  build/static/js/2.ce062947.chunk.js
+  3.43 KB    build/static/js/main.5a39cc69.chunk.js
+  762 B      build/static/js/runtime~main.a8a9905a.js
+  393 B      build/static/css/main.cb968b21.chunk.css
+
+The project was built assuming it is hosted at the server root.
+You can control this with the homepage field in your package.json.
+For example, add this to build it for GitHub Pages:
+
+  "homepage" : "http://myname.github.io/myapp",
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://bit.ly/CRA-deploy
+
+Removing intermediate container 8a854408a856
+ ---> abd1fb1b605c
+Step 13/15 : FROM nginx:1.15.8
+1.15.8: Pulling from library/nginx
+6ae821421a7d: Pull complete
+da4474e5966c: Pull complete
+eb2aec2b9c9f: Pull complete
+Digest: sha256:dd2d0ac3fff2f007d99e033b64854be0941e19a2ad51f174d9240dda20d9f534
+Status: Downloaded newer image for nginx:1.15.8
+ ---> f09fe80eb0e7
+Step 14/15 : ADD nginx/nginx.conf /etc/nginx/nginx.conf
+ ---> 09b11a56bce7
+Step 15/15 : COPY --from=0 /app/build /usr/share/nginx/html
+ ---> 73dc37cdba11
+Successfully built 73dc37cdba11
+Successfully tagged waardepapieren_clerk-frontend:latest
+WARNING: Image for service clerk-frontend was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+Creating waardepapieren_mock-nlx_1 ... 
+Creating waardepapieren_mock-nlx_1 ... error
+
+ERROR: for waardepapieren_mock-nlx_1  Cannot start service mock-nlx: driver failed programming external connectivity on endpoint waardepapieren_mock-nlx_1 (cf6f076e9054ac0b10c13038fc3d1a63d6ba3cb7467f7b793f5e41e35bf725e8): Bind for 0.0.0.0:80 failed: port is already allocated
+
+ERROR: for mock-nlx  Cannot start service mock-nlx: driver failed programming external connectivity on endpoint waardepapieren_mock-nlx_1 (cf6f076e9054ac0b10c13038fc3d1a63d6ba3cb7467f7b793f5e41e35bf725e8): Bind for 0.0.0.0:80 failed: port is already allocated
+ERROR: Encountered errors while bringing up the project.
+
+```
