@@ -825,9 +825,7 @@ boscp08@myDockerVM:~$
 
 ` sudo apt install docker-compose` 
 
-```
-boscp08@myDockerVM:~$ docker-compose -v
-docker-compose version 1.17.1, build unknown
+
 ```
 boscp08@myDockerVM:~$ sudo apt install docker-compose
 Reading package lists... Done
@@ -1030,9 +1028,14 @@ Processing triggers for systemd (237-3ubuntu10.31) ...
 Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
 Processing triggers for ureadahead (0.100.0-21) ...
 Processing triggers for libc-bin (2.27-3ubuntu1) ...
-boscp08@myDockerVM:~$ docker-compose -v
-docker-compose version 1.17.1, build unknown
-boscp08@myDockerVM:~$ docker run hello-world
+```
+
+
+boscp08@myDockerVM:~$ `docker-compose -v`
+**docker-compose version 1.17.1, build unknown**
+
+boscp08@myDockerVM:~$ `docker run hello-world`
+```
 docker: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post http://%2Fvar%2Frun%2Fdocker.sock/v1.40/containers/create: dial unix /var/run/docker.sock: connect: permission denied.
 See 'docker run --help'.
 boscp08@myDockerVM:~$ sudo docker run hello-world
