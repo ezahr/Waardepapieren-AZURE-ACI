@@ -231,5 +231,21 @@ boscp08@ubuntu:~$ cat cloud-init.txt
 
 
 ```
+Now create a VM with `az vm create` . Use the --custom-data parameter to pass in your cloud-init config file. Provide the full path to the cloud-init.txt config if you saved the file outside of your present working directory. The following example creates a VM named myDockerVM and opens port 80 to web traffic.
+
+```
+az vm create \
+    --resource-group myDockerGroup \
+    --name myDockerVM \
+    --image UbuntuLTS \
+    --admin-username azureuser \
+    --generate-ssh-keys \
+    --custom-data cloud-init.txt
+az vm open-port --port 80 \
+    --resource-group myDockerGroup \
+	--name myDockerVM
+  ```
+  
+ It takes a few minutes for the VM to be created, the packages to install, and the app to start. There are background tasks that continue to run after the Azure CLI returns you to the prompt. When the VM has been created, take note of the **publicIpAddress** displayed by the Azure CLI.
  
 
