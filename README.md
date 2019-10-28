@@ -199,3 +199,17 @@ You have logged in. Now let us find all the subscriptions to which you have acce
 First, create a resource group for your Docker environment with az group create. The following example creates a resource group named myResourceGroup in the eastus location:
 
 `az group create --name myDockerGroup --location eastus`
+
+```
+boscp08@ubuntu:~$ az group create --name myDockerGroup --location eastus
+{
+  "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup",
+  "location": "eastus",
+  "managedBy": null,
+  "name": "myDockerGroup",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+```
