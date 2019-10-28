@@ -214,3 +214,22 @@ boscp08@ubuntu:~$ az group create --name myDockerGroup --location eastus
   "tags": null,
   "type": "Microsoft.Resources/resourceGroups"
 ```
+
+:;):
+```
+boscp08@ubuntu:~$ sensible-editor cloud-init.txt
+
+Select an editor.  To change later, run 'select-editor'.
+  1. /bin/nano        <---- easiest
+  2. /usr/bin/vim.tiny
+  3. /bin/ed
+
+Choose 1-3 [1]: 1
+
+boscp08@ubuntu:~$ cat cloud-init.txt 
+#include https://get.docker.com
+
+
+```
+
+
