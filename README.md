@@ -1,6 +1,9 @@
 # Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst
 Waardepapieren AZURE ACI met ICTU/Belastingdienst
 
+Met Compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiëren die uit meerdere Docker-containers bestaat. Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren. 
+
+
 
 `type: Microsoft.ContainerInstance/containerGroups`
 
