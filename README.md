@@ -1125,4 +1125,17 @@ For more examples and ideas, visit:
 ```
 set to go... hope the run will be okay
 
+```
+boscp08@myDockerVM:~$ git --version
+git version 2.17.1
+boscp08@myDockerVM:~$ git clone https://github.com/discipl/waardepapieren
+Cloning into 'waardepapieren'...
+remote: Enumerating objects: 188, done.
+remote: Counting objects: 100% (188/188), done.
+remote: Compressing objects: 100% (117/117), done.
+remote: Total 1798 (delta 92), reused 124 (delta 68), pack-reused 1610
+Receiving objects: 100% (1798/1798), 14.09 MiB | 32.43 MiB/s, done.
+Resolving deltas: 100% (1060/1060), done.
+```
 
+`cd waardepapieren`
