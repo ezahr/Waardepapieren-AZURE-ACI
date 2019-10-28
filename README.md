@@ -521,6 +521,13 @@ SSH into your VM  With the public key deployed on your Azure VM, and the private
 
 If you specified a passphrase when you created your key pair, enter that passphrase when prompted during the login process. The VM is added to your ~/.ssh/known_hosts file, and you won't be asked to connect again until either the public key on your Azure VM changes or the server name is removed from ~/.ssh/known_hosts.If the VM is using the just-in-time access policy, you need to request access before you can connect to the VM. For more information about the just-in-time policy, see Manage virtual machine access using the just in time policy.
 
+https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-manage
+
+
+boscp08@ubuntu:~$ `az vm delete --resource-group  myDockerGroup --name myDockerVM `
+**Are you sure you want to perform this operation? (y/n): y**
+
+
 ## docker-compose ... close very close now
 
 ` sudo apt install docker-compose` 
