@@ -252,7 +252,7 @@ az vm open-port --port 80 \
   
  It takes a few minutes for the VM to be created, the packages to install, and the app to start. There are background tasks that continue to run after the Azure CLI returns you to the prompt. When the VM has been created, take note of the **publicIpAddress** displayed by the Azure CLI.
 
-publicIpAddress": "40.121.146.69", 👇 
+publicIpAddress": "40.117.233.34", 👇 
 
 
 ```
@@ -260,7 +260,8 @@ boscp08@ubuntu:~$ az vm create \
 >     --resource-group myDockerGroup \
 >     --name myDockerVM \
 >     --image UbuntuLTS \
->     --admin-username azureuser \
+>     --admin-username boscp08 \
+>     --admin-password geheim \
 >     --generate-ssh-keys \
 >     --custom-data cloud-init.txt
 SSH key files '/home/boscp08/.ssh/id_rsa' and '/home/boscp08/.ssh/id_rsa.pub' have been generated under ~/.ssh to allow SSH access to the VM. If using machines without permanent storage, back up your keys to a safe location.
@@ -276,6 +277,12 @@ SSH key files '/home/boscp08/.ssh/id_rsa' and '/home/boscp08/.ssh/id_rsa.pub' ha
   "zones": ""
 }
 boscp08@ubuntu:~$ az vm open-port --port 80 \
+>     --resource-group myDockerGroup \
+> --name myDockerVM
+az vm open-port --port 443 \
+>     --resource-group myDockerGroup \
+> --name myDockerVM
+az vm open-port --port 8880 \
 >     --resource-group myDockerGroup \
 > --name myDockerVM
 ```
@@ -568,268 +575,7 @@ https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-manage
 boscp08@ubuntu:~$ `az vm delete --resource-group  myDockerGroup --name myDockerVM `
 **Are you sure you want to perform this operation? (y/n): y**
 
-```
-az vm create \
-    --resource-group myDockerGroup \
-    --name myDockerVM \
-    --image UbuntuLTS \
-    --admin-username boscp08 \
-    --generate-ssh-keys \
-    --custom-data cloud-init.txt
-az vm open-port --port 80 \
-    --resource-group myDockerGroup \
-	--name myDockerVM
-```
 
-recreate admin-username boscp08
-
-```
-boscp08@ubuntu:~$ az vm create \
->     --resource-group myDockerGroup \
->     --name myDockerVM \
->     --image UbuntuLTS \
->     --admin-username boscp08 \
->     --generate-ssh-keys \
->     --custom-data cloud-init.txt
- - Running ..
-{
-  "fqdns": "",
-  "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Compute/virtualMachines/myDockerVM",
-  "location": "eastus",
-  "macAddress": "00-0D-3A-55-28-2C",
-  "powerState": "VM running",
-  "privateIpAddress": "10.0.0.4",
-  "publicIpAddress": "40.117.233.34",
-  "resourceGroup": "myDockerGroup",
-  "zones": ""
-}
-boscp08@ubuntu:~$ az vm open-port --port 80 \
->     --resource-group myDockerGroup \
-> --name myDockerVM
-{
-  "defaultSecurityRules": [
-    {
-      "access": "Allow",
-      "description": "Allow inbound traffic from all VMs in VNET",
-      "destinationAddressPrefix": "VirtualNetwork",
-      "destinationAddressPrefixes": [],
-      "destinationApplicationSecurityGroups": null,
-      "destinationPortRange": "*",
-      "destinationPortRanges": [],
-      "direction": "Inbound",
-      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
-      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/AllowVnetInBound",
-      "name": "AllowVnetInBound",
-      "priority": 65000,
-      "protocol": "*",
-      "provisioningState": "Succeeded",
-      "resourceGroup": "myDockerGroup",
-      "sourceAddressPrefix": "VirtualNetwork",
-      "sourceAddressPrefixes": [],
-      "sourceApplicationSecurityGroups": null,
-      "sourcePortRange": "*",
-      "sourcePortRanges": [],
-      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
-    },
-    {
-      "access": "Allow",
-      "description": "Allow inbound traffic from azure load balancer",
-      "destinationAddressPrefix": "*",
-      "destinationAddressPrefixes": [],
-      "destinationApplicationSecurityGroups": null,
-      "destinationPortRange": "*",
-      "destinationPortRanges": [],
-      "direction": "Inbound",
-      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
-      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound",
-      "name": "AllowAzureLoadBalancerInBound",
-      "priority": 65001,
-      "protocol": "*",
-      "provisioningState": "Succeeded",
-      "resourceGroup": "myDockerGroup",
-      "sourceAddressPrefix": "AzureLoadBalancer",
-      "sourceAddressPrefixes": [],
-      "sourceApplicationSecurityGroups": null,
-      "sourcePortRange": "*",
-      "sourcePortRanges": [],
-      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
-    },
-    {
-      "access": "Deny",
-      "description": "Deny all inbound traffic",
-      "destinationAddressPrefix": "*",
-      "destinationAddressPrefixes": [],
-      "destinationApplicationSecurityGroups": null,
-      "destinationPortRange": "*",
-      "destinationPortRanges": [],
-      "direction": "Inbound",
-      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
-      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/DenyAllInBound",
-      "name": "DenyAllInBound",
-      "priority": 65500,
-      "protocol": "*",
-      "provisioningState": "Succeeded",
-      "resourceGroup": "myDockerGroup",
-      "sourceAddressPrefix": "*",
-      "sourceAddressPrefixes": [],
-      "sourceApplicationSecurityGroups": null,
-      "sourcePortRange": "*",
-      "sourcePortRanges": [],
-      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
-    },
-    {
-      "access": "Allow",
-      "description": "Allow outbound traffic from all VMs to all VMs in VNET",
-      "destinationAddressPrefix": "VirtualNetwork",
-      "destinationAddressPrefixes": [],
-      "destinationApplicationSecurityGroups": null,
-      "destinationPortRange": "*",
-      "destinationPortRanges": [],
-      "direction": "Outbound",
-      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
-      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/AllowVnetOutBound",
-      "name": "AllowVnetOutBound",
-      "priority": 65000,
-      "protocol": "*",
-      "provisioningState": "Succeeded",
-      "resourceGroup": "myDockerGroup",
-      "sourceAddressPrefix": "VirtualNetwork",
-      "sourceAddressPrefixes": [],
-      "sourceApplicationSecurityGroups": null,
-      "sourcePortRange": "*",
-      "sourcePortRanges": [],
-      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
-    },
-    {
-      "access": "Allow",
-      "description": "Allow outbound traffic from all VMs to Internet",
-      "destinationAddressPrefix": "Internet",
-      "destinationAddressPrefixes": [],
-      "destinationApplicationSecurityGroups": null,
-      "destinationPortRange": "*",
-      "destinationPortRanges": [],
-      "direction": "Outbound",
-      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
-      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/AllowInternetOutBound",
-      "name": "AllowInternetOutBound",
-      "priority": 65001,
-      "protocol": "*",
-      "provisioningState": "Succeeded",
-      "resourceGroup": "myDockerGroup",
-      "sourceAddressPrefix": "*",
-      "sourceAddressPrefixes": [],
-      "sourceApplicationSecurityGroups": null,
-      "sourcePortRange": "*",
-      "sourcePortRanges": [],
-      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
-    },
-    {
-      "access": "Deny",
-      "description": "Deny all outbound traffic",
-      "destinationAddressPrefix": "*",
-      "destinationAddressPrefixes": [],
-      "destinationApplicationSecurityGroups": null,
-      "destinationPortRange": "*",
-      "destinationPortRanges": [],
-      "direction": "Outbound",
-      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
-      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/defaultSecurityRules/DenyAllOutBound",
-      "name": "DenyAllOutBound",
-      "priority": 65500,
-      "protocol": "*",
-      "provisioningState": "Succeeded",
-      "resourceGroup": "myDockerGroup",
-      "sourceAddressPrefix": "*",
-      "sourceAddressPrefixes": [],
-      "sourceApplicationSecurityGroups": null,
-      "sourcePortRange": "*",
-      "sourcePortRanges": [],
-      "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
-    }
-  ],
-  "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
-  "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG",
-  "location": "eastus",
-  "name": "myDockerVMNSG",
-  "networkInterfaces": [
-    {
-      "dnsSettings": null,
-      "enableAcceleratedNetworking": null,
-      "enableIpForwarding": null,
-      "etag": null,
-      "hostedWorkloads": null,
-      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkInterfaces/myDockerVMVMNic",
-      "ipConfigurations": null,
-      "location": null,
-      "macAddress": null,
-      "name": null,
-      "networkSecurityGroup": null,
-      "primary": null,
-      "privateEndpoint": null,
-      "provisioningState": null,
-      "resourceGroup": "myDockerGroup",
-      "resourceGuid": null,
-      "tags": null,
-      "tapConfigurations": null,
-      "type": null,
-      "virtualMachine": null
-    }
-  ],
-  "provisioningState": "Succeeded",
-  "resourceGroup": "myDockerGroup",
-  "resourceGuid": "35700ba4-503c-48f4-9eb4-3e64690e5fd9",
-  "securityRules": [
-    {
-      "access": "Allow",
-      "description": null,
-      "destinationAddressPrefix": "*",
-      "destinationAddressPrefixes": [],
-      "destinationApplicationSecurityGroups": null,
-      "destinationPortRange": "22",
-      "destinationPortRanges": [],
-      "direction": "Inbound",
-      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
-      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/securityRules/default-allow-ssh",
-      "name": "default-allow-ssh",
-      "priority": 1000,
-      "protocol": "Tcp",
-      "provisioningState": "Succeeded",
-      "resourceGroup": "myDockerGroup",
-      "sourceAddressPrefix": "*",
-      "sourceAddressPrefixes": [],
-      "sourceApplicationSecurityGroups": null,
-      "sourcePortRange": "*",
-      "sourcePortRanges": [],
-      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
-    },
-    {
-      "access": "Allow",
-      "description": null,
-      "destinationAddressPrefix": "*",
-      "destinationAddressPrefixes": [],
-      "destinationApplicationSecurityGroups": null,
-      "destinationPortRange": "80",
-      "destinationPortRanges": [],
-      "direction": "Inbound",
-      "etag": "W/\"ba619b3d-1993-4738-a082-7654f71b0be9\"",
-      "id": "/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myDockerGroup/providers/Microsoft.Network/networkSecurityGroups/myDockerVMNSG/securityRules/open-port-80",
-      "name": "open-port-80",
-      "priority": 900,
-      "protocol": "*",
-      "provisioningState": "Succeeded",
-      "resourceGroup": "myDockerGroup",
-      "sourceAddressPrefix": "*",
-      "sourceAddressPrefixes": [],
-      "sourceApplicationSecurityGroups": null,
-      "sourcePortRange": "*",
-      "sourcePortRanges": [],
-      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
-    }
-  ],
-  "subnets": null,
-  "tags": {},
-  "type": "Microsoft.Network/networkSecurityGroups"
-}
 boscp08@ubuntu:~$ ssh boscp08@40.117.233.34
 The authenticity of host '40.117.233.34 (40.117.233.34)' can't be established.
 ECDSA key fingerprint is SHA256:7rzRRojvC2WtyN+Yaals4J6kercaf7y+u6wWG11DECg.
@@ -1190,6 +936,12 @@ docker-compose -f docker-compose-travis.yml up
 # BSN=663678651
 ```
 
+***
+start hacking 
+
+## portal.azure.com
+
+https://portal.azure.com/?configHash=x8B-2TCnUfFf&iepolyfills=true&l=nl.nl-nl&appPageVersion=5.0.302.61901037300.191025-2214#home
+bosch.peter@outlook.com 0l
 
 
-```
