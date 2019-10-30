@@ -937,11 +937,67 @@ docker-compose -f docker-compose-travis.yml up
 ```
 
 ***
-start hacking 
+start hacking  💪 
 
 ## portal.azure.com
 
 https://portal.azure.com/?configHash=x8B-2TCnUfFf&iepolyfills=true&l=nl.nl-nl&appPageVersion=5.0.302.61901037300.191025-2214#home
 bosch.peter@outlook.com 0l
+
+
+boscp08@win10pro ~
+$ ` ssh boscp08@40.117.233.34`
+```
+boscp08@win10pro ~
+$ ssh boscp08@40.117.233.34
+Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 5.0.0-1023-azure x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Wed Oct 30 19:42:21 UTC 2019
+
+  System load:  0.0                Users logged in:                1
+  Usage of /:   12.5% of 28.90GB   IP address for eth0:            10.0.0.4
+  Memory usage: 27%                IP address for docker0:         172.17.0.1
+  Swap usage:   0%                 IP address for br-9e95b2e94a99: 172.18.0.1
+  Processes:    117
+
+ * Kata Containers are now fully integrated in Charmed Kubernetes 1.16!
+   Yes, charms take the Krazy out of K8s Kata Kluster Konstruction.
+
+     https://ubuntu.com/kubernetes/docs/release-notes
+
+ * Canonical Livepatch is available for installation.
+   - Reduce system reboots and improve kernel security. Activate at:
+     https://ubuntu.com/livepatch
+
+0 packages can be updated.
+0 updates are security updates.
+
+
+Last login: Wed Oct 30 18:46:14 2019 from 86.86.102.241
+boscp08@myDockerVM:~$ az login
+```
+
+`PS C:\Users\bosch> az login`
+```
+Note, we have launched a browser for you to login. For old experience with device code, use "az login --use-device-code"`
+You have logged in. Now let us find all the subscriptions to which you have access...
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "cfcb03ea-255b-42f8-beca-2d4ac30779bb",
+    "isDefault": true,
+    "name": "Gratis versie",
+    "state": "Enabled",
+    "tenantId": "62123322-502d-493f-b543-503672043240",
+    "user": {
+      "name": "bosch.peter@outlook.com",
+      "type": "user"
+    }
+  }
+ ``` 
 
 
