@@ -900,12 +900,12 @@ For more examples and ideas, visit:
 ```
 set to go... hope the run will be okay
 
-# git clone https://github.com/discipl/waardepapieren
+# git clone https://github.com/discipl/waardepapieren.git
 
 ```
 boscp08@myDockerVM:~$ git --version
 git version 2.17.1
-boscp08@myDockerVM:~$ git clone https://github.com/discipl/waardepapieren
+boscp08@myDockerVM:~$ git clone https://github.com/discipl/waardepapieren.git
 Cloning into 'waardepapieren'...
 remote: Enumerating objects: 188, done.
 remote: Counting objects: 100% (188/188), done.
@@ -994,5 +994,109 @@ You have logged in. Now let us find all the subscriptions to which you have acce
     }
   }
  ``` 
+ 
+ 
+# image UbuntuLTS ??
 
+```
+PS C:\Users\bosch> az vm image list
+You are viewing an offline list of images, use --all to retrieve an up-to-date list
+[
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "7.5",
+    "urn": "OpenLogic:CentOS:7.5:latest",
+    "urnAlias": "CentOS",
+    "version": "latest"
+  },
+  {
+    "offer": "CoreOS",
+    "publisher": "CoreOS",
+    "sku": "Stable",
+    "urn": "CoreOS:CoreOS:Stable:latest",
+    "urnAlias": "CoreOS",
+    "version": "latest"
+  },
+  {
+    "offer": "debian-10",
+    "publisher": "Debian",
+    "sku": "10",
+    "urn": "Debian:debian-10:10:latest",
+    "urnAlias": "Debian",
+    "version": "latest"
+  },
+  {
+    "offer": "openSUSE-Leap",
+    "publisher": "SUSE",
+    "sku": "42.3",
+    "urn": "SUSE:openSUSE-Leap:42.3:latest",
+    "urnAlias": "openSUSE-Leap",
+    "version": "latest"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7-LVM",
+    "urn": "RedHat:RHEL:7-LVM:latest",
+    "urnAlias": "RHEL",
+    "version": "latest"
+  },
+  {
+    "offer": "SLES",
+    "publisher": "SUSE",
+    "sku": "15",
+    "urn": "SUSE:SLES:15:latest",
+    "urnAlias": "SLES",
+    "version": "latest"
+  },
+  {
+    "offer": "UbuntuServer",
+    "publisher": "Canonical",
+    "sku": "18.04-LTS",
+    "urn": "Canonical:UbuntuServer:18.04-LTS:latest",
+    "urnAlias": "UbuntuLTS",
+    "version": "latest"
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2019-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest",
+    "urnAlias": "Win2019Datacenter",
+    "version": "latest"
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2016-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2016-Datacenter:latest",
+    "urnAlias": "Win2016Datacenter",
+    "version": "latest"
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2012-R2-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:latest",
+    "urnAlias": "Win2012R2Datacenter",
+    "version": "latest"
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2012-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2012-Datacenter:latest",
+    "urnAlias": "Win2012Datacenter",
+    "version": "latest"
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2008-R2-SP1",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:latest",
+    "urnAlias": "Win2008R2SP1",
+    "version": "latest"
+  }
+]```
 
