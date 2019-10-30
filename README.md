@@ -3,14 +3,13 @@ Waardepapieren AZURE ACI met ICTU/Belastingdienst
 
 Met Compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiëren die uit meerdere Docker-containers bestaat. Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren. 
 
-
+# container brings itś own file system, on every type of system
 
 `type: Microsoft.ContainerInstance/containerGroups`
 
 ![kubernetes](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/kubernetes.PNG)
 
 https://sietseringers.net/
-
 
 Bas kan hem ook prebuilt bijhouden in de docker hub zoals de mensen van irma dat doen dan wordt de deployment eenvoudiger.  
 Misschien kan bas hem packagen op docker hub
