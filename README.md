@@ -513,7 +513,6 @@ az vm open-port --port 8880 \
   "type": "Microsoft.Network/networkSecurityGroups"
 ```
 
-
 ## Install Compose
 
 SSH to your new Docker host VM. Provide your own IP address.
@@ -534,8 +533,10 @@ boscp08@myDockerVM:~/.ssh$ tail -f /var/log/auth.log
 Oct 29 16:09:24 myDockerVM sshd[70401]: Connection closed by authenticating user boscp08 86.86.102.241 port 50847 [preauth]
 ```
 
+Setting PasswordAuthentication no causes Permission denied (publickey}9	Would be really happy if anyone had seen this issues before and found a solution to share with.
 
-```
+`grep -vE "^#|^$" /etc/ssh/sshd_config  `
+
 boscp08@myDockerVM:~/.ssh$ grep -vE "^#|^$" /etc/ssh/sshd_config
 PasswordAuthentication no
 ChallengeResponseAuthentication no
@@ -545,23 +546,17 @@ PrintMotd no
 AcceptEnv LANG LC_*
 Subsystem	sftp	/usr/lib/openssh/sftp-server
 ClientAliveInterval 120
-```
 
 
-20191029	Would be really happy if anyone had seen this issues before and found a solution to share with.
 
- grep -vE "^#|^$" /etc/ssh/sshd_config  
-
-20191029	Setting PasswordAuthentication no causes Permission denied (publickey}
-
- /etc/ssh/sshd_config 
-
+`cd /etc/ssh/sshd_config `
 boscp08@myDockerVM:/etc/ssh$ `sudo nano sshd_config`
 ```
 # To disable tunneled clear text passwords, change to no here!
 #####PasswordAuthentication no
 #PermitEmptyPasswords no
-``
+```
+
  😉 
 ***
 
@@ -571,12 +566,10 @@ If you specified a passphrase when you created your key pair, enter that passphr
 
 https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-manage
 
-
 boscp08@ubuntu:~$ `az vm delete --resource-group  myDockerGroup --name myDockerVM `
 **Are you sure you want to perform this operation? (y/n): y**
 
-
-boscp08@ubuntu:~$ ssh boscp08@40.117.233.34
+boscp08@ubuntu:~$`ssh boscp08@40.117.233.34`
 The authenticity of host '40.117.233.34 (40.117.233.34)' can't be established.
 ECDSA key fingerprint is SHA256:7rzRRojvC2WtyN+Yaals4J6kercaf7y+u6wWG11DECg.
 Are you sure you want to continue connecting (yes/no)? yes
