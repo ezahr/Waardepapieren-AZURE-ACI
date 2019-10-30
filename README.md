@@ -5,6 +5,8 @@ Met Compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiër
 
 # container brings itś own file system, on every type of system
 
+![A-Z](https://github.com/boscp08/Workbook_Docker_fundamentals)
+
 `type: Microsoft.ContainerInstance/containerGroups`
 
 ![kubernetes](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/kubernetes.PNG)
