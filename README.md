@@ -10,7 +10,7 @@ Met Compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiër
 ![kubernetes](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/kubernetes.PNG)
 
 ![k3](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/sem_k8s.PNG)
-https://sietseringers.net/
+
 
 Bas kan hem ook prebuilt bijhouden in de docker hub zoals de mensen van irma dat doen dan wordt de deployment eenvoudiger.  
 Misschien kan bas hem packagen op docker hub
@@ -69,20 +69,24 @@ type: Microsoft.ContainerInstance/containerGroups
 But... how to start a container.  Ask Pim Otte / Bas Kaptijn  :shipit:
 
 
-
 ***
 
 https://docs.microsoft.com/en-us/azure/virtual-machines/linux/docker-compose-quickstart
 
-
 # Get started with Docker and Compose to define and run a multi-container application in Azure
-  
 With Compose, you use a simple text file to define an application consisting of multiple Docker containers. You then spin up your application in a single command that does everything to deploy your defined environment. As an example, this article shows you how to quickly set up a WordPress blog with a backend MariaDB SQL database on an Ubuntu VM. You can also use Compose to set up more complex applications. This article was last tested on 10/28/2019 using the Azure Cloud Shell and the Azure CLI version 2.0.58.
 Create Docker host with Azure CLI
 
 
+
 # Install the latest Azure CLI and log in to an Azure account using az login.
 https://docs.microsoft.com/nl-nl/cli/azure/install-azure-cli-apt?view=azure-cli-latest
+
+|env| Create Docker host with Azure CLI|
+|-------|------------------------------------------------------|
+|Linux Ubuntu 18 |`curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash`|
+|windows10 |invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet' |
+
 
 ##  virtual-machines/linux
 `G:\VM_backup\ubuntu-19.04-desktop-amd64.iso`
@@ -508,16 +512,53 @@ boscp08@ubuntu:~$ az vm open-port --port 80 \
 SSH to your new Docker host VM. Provide your own IP address.
 bash ssh azureuser@10.10.111.11 Install Compose on the VM. bash
 
-
+***
+## Error: Permission denied (publickey)
 ` ssh boscp08@40.121.146.69` 
+
 Permission denied (publickey).  😡 
 https://www.reddit.com/r/AZURE/comments/7f0htz/cant_ssh_into_ubuntu_vm_permission_denied/
 https://docs.microsoft.com/en-us/azure/virtual-machines/linux/mac-create-ssh-keys
 
-## SSH Issue
-SSH into your VM  With the public key deployed on your Azure VM, and the private key on your local system, SSH into your VM using the IP address or DNS name of your VM. In the following command, replace azureuser and myvm.westus.cloudapp.azure.com with the administrator user name and the fully qualified domain name (or IP address):bash
+Error: Permission denied (publickey) A "Permission denied" error means that the server rejected your connection. 
 
-`ssh azureuser@myvm.westus.cloudapp.azure.com`
+```
+boscp08@myDockerVM:~/.ssh$ tail -f /var/log/auth.log
+Oct 29 16:09:24 myDockerVM sshd[70401]: Connection closed by authenticating user boscp08 86.86.102.241 port 50847 [preauth]
+```
+
+
+```
+boscp08@myDockerVM:~/.ssh$ grep -vE "^#|^$" /etc/ssh/sshd_config
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+UsePAM yes
+X11Forwarding yes
+PrintMotd no
+AcceptEnv LANG LC_*
+Subsystem	sftp	/usr/lib/openssh/sftp-server
+ClientAliveInterval 120
+```
+
+
+20191029	Would be really happy if anyone had seen this issues before and found a solution to share with.
+
+ grep -vE "^#|^$" /etc/ssh/sshd_config  
+
+20191029	Setting PasswordAuthentication no causes Permission denied (publickey}
+
+ /etc/ssh/sshd_config 
+
+boscp08@myDockerVM:/etc/ssh$ `sudo nano sshd_config`
+```
+# To disable tunneled clear text passwords, change to no here!
+#####PasswordAuthentication no
+#PermitEmptyPasswords no
+``
+ 😉 
+***
+
+SSH into your VM  With the public key deployed on your Azure VM, and the private key on your local system, SSH into your VM using the IP address or DNS name of your VM. In the following command, replace azureuser and myvm.westus.cloudapp.azure.com with the administrator user name and the fully qualified domain name (or IP address):bash  `ssh azureuser@myvm.westus.cloudapp.azure.com`
 
 If you specified a passphrase when you created your key pair, enter that passphrase when prompted during the login process. The VM is added to your ~/.ssh/known_hosts file, and you won't be asked to connect again until either the public key on your Azure VM changes or the server name is removed from ~/.ssh/known_hosts.If the VM is using the just-in-time access policy, you need to request access before you can connect to the VM. For more information about the just-in-time policy, see Manage virtual machine access using the just in time policy.
 
