@@ -75,6 +75,32 @@ But... how to start a container.  Ask Pim Otte / Bas Kaptijn  :shipit:(
 ***
 ![portal azuer com bosch.peter@outlook.com 0li](https://portal.azure.com/#home)
 
+```
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Try the new cross-platform PowerShell https://aka.ms/pscore6
+
+PS C:\Users\Gebruiker> az login
+Note, we have launched a browser for you to login. For old experience with device code, use "az login --use-device-code"
+You have logged in. Now let us find all the subscriptions to which you have access...
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "cfcb03ea-255b-42f8-beca-2d4ac30779bb",
+    "isDefault": true,
+    "name": "Gratis versie",
+    "state": "Enabled",
+    "tenantId": "62123322-502d-493f-b543-503672043240",
+    "user": {
+      "name": "bosch.peter@outlook.com",
+      "type": "user"
+    }
+  }
+]
+PS C:\Users\Gebruiker>
+```
+
 Ps Azure:\> 
 `az container create --resource-group MyResourceGroup --file deploy-aci.yml`
 
