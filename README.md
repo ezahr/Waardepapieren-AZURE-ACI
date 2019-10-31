@@ -75,7 +75,7 @@ But... how to start a container.  Ask Pim Otte / Bas Kaptijn  :shipit:(
 
 ![meetup sjef1](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/meetup_sjef_van_leeuwen_20191031_2.jpg)
 ***
-![portal azuer com bosch.peter@outlook.com 0li]{https://portal.azure.com/#@boschpeteroutlook.onmicrosoft.com/resource/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myResourceGroup/deployments)
+![portal azuer com bosch.peter@outlook.com 0li](https://portal.azure.com/#@boschpeteroutlook.onmicrosoft.com/resource/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myResourceGroup/deployments)
 
 Ps Azure:\> 
 `az container create --resource-group MyResourceGroup --file deploy-aci.yml`
