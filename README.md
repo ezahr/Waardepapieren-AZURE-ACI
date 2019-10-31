@@ -101,6 +101,11 @@ You have logged in. Now let us find all the subscriptions to which you have acce
   }
 ]
 PS C:\Users\Gebruiker>
+
+€164.99 credit remaining
+Subscription 'Gratis versie' has a remaining credit of €164.99.
+Click here to upgrade to a Pay-As-You-Go subscription.
+a minute ago
 ```
 
 Ps Azure:\> 
