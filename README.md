@@ -17,9 +17,9 @@ Met Compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiër
 Bas kan hem ook prebuilt bijhouden in de docker hub zoals de mensen van irma dat doen dan wordt de deployment eenvoudiger.  
 Misschien kan bas hem packagen op docker hub
 
-!bevrijdenregelingen]https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/bevrijden-regelingen-master.zip)
+![bevrijdenregelingen]https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/bevrijden-regelingen-master.zip)
 
-![katacode](https://www.katacoda.com/courses/kubernetes/playground)
+![katacoda](https://www.katacoda.com/courses/kubernetes/playground)
 
 # voorbeeld irma-api-server
 ```apiVersion: 2018-06-01
@@ -75,6 +75,9 @@ But... how to start a container.  Ask Pim Otte / Bas Kaptijn  :shipit:
 
 ***
 ![portal azuer com bosch.peter@outlook.com 0li]{https://portal.azure.com/#@boschpeteroutlook.onmicrosoft.com/resource/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myResourceGroup/deployments)
+
+Ps Azure:\> 
+`az container create --resource-group MyResourceGroup --file deploy-aci.yml`
 
 # deploy-portal_azure-com-mock-nlx.yml
 ```
@@ -196,7 +199,8 @@ properties:
     dnsNameLabel: "waardepapieren" 
     ports:
     - protocol: tcp
-    - port: 443
+    port: 443
 tags: null
 type: Microsoft.ContainerInstance/containerGroups
 ```
+# challenge poorten debuggen met pim Otte
