@@ -70,9 +70,10 @@ type: Microsoft.ContainerInstance/containerGroups
 |1|docker pull boscp08/waardepapieren_mock-nlx:1.0|  
 |2|docker pull boscp08/waardepapieren_service:1.0|  
 |3|docker pull boscp08/waardepapieren_clerk-frontend:1.0|
-But... how to start a container.  Ask Pim Otte / Bas Kaptijn  :shipit:
+But... how to start a container.  Ask Pim Otte / Bas Kaptijn  :shipit:(
+![meetup sjef1](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/meetup_sjef_van_leeuwen_20191031_1.jpg)
 
-
+![meetup sjef1](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/meetup_sjef_van_leeuwen_20191031_2.jpg)
 ***
 ![portal azuer com bosch.peter@outlook.com 0li]{https://portal.azure.com/#@boschpeteroutlook.onmicrosoft.com/resource/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myResourceGroup/deployments)
 
