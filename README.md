@@ -60,7 +60,7 @@ tags: null
 type: Microsoft.ContainerInstance/containerGroups
 ```
 
-
+# 
 
 ***
 
@@ -73,3 +73,129 @@ But... how to start a container.  Ask Pim Otte / Bas Kaptijn  :shipit:
 
 
 ***
+![[portal azuer com bosch.peter@outlook.com 0li]{https://portal.azure.com/#@boschpeteroutlook.onmicrosoft.com/resource/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/myResourceGroup/deployments)
+
+# deploy-portal_azure-com-mock-nlx.yml
+```
+location: westeurope
+name: myResourceGroup
+properties:
+  containers:
+  - name: waardepapieren-mock-nlx
+    properties:
+      image: boscp08/waardepapieren_mock-nlx:1.0
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 80
+  osType: Linux
+  ipAddress:
+    type: Public
+    dnsNameLabel: "waardepapieren-mock-nlx"
+    ports:
+    - protocol: tcp
+      port: 80
+tags: null
+type: Microsoft.ContainerInstance/containerGroups
+```
+
+# deploy-portal_azure_com-waardepapieren-service.yml
+```
+location: westeurope
+name: myResourceGroup
+properties:
+  containers:
+  - name: waardepapieren-service
+    properties:
+      image: boscp08/waardepapieren_service:1.0
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 3232
+  osType: Linux
+  ipAddress:
+    type: Public
+    dnsNameLabel: "waardepapieren-clerk-service"
+    ports:
+    - protocol: tcp
+      port: 3232
+tags: null
+type: Microsoft.ContainerInstance/containerGroups
+```
+
+# deploy-portal_azure_com-clerk-frontend.yml
+```
+location: westeurope
+name: lab
+properties:
+  containers:
+  - name: waardepapieren-clerk-frontend
+    properties:
+      image: boscp08/waardepapieren_clerk-frontend:1.0
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 443
+  osType: Linux
+  ipAddress:
+    type: Public
+    dnsNameLabel: "waardepapieren-clerk-frontend"
+    ports:
+    - protocol: tcp
+      port: 443
+tags: null
+type: Microsoft.ContainerInstance/containerGroups
+```
+
+
+# deploy_service-portal_azure_com_the_whole_sjebang.yml
+
+```
+location: westeurope
+name: myResourceGroup
+properties:
+  containers:
+  - name: waardepapieren-mock-nlx
+    properties:
+      image: boscp08/waardepapieren_mock-nlx:1.0
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 80
+  - name: waardepapieren-service
+    properties:
+      image: boscp08/waardepapieren_service:1.0
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 3232
+  - name: waardepapieren-clerk-frontend
+    properties:
+      image: boscp08/waardepapieren_clerk-frontend:1.0
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 443
+  osType: Linux
+  ipAddress:
+    type: Public
+    # fqdn wordt: waardepapieren.westeurope.azurecontainer.io
+    dnsNameLabel: "waardepapieren" 
+    ports:
+    - protocol: tcp
+    - port: 443
+tags: null
+type: Microsoft.ContainerInstance/containerGroups
+```
