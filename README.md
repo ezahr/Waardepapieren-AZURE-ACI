@@ -9,8 +9,6 @@ Met Compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiër
 
 `type: Microsoft.ContainerInstance/containerGroups`
 
-
-
 Bas kan hem ook prebuilt bijhouden in de docker hub zoals de mensen van irma dat doen dan wordt de deployment eenvoudiger.  
 Misschien kan bas hem packagen op docker hub
 
@@ -58,7 +56,35 @@ tags: null
 type: Microsoft.ContainerInstance/containerGroups
 ```
 
-# 
+
+# Running fqdn waardepapieren.westeurope.azurecontainer.io
+
+##using docker-compose:
+
+This is done as follows:
+
+`git clone https://github.com/discipl/waardepapieren.git`
+`cd waardepapieren`
+
+
+1. Hack into docker-compose-travis.yml. Set the environment variable CERT_HOST_IP is with an IP (fqdn=`waardepapieren.westeurope.azurecontainer.io`) that the validator app can use to reach  the clerk-frontend container. Ensure that the validator app runs on the same (wifi) network as the clerk frontend. you can use an offline mock, which replicates the NLX environment.
+
+
+
+
+Run `docker-compose -f docker-compose-travis.yml up`
+
+This will start 3 container applications:
+
+- clerk-frontend
+- waardepapieren-service, with embedded ephemeral-server
+- nlx-mock, which is an nlx-outway that provides access to a mock BRP service for BSN = `663678651`
+
+The clerk frontend will be available at `https://waardepapieren.westeurope.azurecontainer.io`*:443*
+
+
+
+
 
 ***
 
