@@ -364,9 +364,15 @@ C:\Users\Gebruiker>`docker login -u boscp08`
 Password:
 **Login Succeeded**
 
+![ to commit changes to a running container to create a new docker image.](https://www.techrepublic.com/article/how-to-commit-changes-to-a-docker-image/)
 
 C:\Users\Gebruiker>`docker commit  c0a8e0d21ad7 boscp08/waardepapieren_clerk-frontend:1.0`
 **sha256:7461405ebd9bd4cbf78d6e294c9c322000e3b33ee0e9c734debfb147806d052c**
+
+# those two are the same:
+$ docker build -t company/boscp08/waardepapieren_clerk-frontend .
+$ docker build -t companyboscp08/waardepapieren_clerk-frontend:latest .
+
 
 C:\Users\Gebruiker>`docker images`
 ```
