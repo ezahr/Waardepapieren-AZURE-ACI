@@ -9,9 +9,6 @@ Met Compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiër
 
 `type: Microsoft.ContainerInstance/containerGroups`
 
-![kubernetes](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/kubernetes.PNG)
-
-![k3](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/sem_k8s.PNG)
 
 
 Bas kan hem ook prebuilt bijhouden in de docker hub zoals de mensen van irma dat doen dan wordt de deployment eenvoudiger.  
@@ -74,6 +71,8 @@ But... how to start a container.  Ask Pim Otte / Bas Kaptijn  :shipit:(
 ![meetup sjef1](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/meetup_sjef_van_leeuwen_20191031_1.jpg) ![meetup sjef1](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/meetup_sjef_van_leeuwen_20191031_2.jpg)
 ***
 https://portal.azure.com/#home  bosch.peter@outlook.com
+
+https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest
 
 ![portal](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/portal_azure_com.png)
 
@@ -236,3 +235,8 @@ tags: null
 type: Microsoft.ContainerInstance/containerGroups
 ```
 # challenge poorten debuggen met pim Otte
+
+
+![kubernetes](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/kubernetes.PNG)
+
+![k3](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/sem_k8s.PNG)
