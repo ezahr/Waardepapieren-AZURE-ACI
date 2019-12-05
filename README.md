@@ -726,6 +726,8 @@ type: Microsoft.ContainerInstance/containerGroups
 # challenge poorten debuggen met pim Otte
 
 
+![anasisa](https://github.com/ezahr/Waardepapieren-AZURE-ACI/blob/master/pictures/anastasia.png)
+
 ![kubernetes](https://github.com/ezahr/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/kubernetes.PNG)
 
 ![k3](https://github.com/ezahr/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/sem_k8s.PNG)
