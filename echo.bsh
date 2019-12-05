@@ -9,7 +9,7 @@ GIT_CODE_DIR=/Users/boscp08/Dropbox/github/Waardepapieren-AZRE-ACI
 PRJ_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
 
 
-# git clone
+# git clone 
 ## cd $PRJ_DIR
 ## rm -rf waardepapieren
 ## git clone https://github.com/discipl/waardepapieren.git
@@ -86,16 +86,13 @@ CMD npm start" > Dockerfile
 
 cd $MAIN_DIR
 
-
-# sudo apt-get update && sudo apt-get upgrade
-# installer AZURE commandline interface
-# curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-##  Gebruik apt-get upgrade om het CLI-pakket bij te werken.
-##  sudo apt-get update && sudo apt-get install --only-upgrade -y azure-cli
-
 #  Clean up previous deployment (containersk and images)
 
+
 # docker compose
+
+cd $MAIN_DIR
+docker-compose -f docker-compose-travis.yml up --build 
 
 #  docker commit  
 
