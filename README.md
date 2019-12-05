@@ -1,18 +1,21 @@
-# Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst
-Waardepapieren AZURE ACI met ICTU/Belastingdienst
+# Waardepapieren-AZURE-ACI-met-ICTU-WiGo4IT
+Waardepapieren AZURE ACI met ICTU/
+
+Let’s get started, @ezahr
+Welcome to GitHub. You’re the newest member of a growing community of people who learn, share, and work together to build software. We’re so excited you’re here.
 
 Met Compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiëren die uit meerdere Docker-containers bestaat. Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren. 
 
 # container brings itś own file system, on every type of system
 
-![A-Z @at hendrik-jan ](https://github.com/boscp08/Workbook_Docker_fundamentals)
+![A-Z @at hendrik-jan ](https://github.com/ezahr/Workbook_Docker_fundamentals)
 
 `type: Microsoft.ContainerInstance/containerGroups`
 
 Bas kan hem ook prebuilt bijhouden in de docker hub zoals de mensen van irma dat doen dan wordt de deployment eenvoudiger.  
 Misschien kan bas hem packagen op docker hub
 
-![bevrijdenregelingen]https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/bevrijden-regelingen-master.zip)
+![bevrijdenregelingen]https://github.com/ezahr/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/bevrijden-regelingen-master.zip)
 
 ![katacoda](https://www.katacoda.com/courses/kubernetes/playground)
 
@@ -150,11 +153,11 @@ with a green Padlock and SSL Certificate?
 
 ## pushing images to hub.docker.com
 
-![containerization](https://github.com/boscp08/waardepapieren/wiki/containerization)
+![containerization](https://github.com/ezahr/waardepapieren/wiki/containerization)
 
 # DOCKER WAARDEPAPIEREN START docker-compose-travis.yml
 
-![Proces](https://github.com/boscp08/waardepapieren/blob/master/pictures/3545A488-D550-4DDB-A9BF-A071FE182E8A.jpeg)
+![Proces](https://github.com/ezahr/waardepapieren/blob/master/pictures/3545A488-D550-4DDB-A9BF-A071FE182E8A.jpeg)
 yet another markup language **docker-compose-Travis.yml**
 ```
 version: '3'
@@ -360,36 +363,36 @@ cddf221cc6aa        prakhar1989/static-site                 "./wrapper.sh"      
          443/tcp, 0.0.0.0:8888->80/tcp                         affectionate_pasteur
 ```
 
-C:\Users\Gebruiker>`docker login -u boscp08`
+C:\Users\Gebruiker>`docker login -u ezahr`
 Password:
 **Login Succeeded**
 
 ![ to commit changes to a running container to create a new docker image.](https://www.techrepublic.com/article/how-to-commit-changes-to-a-docker-image/)
 
-C:\Users\Gebruiker>`docker commit  c0a8e0d21ad7 boscp08/waardepapieren_clerk-frontend:1.0`
+C:\Users\Gebruiker>`docker commit  c0a8e0d21ad7 ezahr/waardepapieren_clerk-frontend:1.0`
 **sha256:7461405ebd9bd4cbf78d6e294c9c322000e3b33ee0e9c734debfb147806d052c**
 
 # those two are the same:
-$ docker build -t company/boscp08/waardepapieren_clerk-frontend .
-$ docker build -t companyboscp08/waardepapieren_clerk-frontend:latest .
+$ docker build -t company/ezahr/waardepapieren_clerk-frontend .
+$ docker build -t companyezahr/waardepapieren_clerk-frontend:latest .
 
 
 C:\Users\Gebruiker>`docker images`
 ```
 REPOSITORY                              TAG                 IMAGE ID            CREATED             SIZE
-boscp08/waardepapieren_clerk-frontend   1.0                 7461405ebd9b        20 seconds ago      117MB
+ezahr/waardepapieren_clerk-frontend   1.0                 7461405ebd9b        20 seconds ago      117MB
 waardepapieren_waardepapieren-service   latest              c40bed724d95        21 hours ago        972MB
 waardepapieren_clerk-frontend           latest              e9621b0230aa        3 days ago          117MB
 waardepapieren_mock-nlx                 latest              cb4103b9bb91        4 weeks ago         906MB
 ```
 
 # REPOSITORIES
-![Push image](https://github.com/boscp08/waardepapieren/blob/master/pictures/F7CBCC59-787A-40C7-9C97-07D580C3D7F6.jpeg)
+![Push image](https://github.com/ezahr/waardepapieren/blob/master/pictures/F7CBCC59-787A-40C7-9C97-07D580C3D7F6.jpeg)
 
-C:\Users\Gebruiker>`docker push boscp08/waardepapieren_clerk-frontend:1.0`
+C:\Users\Gebruiker>`docker push ezahr/waardepapieren_clerk-frontend:1.0`
 
 ```
-The push refers to repository [docker.io/boscp08/waardepapieren_clerk-frontend]
+The push refers to repository [docker.io/ezahr/waardepapieren_clerk-frontend]
 d97fb9ba1c1b: Pushed
 d622900c9ad6: Pushed
 f29f4d404c87: Pushed
@@ -399,27 +402,27 @@ f29f4d404c87: Pushed
 1.0: digest: sha256:dd6d66f360bd497d51f912939240be94ac740121eafdf57fee31401819fabdf8 size: 1573
 ```
 
-C:\Users\Gebruiker>`docker commit be9c0845ef51 boscp08/waardepapieren_service:1.0`
+C:\Users\Gebruiker>`docker commit be9c0845ef51 ezahr/waardepapieren_service:1.0`
 **sha256:43bc03756b254c6ab32eeebd1d3d073c765b91ea5d4b92ebfb5562f2957fe4a2**
 
-C:\Users\Gebruiker>`docker commit 21c2c3348def boscp08/waardepapieren_mock-nlx:1.0`
+C:\Users\Gebruiker>`docker commit 21c2c3348def ezahr/waardepapieren_mock-nlx:1.0`
 **sha256:e2718a431de192203d795c094978d8b6f94c07bb38c2477610d0f76137cd2e71**
 
 C:\Users\Gebruiker>`docker images`
 
 |REPOSITORY |TAG|IMAGE ID|CREATED|SIZE|
 |-------|-----|-----------|-------|-------|
-|boscp08/waardepapieren_mock-nlx|1.0| f0304ed8a8fa|4 seconds ago|906MB|
-|boscp08/waardepapieren_service|1.0 |43bc03756b25|About a minute ago|972MB
-|boscp08/waardepapieren_clerk-frontend|1.0 |7461405ebd9b|10 minutes ago|117MB|
+|ezahr/waardepapieren_mock-nlx|1.0| f0304ed8a8fa|4 seconds ago|906MB|
+|ezahr/waardepapieren_service|1.0 |43bc03756b25|About a minute ago|972MB
+|ezahr/waardepapieren_clerk-frontend|1.0 |7461405ebd9b|10 minutes ago|117MB|
 |waardepapieren_waardepapieren-service|latest|c40bed724d95|21 hours ago|972MB|
 |waardepapieren_clerk-frontend|latest|e9621b0230aa|3 days ago|117MB|
 |waardepapieren_mock-nlx |latest|cb4103b9bb91| 4 weeks ago|906MB|
 
-C:\Users\Gebruiker>`docker push boscp08/waardepapieren_service:1.0`
+C:\Users\Gebruiker>`docker push ezahr/waardepapieren_service:1.0`
 
 ```
-The push refers to repository [docker.io/boscp08/waardepapieren_service]
+The push refers to repository [docker.io/ezahr/waardepapieren_service]
 d0c936f934a7: Pushed
 5ba600311444: Pushed
 dcf7d81f33f6: Pushed
@@ -438,33 +441,33 @@ e8fb1bc83a7b: Mounted from library/node
 1.0: digest: sha256:58050da6f9867c77fad30cdfd0ce80d900305383a7696b6505eff8ac520a5101 size: 3467
 
 ```
-C:\Users\Gebruiker>`docker push boscp08/waardepapieren_mock-nlx:1.0`
+C:\Users\Gebruiker>`docker push ezahr/waardepapieren_mock-nlx:1.0`
 ```
-The push refers to repository [docker.io/boscp08/waardepapieren_mock-nlx]
+The push refers to repository [docker.io/ezahr/waardepapieren_mock-nlx]
 ca66a1823219: Pushed
 5e8d679ed446: Pushed
 338cb3eb280f: Pushed
-cacd464c5340: Mounted from boscp08/waardepapieren_service
-e8fb1bc83a7b: Mounted from boscp08/waardepapieren_service
-77e12dcdfd3f: Mounted from boscp08/waardepapieren_service
-92c70f59b8b4: Mounted from boscp08/waardepapieren_service
-72be3b1da83c: Mounted from boscp08/waardepapieren_service
-409170aec809: Mounted from boscp08/waardepapieren_service
-2e669e0134f5: Mounted from boscp08/waardepapieren_service
-8bacec4e3446: Mounted from boscp08/waardepapieren_service
-26b1991f37bd: Mounted from boscp08/waardepapieren_service
-55e6b89812f3: Mounted from boscp08/waardepapieren_service
+cacd464c5340: Mounted from ezahr/waardepapieren_service
+e8fb1bc83a7b: Mounted from ezahr/waardepapieren_service
+77e12dcdfd3f: Mounted from ezahr/waardepapieren_service
+92c70f59b8b4: Mounted from ezahr/waardepapieren_service
+72be3b1da83c: Mounted from ezahr/waardepapieren_service
+409170aec809: Mounted from ezahr/waardepapieren_service
+2e669e0134f5: Mounted from ezahr/waardepapieren_service
+8bacec4e3446: Mounted from ezahr/waardepapieren_service
+26b1991f37bd: Mounted from ezahr/waardepapieren_service
+55e6b89812f3: Mounted from ezahr/waardepapieren_service
 1.0: digest: sha256:be53fe3ca27323318071e71996eb173bd2935ca68b0bda2e4a4656248301fd70 size: 3047
 ```
-![docker push](https://github.com/boscp08/waardepapieren/blob/master/pictures/Screenshot%20from%202019-10-25%2008-59-34.png)
+![docker push](https://github.com/ezahr/waardepapieren/blob/master/pictures/Screenshot%20from%202019-10-25%2008-59-34.png)
 
 # PULL
 
-`docker pull boscp08/waardepapieren_mock-nlx:1.0`
+`docker pull ezahr/waardepapieren_mock-nlx:1.0`
 
 ```
-macos-catalina:~ boscp08$ docker pull boscp08/waardepapieren_mock-nlx:1.0
-1.0: Pulling from boscp08/waardepapieren_mock-nlx
+macos-catalina:~ ezahr$ docker pull ezahr/waardepapieren_mock-nlx:1.0
+1.0: Pulling from ezahr/waardepapieren_mock-nlx
 092586df9206: Pull complete 
 ef599477fae0: Pull complete 
 4530c6472b5d: Pull complete 
@@ -479,16 +482,16 @@ baf38db91f43: Pull complete
 00d94fe88392: Pull complete 
 8aafb3badb84: Pull complete 
 Digest: sha256:be53fe3ca27323318071e71996eb173bd2935ca68b0bda2e4a4656248301fd70
-Status: Downloaded newer image for boscp08/waardepapieren_mock-nlx:1.0
-docker.io/boscp08/waardepapieren_mock-nlx:1.0
+Status: Downloaded newer image for ezahr/waardepapieren_mock-nlx:1.0
+docker.io/ezahr/waardepapieren_mock-nlx:1.0
 ```
 ***
 
-`docker pull boscp08/waardepapieren_service:1.0`
+`docker pull ezahr/waardepapieren_service:1.0`
 
 ```
-macos-catalina:~ boscp08$ docker pull boscp08/waardepapieren_service:1.0
-1.0: Pulling from boscp08/waardepapieren_service
+macos-catalina:~ ezahr$ docker pull ezahr/waardepapieren_service:1.0
+1.0: Pulling from ezahr/waardepapieren_service
 092586df9206: Already exists 
 ef599477fae0: Already exists 
 4530c6472b5d: Already exists 
@@ -505,18 +508,18 @@ f4f8ee1088fc: Pull complete
 f0b80e4123a3: Pull complete 
 27d6e8939383: Pull complete 
 Digest: sha256:58050da6f9867c77fad30cdfd0ce80d900305383a7696b6505eff8ac520a5101
-Status: Downloaded newer image for boscp08/waardepapieren_service:1.0
-docker.io/boscp08/waardepapieren_service:1.0
-macos-catalina:~ boscp08$ docker images
+Status: Downloaded newer image for ezahr/waardepapieren_service:1.0
+docker.io/ezahr/waardepapieren_service:1.0
+macos-catalina:~ ezahr$ docker images
 REPOSITORY                        TAG                 IMAGE ID            CREATED             SIZE
-boscp08/waardepapieren_mock-nlx   1.0                 e2718a431de1        25 hours ago        906MB
-boscp08/waardepapieren_service    1.0                 43bc03756b25        26 hours ago        972MB
+ezahr/waardepapieren_mock-nlx   1.0                 e2718a431de1        25 hours ago        906MB
+ezahr/waardepapieren_service    1.0                 43bc03756b25        26 hours ago        972MB
 ```
 ***
-`docker pull boscp08/waardepapieren_clerk-frontend:1.0`
+`docker pull ezahr/waardepapieren_clerk-frontend:1.0`
 ```
-macos-catalina:~ boscp08$ docker pull boscp08/waardepapieren_clerk-frontend:1.0
-1.0: Pulling from boscp08/waardepapieren_clerk-frontend
+macos-catalina:~ ezahr$ docker pull ezahr/waardepapieren_clerk-frontend:1.0
+1.0: Pulling from ezahr/waardepapieren_clerk-frontend
 6ae821421a7d: Pull complete 
 da4474e5966c: Pull complete 
 eb2aec2b9c9f: Pull complete 
@@ -524,18 +527,18 @@ eb2aec2b9c9f: Pull complete
 5ccde6b0eb16: Pull complete 
 fb12ef1ac984: Pull complete 
 Digest: sha256:dd6d66f360bd497d51f912939240be94ac740121eafdf57fee31401819fabdf8
-Status: Downloaded newer image for boscp08/waardepapieren_clerk-frontend:1.0
-docker.io/boscp08/waardepapieren_clerk-frontend:1.0
+Status: Downloaded newer image for ezahr/waardepapieren_clerk-frontend:1.0
+docker.io/ezahr/waardepapieren_clerk-frontend:1.0
 
 ```
 
-macos-catalina:~ boscp08$ `docker images`
+macos-catalina:~ ezahr$ `docker images`
 
 
 REPOSITORY                              TAG                 IMAGE ID            CREATED             SIZE
-boscp08/waardepapieren_mock-nlx         1.0                 e2718a431de1        26 hours ago        906MB
-boscp08/waardepapieren_service          1.0                 43bc03756b25        26 hours ago        972MB
-boscp08/waardepapieren_clerk-frontend   1.0                 7461405ebd9b        26 hours ago        117MB
+ezahr/waardepapieren_mock-nlx         1.0                 e2718a431de1        26 hours ago        906MB
+ezahr/waardepapieren_service          1.0                 43bc03756b25        26 hours ago        972MB
+ezahr/waardepapieren_clerk-frontend   1.0                 7461405ebd9b        26 hours ago        117MB
 
 
 
@@ -549,18 +552,18 @@ Build and Ship any Application Anywhere Docker Hub is the world's easiest way to
 
 |nr|image|
 |---|---------------------------------------------|
-|1|docker pull boscp08/waardepapieren_mock-nlx:1.0|  
-|2|docker pull boscp08/waardepapieren_service:1.0|  
-|3|docker pull boscp08/waardepapieren_clerk-frontend:1.0|
+|1|docker pull ezahr/waardepapieren_mock-nlx:1.0|  
+|2|docker pull ezahr/waardepapieren_service:1.0|  
+|3|docker pull ezahr/waardepapieren_clerk-frontend:1.0|
 But... how to start a container.  Ask Pim Otte / Bas Kaptijn  :shipit:(
 
-![meetup sjef1](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/meetup_sjef_van_leeuwen_20191031_1.jpg) ![meetup sjef1](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/meetup_sjef_van_leeuwen_20191031_2.jpg)
+![meetup sjef1](https://github.com/ezahr/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/meetup_sjef_van_leeuwen_20191031_1.jpg) ![meetup sjef1](https://github.com/ezahr/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/meetup_sjef_van_leeuwen_20191031_2.jpg)
 ***
 https://portal.azure.com/#home  bosch.peter@outlook.com
 
 https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest
 
-![portal](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/portal_azure_com.png)
+![portal](https://github.com/ezahr/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/portal_azure_com.png)
 
 ```
 Windows PowerShell
@@ -604,7 +607,7 @@ properties:
   containers:
   - name: waardepapieren-mock-nlx
     properties:
-      image: boscp08/waardepapieren_mock-nlx:1.0
+      image: ezahr/waardepapieren_mock-nlx:1.0
       resources:
         requests:
           cpu: 1
@@ -630,7 +633,7 @@ properties:
   containers:
   - name: waardepapieren-service
     properties:
-      image: boscp08/waardepapieren_service:1.0
+      image: ezahr/waardepapieren_service:1.0
       resources:
         requests:
           cpu: 1
@@ -656,7 +659,7 @@ properties:
   containers:
   - name: waardepapieren-clerk-frontend
     properties:
-      image: boscp08/waardepapieren_clerk-frontend:1.0
+      image: ezahr/waardepapieren_clerk-frontend:1.0
       resources:
         requests:
           cpu: 1
@@ -684,7 +687,7 @@ properties:
   containers:
   - name: waardepapieren-mock-nlx
     properties:
-      image: boscp08/waardepapieren_mock-nlx:1.0
+      image: ezahr/waardepapieren_mock-nlx:1.0
       resources:
         requests:
           cpu: 1
@@ -693,7 +696,7 @@ properties:
       - port: 80
   - name: waardepapieren-service
     properties:
-      image: boscp08/waardepapieren_service:1.0
+      image: ezahr/waardepapieren_service:1.0
       resources:
         requests:
           cpu: 1
@@ -702,7 +705,7 @@ properties:
       - port: 3232
   - name: waardepapieren-clerk-frontend
     properties:
-      image: boscp08/waardepapieren_clerk-frontend:1.0
+      image: ezahr/waardepapieren_clerk-frontend:1.0
       resources:
         requests:
           cpu: 1
@@ -723,6 +726,6 @@ type: Microsoft.ContainerInstance/containerGroups
 # challenge poorten debuggen met pim Otte
 
 
-![kubernetes](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/kubernetes.PNG)
+![kubernetes](https://github.com/ezahr/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/kubernetes.PNG)
 
-![k3](https://github.com/boscp08/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/sem_k8s.PNG)
+![k3](https://github.com/ezahr/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/pictures/sem_k8s.PNG)
