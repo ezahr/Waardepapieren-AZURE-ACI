@@ -1,64 +1,78 @@
-#!usr/bin/bash
+#!/bin/bash
 
 # //////////////////////////////////////////////////////////////////////////////////////////
-#
-# 
-#    File Type   :- BASH Script (needs Cygwin environment installed)
+#    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
 #  
 #    Description :- This script makes a backup using export tool (oracle)
-#                          compress with rar  http://www.win-rar.com/index.php?lang=&aid=knowl&kb_category_id=&kb_article_id=60&kb=1
 #    Modified           Date            Description
 #    --------           --------        -------------------------------------------------
-#    Peter Bosch       18.04.2005      Initial version.
+#    Peter Bosch       05.12.2019      Initial version.
 #
 # //////////////////////////////////////////////////////////////////////////////////////////
-#
-
-
-#******************************************************************************
-#* File:            :echo.bsh
-#* version          :20171103 v0
-#* File Type        :Bash 
-#* Purpose          :import Logical Model from Excel into PDM model     
-#* Title:           :
-#* Category         :Discipl deploy script
-#* Identificatie    :\BI&D_EDW_MTHV\1130 Hulpmiddelen\3000 Scripts\3200 Ontwerp 
+# File:            :echo2.bash
+# version          :20190412 v0
+# File Type        :Bash 
+# Purpose          :build waardepapieren      
+# Title:           :
+# Category         :Discipl deploy script
+# Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
 
 #'big thanks to pim Otte en Stef van Leeuwen Wigo4il  
-
 # rationale
 # Use this task in a build or release pipeline to run a Bash script on macOS, Linux, or Windows. 
 # DevOps: REST API Execution Through Bash Shell Scripting
 
-
 # ********** instructies **********
 #1. start bash shell
-#2. run het script . echo.bsh   => serving needs  CERT_HOST_IP
+#2. run het script . echo2.bash   => serving needs  CERT_HOST_IP
 # ********** parameters **********
 
 CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN
 GITHUB_DIR=/Users/boscp08/Dropbox/github/Waardepapieren-AZURE-ACI
 PRJ_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
 
-
-# ********** Parameters **********
+# ********** stuur Parameters **********
 GIT_CLONE="NEE"
-COMPOSE="NEE"
 SET_FQDN="NEE"
+COMPOSE="NEE"
+
+### barf
+enter_cont() {
+    echo
+    echo
+    echo -n "Press enter to Continue"
+    read
+}
+
+echo "***"   
+echo "***  Welcome to  docker-compose "
+echo "***"   
+echo "***" 
+echo "***  You are about to start to build new waardepapieren images and containers "
+echo "***  targethost= https://$CERT_HOST_IP " 
+echo "***" 
 
 echo "GIT_CLONE= " $GIT_CLONE
 echo "DOCKER-COMPOSE= " $COMPOSE
 echo "SET_FQDN=" $SET_FQDN
 
-read -p "Are you sure? " -n 1 -r
+enter_cont
 
-# ********** parameters **********
+#######################
+## M A I N
+#######################
 
+#
 # A start from scratch  git clone 
+#
+
 if [ $GIT_CLONE = "JA" ]
 then
 echo "afhalen"
 cd $PRJ_DIR
+
+ echo "rm -rf waardepapieren sure?"
+ enter_cont
  rm -rf waardepapieren
  git clone https://github.com/discipl/waardepapieren.git
 fi
@@ -114,7 +128,10 @@ services:
       - 80:80" > docker-compose-travis.yml
 
 
+#
 # C set Dockerfiles 
+#
+
 cd $CF_DIR
 touch Dockerfile
 mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`
@@ -186,7 +203,6 @@ fi
 cd $MAIN_DIR
 
 #  Clean up previous deployment (containersk and images)
-
 # remove alle containers `docker stop $(docker ps -a -q)`
 # remove alle containers and images `docker rm $(docker ps -a -q) && docker rmi $(docker images -q)`
 # remove all stopped containers (just waist of storage} `docker container prune`
@@ -226,9 +242,15 @@ cd $GITHUB_DIR
 
 
 # blader naar protal.azure.com 
-clear
-cd $GIT_DIR
 
+echo
+echo "hope the run was ok!"
+echo
+sleep  5
+
+echo " cd back into " $GIT_DIR
+cd $GITHUB_DIR
+clear
 
 
 #boscp08s-mbp:~ boscp08$ ssh boscp08@waardepapieren.westeurope.cloudapp.azure.com
