@@ -15,7 +15,7 @@ Met Compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiër
 Bas kan hem ook prebuilt bijhouden in de docker hub zoals de mensen van irma dat doen dan wordt de deployment eenvoudiger.  
 Misschien kan bas hem packagen op docker hub
 
-![bevrijdenregelingen]https://github.com/ezahr/Waardepapieren-AZURE-ACI-met-ICTU-Belastingdienst/blob/master/bevrijden-regelingen-master.zip)
+![bevrijdenregelingen]https://github.com/ezahr/Waardepapieren-AZURE-ACI/blob/master/bevrijden-regelingen-master.zip)
 
 ![katacoda](https://www.katacoda.com/courses/kubernetes/playground)
 
