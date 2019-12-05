@@ -1,9 +1,90 @@
 #! /bin/Bash
-echo "Printing text with newline"
-echo -n "Printing text without newline"
-echo -e "\nRemoving \t backslash \t characters\n"
+
 # Use this task in a build or release pipeline to run a Bash script on macOS, Linux, or Windows. 
 # DevOps: REST API Execution Through Bash Shell Scripting
+
+CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN
+GIT_CODE_DIR=/Users/boscp08/Dropbox/github/Waardepapieren-AZRE-ACI
+
+PRJ_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
+
+
+# git clone
+## cd $PRJ_DIR
+## rm -rf waardepapieren
+## git clone https://github.com/discipl/waardepapieren.git
+MAIN_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
+CF_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+WP_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+
+
+# set Dockerfile
+cd $CF_DIR
+touch Dockerfile
+mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`
+echo "" > Dockerfile
+
+echo "FROM node:10
+RUN mkdir /app
+ADD package.json package-lock.json /app/
+ENV REACT_APP_EPHEMERAL_ENDPOINT=$CERT_HOST_IP:443/api/eph
+ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://$CERT_HOST_IP:443/api/eph-ws
+WORKDIR /app
+RUN npm install --unsafe-perm
+ADD public /app/public
+ADD src /app/src
+ARG CERTIFICATE_HOST
+ENV REACT_APP_CERTIFICATE_HOST=\${CERTIFICATE_HOST}
+RUN npm run build
+
+FROM nginx:1.15.8
+ADD nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=0 /app/build /usr/share/nginx/html
+#  volumes:
+#    - ./clerk-frontend/nginx/certs:/etc/nginx/certs:rw
+RUN mkdir /etc/nginx/certs
+ADD nginx/certs/org.crt /etc/nginx/certs/org.crt
+ADD nginx/certs/org.key /etc/nginx/certs/org.key" > Dockerfile
+
+
+cd $WP_DIR
+touch Dockerfile
+mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`
+echo "#FROM node:10
+#RUN mkdir /app
+#ADD .babelrc package.json package-lock.json /app/
+#ADD src/* app/src/
+#ADD configuration/* app/configuration/
+#ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
+#WORKDIR /app
+#RUN npm install --production
+#CMD npm start
+FROM node:10
+RUN mkdir /app
+ADD .babelrc package.json package-lock.json /app/
+ADD src/* app/src/
+ADD configuration/* app/configuration/
+#- ./waardepapieren-service/system-test/certs:/certs:ro
+RUN mkdir /certs
+ADD system-test/certs/org.crt /certs/org.crt
+ADD system-test/certs/org.key /certs/org.key
+#- ./waardepapieren-service/system-test/ephemeral-certs:/ephemeral-certs:ro
+RUN mkdir /ephemeral-certs
+ADD system-test/ephemeral-certs/org.crt /ephemeral-certs/
+ADD system-test/ephemeral-certs/org.key /ephemeral-certs/
+#- ./waardepapieren-service/configuration/:/app/configuration:ro
+
+WORKDIR /app
+RUN mkdir /configuration
+ADD configuration/waardepapieren-config-compose.json /app/configuration
+ADD configuration/waardepapieren-config-compose-travis.json /app/configuration
+ADD configuration/waardepapieren-config.json /app/configuration
+ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
+
+RUN npm install --production
+CMD npm start" > Dockerfile
+
+cd $MAIN_DIR
 
 
 # sudo apt-get update && sudo apt-get upgrade
@@ -27,7 +108,7 @@ echo -e "\nRemoving \t backslash \t characters\n"
 
 # az login
 
-Congratulations! You've configured a custom Linux AZURE container in App Service.
+# Congratulations! You've configured a custom Linux AZURE container in App Service.
 
 
 
@@ -41,3 +122,5 @@ Congratulations! You've configured a custom Linux AZURE container in App Service
 
 
 # blader naar protal.azure.com 
+clear
+cd $GIT_DIR
