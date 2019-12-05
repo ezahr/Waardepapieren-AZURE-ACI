@@ -1,0 +1,43 @@
+#! /bin/Bash
+echo "Printing text with newline"
+echo -n "Printing text without newline"
+echo -e "\nRemoving \t backslash \t characters\n"
+# Use this task in a build or release pipeline to run a Bash script on macOS, Linux, or Windows. 
+# DevOps: REST API Execution Through Bash Shell Scripting
+
+
+# sudo apt-get update && sudo apt-get upgrade
+# installer AZURE commandline interface
+# curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+##  Gebruik apt-get upgrade om het CLI-pakket bij te werken.
+##  sudo apt-get update && sudo apt-get install --only-upgrade -y azure-cli
+
+#  Clean up previous deployment (containersk and images)
+
+# docker compose
+
+#  docker commit  
+
+
+# docker login
+
+
+# docker push
+
+
+# az login
+
+Congratulations! You've configured a custom Linux AZURE container in App Service.
+
+
+
+# az delete resource group
+
+
+# az create resource group
+
+
+# az create containter group
+
+
+# blader naar protal.azure.com 
