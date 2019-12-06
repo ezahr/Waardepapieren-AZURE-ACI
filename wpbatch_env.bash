@@ -37,8 +37,8 @@ enter_cont() {
 #echo "--- Directories"
 
 #CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN linux VVM
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
-CERT_HOST_IP=localhost  #FQDN linux
+CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
+#CERT_HOST_IP=localhost  #FQDN linux
 #portal.azure.com
 
 << "ECT-HOST_COMMENT"
