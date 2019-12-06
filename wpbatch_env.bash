@@ -35,10 +35,35 @@ enter_cont() {
 ## Directories used 
 #######################
 #echo "--- Directories"
-CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN
+
+#CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN linux VVM
+#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
+CERT_HOST_IP=localhost  #FQDN linux
+#portal.azure.com
+
+<< "ECT-HOST_COMMENT"
+## /etc/hosts 
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1       localhost
+#127.0.0.1       waardepapieren.westeurope.azurecontainer.io
+127.0.0.1        waardepapieren.westeurope.cloudapp.azure.com
+255.255.255.255 broadcasthost
+::1             localhost
+# Added by Docker Desktop
+# To allow the same kube context to work on the host and the container:
+127.0.0.1 kubernetes.docker.internal
+# End of section
+ECT-HOST_COMMENT
+
+
+
 GITHUB_DIR=/Users/boscp08/Dropbox/github/Waardepapieren-AZURE-ACI
 PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
-
+DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
 CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 
@@ -54,13 +79,13 @@ echo "---"
 ## setters
 #######################
  
-SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="NEE"
-SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="NEE"
-SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="NEE"
+SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="JA"
+SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="JA"
+SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="JA"
 
-SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="JA"
-SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="JA"
-SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="JA"
+SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="NEE"
+SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="NEE"
+SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="NEE"
 
 echo "---"
 echo "SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME     
@@ -76,10 +101,10 @@ echo "---"
 ######################
 ## CMD
 ######################
-CMD_GIT_CLONE="JA"
+CMD_GIT_CLONE="NEE"
 CMD_CONTAINER_STOP_AND_PRUNE="NEE"
 CMD_IMAGE_REMOVE="NEE"
-CMD_DOCKER_COMPOSE="NEE"
+CMD_DOCKER_COMPOSE="JA"
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 
 echo "---"

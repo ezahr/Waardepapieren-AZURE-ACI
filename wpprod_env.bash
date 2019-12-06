@@ -33,6 +33,25 @@ enter_cont() {
     read
 }
 
+docker_compose_min_f_docker-travis_compose_yml_up() {
+#DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
+echo "docker_compose_min_f_docker-travis_compose_yml_up"
+echo " process is readay at: waardepapieren-service_1  | Serving needs"   
+echo "blader dan naar https://$CERT_HOST_IP "
+echo "hope the run will be okay! "
+echo "Doel	Bewijs verblijfadres in woonplaats"
+echo "Burgerservicenummer (BSN)	663678651"
+echo "Woonplaats verblijfadres	Utrecht"
+echo "Gracefully stopping... (press Ctrl+C again to force)"
+echo "Stopping waardepapieren_clerk-frontend_1         ... done"
+echo "Stopping waardepapieren_waardepapieren-service_1 ... done"
+echo "Stopping waardepapieren_mock-nlx_1               ... done"
+echo " here we go with docker-compose -f docker-compose-travis.yml up --build"
+enter_cont
+
+cd $DOCKER_COMPOSE_DIR
+docker-compose -f docker-compose-travis.yml up --build
+}
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +67,7 @@ echo "FROM node:10
 RUN mkdir /app
 ADD package.json package-lock.json /app/
 ENV REACT_APP_EPHEMERAL_ENDPOINT=https://$CERT_HOST_IP:443/api/eph
-ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://l$CERT_HOST_IP:443/api/eph-ws
+ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://$CERT_HOST_IP:443/api/eph-ws
 WORKDIR /app
 RUN npm install --unsafe-perm
 ADD public /app/public

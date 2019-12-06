@@ -11,10 +11,10 @@
 # File:            :wp_compose.bash
 # version          :20190412 v0
 # File Type        :Bash 
-# Purpose          :build waardepapieren      
-# Title:           :
+# Purpose          :Creating an optimized production build...     
+# Title:           :https://github.com/discipl/waardepapieren 
 # Category         :Discipl deploy script
-# Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
+# Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI wp_compose.bash
 
 #'big thanks to pim Otte en Stef van Leeuwen Wigo4il  
 # rationale
@@ -86,6 +86,11 @@ if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = "JA" ]
   then waardepapieren_service_dockerfile_without_volumes
 fi 
 # //////////////////////////////////////////////////////////////////////////////////////////
+
+
+if [ $CMD_DOCKER_COMPOSE = "JA" ]
+  then docker_compose_min_f_docker-travis_compose_yml_up
+fi 
 
 
 
