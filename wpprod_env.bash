@@ -21,7 +21,7 @@
 # rationale
 # software wordt steeds complexer. Developerteam moet de productieomgeving begrijpen
 # operatie team moet software internals begrijpen
-# containers laten toe om applicaties samen met zijn runtime-omgevingen te implementeren infrastructure as code
+# containers laten toe om applicaties samen met zijn runtime-omgevingen te implementeren (infrastructure as code)
 # dezelfde bundel in verschillende omgevingen ontwikkeling test acceptatie productie, veel implementaties
 # pssst vermijden configuratiedrift a.k.a. 100% genereren.
 
@@ -32,6 +32,84 @@ enter_cont() {
     echo -n "Press enter to Continue"
     read
 }
+
+az_container_create() {
+az container create --resource-group Discipl_Wigo4it_DockerGroup2 --file deploy-aci.yaml
+}
+
+create_azure_deploy_aci_yml() {
+
+
+touch deploy-aci.yaml
+echo "" > deploy-aci.yaml
+
+echo "location: westeurope
+name: Discipl_Wigo4it_DockerGroup2
+properties:
+  containers:
+  - name: waardepapieren-mock-nlx
+    properties:
+      image: ezahr/waardepapieren-mock-nl:3.0
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 80
+  - name: waardepapieren-service
+    properties:
+      image: ezahr/waardepapieren-service:3.0
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 3232
+  - name: waardepapieren-clerk-frontend
+    properties:
+      image: ezahr/waardepapieren-clerk-frontend:3.0
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 443
+  osType: Linux
+  ipAddress:
+    type: Public
+    # fqdn wordt: waardepapieren.westeurope.azurecontainer.io
+    dnsNameLabel: "waardepapieren" 
+    ports:
+    - protocol: tcp
+      port: '443' 
+tags: null
+type: Microsoft.ContainerInstance/containerGroups" > deploy-aci.yaml
+}
+
+
+az_group_create() {
+az group create --name Discipl_Wigo4it_Dockergroup2 --location
+}
+
+az_group_delete() {
+az group delete --name Discipl_Wigo4it_Dockergroup2
+}
+
+
+docker_push() {
+
+docker push boscp08/waardepapieren-clerk-frontend:3.0
+docker push boscp08/waardepapieren-service:3.0
+docker push boscp08/waardepapieren-mock-nl:3.0
+}
+
+docker_commit() {
+docker commit waardepapieren_clerk-frontend_1 ezahr/waardepapieren-clerk-frontend:3.0
+docker commit waardepapieren_waardepapieren-service_1 ezahr/waardepapieren-service:3.0
+docker commit waardepapieren_mock-nlx_1 ezahr/waardepapieren-mock-nl:3.0
+}
+
+
 
 docker_compose_min_f_docker-travis_compose_yml_up() {
 #DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
@@ -168,7 +246,6 @@ RUN npm install --production
 CMD npm start"  > Dockerfile
 }
 
-# /////////////////////////////////////////////////////////////////////////////////////////
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 docker_compose_travis_yml_with_volumes() {
@@ -278,51 +355,6 @@ git_clone() {
 
 
 << 'MULTILINE-COMMENT'
-
-
-
-
-cd $WP_DIR
-touch Dockerfile
-mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`
-echo "#FROM node:10
-#RUN mkdir /app
-#ADD .babelrc package.json package-lock.json /app/
-#ADD src/* app/src/
-#ADD configuration/* app/configuration/
-#ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
-#WORKDIR /app
-#RUN npm install --production
-#CMD npm start
-FROM node:10
-RUN mkdir /app
-ADD .babelrc package.json package-lock.json /app/
-ADD src/* app/src/
-ADD configuration/* app/configuration/
-#- ./waardepapieren-service/system-test/certs:/certs:ro
-RUN mkdir /certs
-ADD system-test/certs/org.crt /certs/org.crt
-ADD system-test/certs/org.key /certs/org.key
-#- ./waardepapieren-service/system-test/ephemeral-certs:/ephemeral-certs:ro
-RUN mkdir /ephemeral-certs
-ADD system-test/ephemeral-certs/org.crt /ephemeral-certs/
-ADD system-test/ephemeral-certs/org.key /ephemeral-certs/
-#- ./waardepapieren-service/configuration/:/app/configuration:ro
-
-WORKDIR /app
-RUN mkdir /configuration
-ADD configuration/waardepapieren-config-compose.json /app/configuration
-ADD configuration/waardepapieren-config-compose-travis.json /app/configuration
-ADD configuration/waardepapieren-config.json /app/configuration
-ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
-
-RUN npm install --production
-CMD npm start" > Dockerfile
-
-fi
-
-
-cd $MAIN_DIR
 
 #  Clean up previous deployment (containersk and images)
 # remove alle containers `docker stop $(docker ps -a -q)`
