@@ -19,12 +19,11 @@
 
 #'big thanks to pim Otte en Stef van Leeuwen Wigo4il  
 # rationale
-# software steeds complexer. Developerteam moet de productieomgeving begrijpen
+# software wordt steeds complexer. Developerteam moet de productieomgeving begrijpen
 # operatie team moet software internals begrijpen
-# containers laten toe om applicaties samen met zijn runtime-omgevingen te implementeren
+# containers laten toe om applicaties samen met zijn runtime-omgevingen te implementeren infrastructure as code
 # dezelfde bundel in verschillende omgevingen ontwikkeling test acceptatie productie, veel implementaties
-# vermijden configuratiedrift
-
+# pssst vermijden configuratiedrift a.k.a. 100% genereren.
 
 ### barf
 enter_cont() {
@@ -34,34 +33,66 @@ enter_cont() {
     read
 }
 
-
 #
 # A start from scratch  git clone 
 #
 
 git_clone() {
-
-if [ $GIT_CLONE = "JA" ]
-then
-#echo "afhalen"
-cd $PRJ_DIR
-
- #echo "rm -rf waardepapieren sure?"
- #echo git --version
- #enter_cont
+#echo "git clone"
+ echo "rm -rf $PROJECT_DIR/waardepapieren sure?"
+ enter_cont
+ cd $PRJ_DIR
  rm -rf waardepapieren
  git clone https://github.com/discipl/waardepapieren.git
-fi
 }
 
+docker-compose-travis_yml_with_volumes() {
 
-# B set docker-compose-travis.yml
+cd $MAIN_DIR
+touch docker-compose-travis.yml 
+mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
 
-set docker-compose-travis_yml_stripe_volumes () {
+echo "version: '3'
+services:
+  waardepapieren-service:
+    volumes:
+      - ./waardepapieren-service/system-test/certs:/certs:ro
+      - ./waardepapieren-service/system-test/ephemeral-certs:/ephemeral-certs:ro
+      - ./waardepapieren-service/configuration/:/app/configuration:ro
+    build: waardepapieren-service/.
+    links:
+    
+      - mock-nlx
+    ports:
+      - 3232:3232
+      - 3233:3233
+    environment:
+      - WAARDEPAPIEREN_CONFIG=/app/configuration/waardepapieren-config-compose-travis.json
+      # Ignore self-signed ephemeral cert issues
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+  clerk-frontend:
+    build:
+      context: clerk-frontend/
+      args:
+        - CERTIFICATE_HOST=http://$CERT_HOST_IP:8880
+    links:
+      - waardepapieren-service
+    ports:
+      - 443:443
+      - 8880:8880
+    healthcheck:
+      test: service nginx status
+    volumes:
+      - ./clerk-frontend/nginx/certs:/etc/nginx/certs:ro
+  mock-nlx:
+    build: mock-nlx/
+    ports:
+      - 80:80" 
+      > docker-compose-travis.yml
 
-if [ $SET_FQDN = "JA" ]
-then
-echo "set FQDN"
+}
+
+docker-compose-travis_yml_stripe_volumes() {
 
 cd $MAIN_DIR
 touch docker-compose-travis.yml 
@@ -102,9 +133,10 @@ services:
     build: mock-nlx/
     ports:
       - 80:80" > docker-compose-travis.yml
+
 }
 
-
+<< 'MULTILINE-COMMENT'
 
 #
 # C set Dockerfiles 
@@ -271,3 +303,15 @@ cd $GITHUB_DIR
 #*hello from docker This message shows that your installation appears to be working correctly. *
 
 
+# https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf
+# https://code.visualstudio.com/docs/getstarted/tips-and-tricks
+# In Visual Studio Code  you can now select columns by holding down Shift + Alt , 
+# then click and drag with the mouse. This can also be done using just the keyboard by holding down 
+# Ctrl + Shift + Alt and then using the arrow keys.
+
+# You can select blocks of text by holding Shift+Alt (Shift+Option on macOS) while you drag your mouse. 
+# A separate cursor will be added to the end of each selected line. You can also use keyboard shortcuts to trigger 
+# column selection.
+
+
+MULTILINE-COMMENT

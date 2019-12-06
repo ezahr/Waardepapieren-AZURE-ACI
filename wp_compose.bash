@@ -1,4 +1,4 @@
-#!/bin/bash
+#!usr//bin/bash
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 #    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
@@ -27,22 +27,23 @@
 #1. start bash shell
 #2. in wpprod_env.bash staan de modules hoef je in principe niet te wijzigen
 #3. in wpbatch_env.bash staan de stuurparameters worden aan begin getoond. naar behoefte wijzigen.
-#4  run het script `. echo2.bash`  
+#4  run het script `. wp_compose.bash`  
+
+# ********** Parameters **********
+
+. wpbatch_env.bash
 
 # ********** functies **********
 
 . wpprod_env.bash  
 
-# ********** Parameters **********
-
-. wpbatch_env.bash
 
 echo "***"   
 echo "***  Welcome to  docker-compose "
 echo "***"   
 echo "***" 
 echo "***  You are about to start to build new waardepapieren images and containers "
-echo "***  targethost= https://$CERT_HOST_IP " 
+echo "***  droplet-targethost= https://$CERT_HOST_IP " 
 echo "***" 
 
 enter_cont
@@ -52,17 +53,16 @@ enter_cont
 # program starts here actually
 #######################
 
-if [ $GIT_CLONE = "JA" ] 
-then git_clone 
+if [ $CMD_GIT_CLONE = "JA" ] 
+  then git_clone 
 fi 
-
 
 echo
 echo "hope the run was ok!"
 echo
-sleep  5
+sleep  2
 
-echo " cd back into " $GIT_DIR
+echo " cd back into " $GITHUB_DIR
 cd $GITHUB_DIR
 clear
 
