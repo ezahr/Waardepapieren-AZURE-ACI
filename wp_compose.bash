@@ -8,7 +8,7 @@
 #    Peter Bosch       05.12.2019      Initial version.
 #
 # //////////////////////////////////////////////////////////////////////////////////////////
-# File:            :echo2.bash
+# File:            :wp_compose.bash
 # version          :20190412 v0
 # File Type        :Bash 
 # Purpose          :build waardepapieren      
@@ -57,46 +57,42 @@ if [ $CMD_GIT_CLONE = "JA" ]
   then git_clone 
 fi 
 
-
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = "JA" ]
-  then docker-compose-travis_yml_with_volumes
+  then docker_compose_travis_yml_with_volumes
 fi 
 
-#if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = "JA"
-#  then git_clone 
-#fi 
+if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = "JA" ]
+  then clerk_frontend_dockerfile_with_volumes
+fi 
 
-
-#if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = "JA"
-#  then git_clone 
-#fi 
+if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = "JA" ]
+  then waardepapieren_service_dockerfile_with_volumes 
+fi 
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = "JA" ]
-  then docker-compose-travis_yml_without_volumes 
+  then docker_compose_travis_yml_without_volumes 
 fi 
 
-#if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = "JA"
-#  then 
-#fi 
+if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = "JA" ]
+  then clerk_frontend_dockerfile_without_volumes
+fi 
 
-#if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = "JA"
-#  then git_clone 
-#fi 
+if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = "JA" ]
+  then waardepapieren_service_dockerfile_without_volumes
+fi 
 # //////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 
 
 echo
 echo "hope the run was ok!"
 echo
-sleep  1
+sleep  4
 
 echo " cd back into " $GITHUB_DIR
 cd $GITHUB_DIR
