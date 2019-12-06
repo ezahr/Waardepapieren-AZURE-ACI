@@ -80,41 +80,36 @@ if [ $DOCKER_COMMIT = "JA" ]
   then docker_commit
 fi 
 
-if [ $DOCKER_PUSH= "JA" ]
+if [ $DOCKER_PUSH = "JA" ]
   then docker_push
 fi 
 
 # //////////////////////////////////////////////////////////////////////////////////////
 
-if [ $CREATE_AZ_DEPLOY_ACI_YAML "JA" ]
-  then create_azure_deploy_aci_yml
+
+if [ $CREATE_AZ_DEPLOY_ACI_YAML = "JA" ]
+  then create_azure_deploy_aci_yaml
+fi 
+
+if [ $AZ_RESOURCE_GROUP_DELETE = "JA" ]
+  then delete_azure_resource_group
+fi 
+
+if [ $AZ_RESOURCE_GROUP_CREATE = "JA" ]
+  then create_azure_resource_group
+fi 
+
+if [ $CMD_AZ_CREATE_CONTAINERGROUP =  "JA" ]
+  then create_azure_container_group   #blader naar portal.azure.com  bosch.peter@outlook.com 0l....n
 fi 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = "JA" ]
-  then waardepapieren_service_dockerfile_with_volumes 
-fi 
-
-AZ_RESOURCE_GROUP_DELETE
-
-
-AZ_RESOURCE_GROUP_DELETE
-
-
-
-# //////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 
 echo
 echo "hope the run was ok!"
 echo
-sleep  4
+sleep  2
 
 echo " cd back into " $GITHUB_DIR
 cd $GITHUB_DIR

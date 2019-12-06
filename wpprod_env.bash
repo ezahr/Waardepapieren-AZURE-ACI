@@ -33,23 +33,41 @@ enter_cont() {
     read
 }
 
-az_container_create() {
+
+
+create_azure_container_group() {
 az container create --resource-group Discipl_Wigo4it_DockerGroup2 --file deploy-aci.yaml
 }
 
-create_azure_deploy_aci_yml() {
+create_azure_resource_group() {
+az group create --name Discipl_Wigo4it_Dockergroup2 --location
+}
+
+delete_azure_resource_group() {
+az group delete --name Discipl_Wigo4it_Dockergroup2
+}
 
 
+
+create_azure_deploy_aci_yaml() {
+#PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
+#DOCKER_VERSION_TAG="3.0"
+#$AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
+
+echo "create_azure_deploy_aci_yaml"
+cd $PROJECT_DIR
+touch deploy-aci.yaml
+mv deploy-aci.yaml  deploy-aci_`date "+%Y%m%d-%H%M%S"`.yaml
 touch deploy-aci.yaml
 echo "" > deploy-aci.yaml
 
 echo "location: westeurope
-name: Discipl_Wigo4it_DockerGroup2
+name: $AZ_RESOURCE_GROUP
 properties:
   containers:
   - name: waardepapieren-mock-nlx
     properties:
-      image: ezahr/waardepapieren-mock-nl:3.0
+      image: ezahr/waardepapieren-mock-nl:$DOCKER_VERSION_TAG
       resources:
         requests:
           cpu: 1
@@ -58,7 +76,7 @@ properties:
       - port: 80
   - name: waardepapieren-service
     properties:
-      image: ezahr/waardepapieren-service:3.0
+      image: ezahr/waardepapieren-service:$DOCKER_VERSION_TAG
       resources:
         requests:
           cpu: 1
@@ -67,7 +85,7 @@ properties:
       - port: 3232
   - name: waardepapieren-clerk-frontend
     properties:
-      image: ezahr/waardepapieren-clerk-frontend:3.0
+      image: ezahr/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
       resources:
         requests:
           cpu: 1
@@ -87,28 +105,20 @@ type: Microsoft.ContainerInstance/containerGroups" > deploy-aci.yaml
 }
 
 
-az_group_create() {
-az group create --name Discipl_Wigo4it_Dockergroup2 --location
-}
-
-az_group_delete() {
-az group delete --name Discipl_Wigo4it_Dockergroup2
-}
-
-
 docker_push() {
+echo "docker push $DOCKER_USER version DOCKER_VERSION_TAG)"
+docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
+docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
+docker push $DOCKER_USER/waardepapieren-mock-nl:$DOCKER_VERSION_TAG
 
-docker push boscp08/waardepapieren-clerk-frontend:3.0
-docker push boscp08/waardepapieren-service:3.0
-docker push boscp08/waardepapieren-mock-nl:3.0
 }
 
 docker_commit() {
-docker commit waardepapieren_clerk-frontend_1 ezahr/waardepapieren-clerk-frontend:3.0
-docker commit waardepapieren_waardepapieren-service_1 ezahr/waardepapieren-service:3.0
-docker commit waardepapieren_mock-nlx_1 ezahr/waardepapieren-mock-nl:3.0
+echo "docker commit $DOCKER_USER version DOCKER_VERSION_TAG)"
+docker commit waardepapieren_clerk-frontend_1 $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
+docker commit waardepapieren_waardepapieren-service_1 $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
+docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nl:$DOCKER_VERSION_TAG
 }
-
 
 
 docker_compose_min_f_docker-travis_compose_yml_up() {

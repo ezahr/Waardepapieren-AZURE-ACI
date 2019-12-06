@@ -60,7 +60,6 @@ CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER 
 ECT-HOST_COMMENT
 
 
-
 GITHUB_DIR=/Users/boscp08/Dropbox/github/Waardepapieren-AZURE-ACI
 PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
 DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
@@ -99,8 +98,12 @@ echo "---"
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 ######################
-## docker CMD
+## docker CLI
 ######################
+# docker -v  |Docker version 19.03.5, build 633a0ea
+# docker-compose -v |docker-compose version 1.24.1, build 4667896b
+
+
 CMD_GIT_CLONE="NEE"
 CMD_CONTAINER_STOP_AND_PRUNE="NEE"
 CMD_IMAGE_REMOVE="NEE"
@@ -120,14 +123,14 @@ echo "---"
 
 
 ######################
-## AZURE CMD
+## AZURE CLI
 ######################
 
 DOCKER_USER="BOSCP08"
-DOCKER_VERSION_TAG"3.0"
+DOCKER_VERSION_TAG="4.0"
 DOCKER_PUSH="NEE"
 DOCKER_COMMIT="NEE"
-AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
+AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
 AZ_RESOURCE_GROUP_DELETE="NEE"
 AZ_RESOURCE_GROUP_CREATE="NEE"
 AZ_DEPLOY_ACI_FILE="deploy_aci.yaml"
@@ -139,7 +142,7 @@ echo "DOCKER_USER="$DOCKER_USER
 echo "DOCKER_VERSION_TAG"$DOCKER_VERSION_TAG
 echo "DOCKER_PUSH="$DOCKER_PUSH
 echo "DOCKER_COMMIT="$DOCKER_COMMIT
-echo "AZ_RESOURCE_GROUP="$AZ_RESOURCE_GROUP=
+echo "AZ_RESOURCE_GROUP="$AZ_RESOURCE_GROUP
 echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE
 echo "AZ_RESOURCE_GROUP_CREATE="$AZ_RESOURCE_GROUP_CREATE
 echo "AZ_DEPLOY_ACI_FILE="$AZ_DEPLOY_ACI_FILE
