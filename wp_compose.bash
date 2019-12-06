@@ -1,4 +1,3 @@
-#!usr//bin/bash
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 #    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
@@ -22,6 +21,7 @@
 # Use this task in a build or release pipeline to run a Bash script on macOS, Linux, or Windows. 
 # DevOps: REST API Execution Through Bash Shell Scripting
 # I hope this helps my fellow (bash) hackers out there.
+# container brings itś own file system, on every type of system
 
 # ********** instructies **********
 #1. start bash shell
@@ -57,10 +57,46 @@ if [ $CMD_GIT_CLONE = "JA" ]
   then git_clone 
 fi 
 
+
+# //////////////////////////////////////////////////////////////////////////////////////////
+
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = "JA" ]
+  then docker-compose-travis_yml_with_volumes
+fi 
+
+#if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = "JA"
+#  then git_clone 
+#fi 
+
+
+#if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = "JA"
+#  then git_clone 
+#fi 
+# //////////////////////////////////////////////////////////////////////////////////////////
+
+
+# //////////////////////////////////////////////////////////////////////////////////////////
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = "JA" ]
+  then docker-compose-travis_yml_without_volumes 
+fi 
+
+#if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = "JA"
+#  then 
+#fi 
+
+#if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = "JA"
+#  then git_clone 
+#fi 
+# //////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 echo
 echo "hope the run was ok!"
 echo
-sleep  2
+sleep  1
 
 echo " cd back into " $GITHUB_DIR
 cd $GITHUB_DIR

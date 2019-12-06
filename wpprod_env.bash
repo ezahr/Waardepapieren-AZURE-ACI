@@ -41,16 +41,21 @@ git_clone() {
 #echo "git clone"
  echo "rm -rf $PROJECT_DIR/waardepapieren sure?"
  enter_cont
- cd $PRJ_DIR
+ cd $PROJECT_DIR
  rm -rf waardepapieren
  git clone https://github.com/discipl/waardepapieren.git
 }
 
 docker-compose-travis_yml_with_volumes() {
 
-cd $MAIN_DIR
-touch docker-compose-travis.yml 
+#DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
+
+echo "docker-compose-travis_yml_with_volumes"
+sleep 1
+cd $DOCKER_COMPOSE_DIR
+
 mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
+touch docker-compose-travis.yml 
 
 echo "version: '3'
 services:
@@ -61,7 +66,6 @@ services:
       - ./waardepapieren-service/configuration/:/app/configuration:ro
     build: waardepapieren-service/.
     links:
-    
       - mock-nlx
     ports:
       - 3232:3232
@@ -87,14 +91,13 @@ services:
   mock-nlx:
     build: mock-nlx/
     ports:
-      - 80:80" 
-      > docker-compose-travis.yml
-
+      - 80:80"  > docker-compose-travis.yml
 }
 
-docker-compose-travis_yml_stripe_volumes() {
-
-cd $MAIN_DIR
+docker-compose-travis_yml_without_volumes() {
+echo "docker-compose-travis_yml_without_volumes"
+sleep 1
+cd $DOCKER_COMPOSE_DIR
 touch docker-compose-travis.yml 
 mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
 
