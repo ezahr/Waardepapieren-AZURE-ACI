@@ -58,21 +58,10 @@ echo "docker login succeeded ?"
 enter_cont
 
 echo "az login succeeded ?"
+#https://docs.microsoft.com/en-us/azure/virtual-machines/azure-cli-arm-commands
+#https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli?view=azure-cli-latest
+az group list
 enter_cont
-
-
-echo "DOCKER_USER="$DOCKER_USER         
-echo "DOCKER_VERSION_TAG"$DOCKER_VERSION_TAG
-echo "DOCKER_PUSH="$DOCKER_PUSH
-echo "DOCKER_COMMIT="$DOCKER_COMMIT
-echo "AZ_RESOURCE_GROUP="$AZ_RESOURCE_GROUP=
-echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE
-echo "AZ_RESOURCE_GROUP_DELETE"$AZ_RESOURCE_GROUP_CREATE
-echo "AZ_CREATE_DEPLOY_ACI_FILE="$AZ_DEPLOY_ACI_FILE
-echo "AZ_RESOURCE_GROUP_DELETE="$CREATE_AZ_DEPLOY_ACI_YAML
-echo "CMD_AZ_CREATE_CONTAINERGROUP="$CMD_AZ_CREATE_CONTAINERGROUP
-
-
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 

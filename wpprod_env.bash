@@ -36,18 +36,22 @@ enter_cont() {
 
 
 create_azure_container_group() {
-az container create --resource-group Discipl_Wigo4it_DockerGroup2 --file deploy-aci.yaml
+cd $PROJECT_DIR
+az container create --resource-group $AZ_RESOURCE_GROUP --file deploy-aci.yaml
 }
 
 create_azure_resource_group() {
-az group create --name Discipl_Wigo4it_Dockergroup2 --location
+ # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
+az group create --name $AZ_RESOURCE_GROUP --location 
+enter_cont
 }
 
 delete_azure_resource_group() {
-az group delete --name Discipl_Wigo4it_Dockergroup2
+ # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
+ echo sure ? delete $AZ_RESOURCE_GROUP
+ enter_cont
+az group delete --name $AZ_RESOURCE_GROUP 
 }
-
-
 
 create_azure_deploy_aci_yaml() {
 #PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
@@ -67,7 +71,7 @@ properties:
   containers:
   - name: waardepapieren-mock-nlx
     properties:
-      image: ezahr/waardepapieren-mock-nl:$DOCKER_VERSION_TAG
+      image: $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
       resources:
         requests:
           cpu: 1
@@ -76,7 +80,7 @@ properties:
       - port: 80
   - name: waardepapieren-service
     properties:
-      image: ezahr/waardepapieren-service:$DOCKER_VERSION_TAG
+      image: $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
       resources:
         requests:
           cpu: 1
@@ -85,7 +89,7 @@ properties:
       - port: 3232
   - name: waardepapieren-clerk-frontend
     properties:
-      image: ezahr/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
+      image: $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
       resources:
         requests:
           cpu: 1
@@ -95,8 +99,8 @@ properties:
   osType: Linux
   ipAddress:
     type: Public
-    # fqdn wordt: waardepapieren.westeurope.azurecontainer.io
-    dnsNameLabel: "waardepapieren" 
+    # fqdn wordt: discipl_waardepapieren.westeurope.azurecontainer.io
+    dnsNameLabel: "discipl" 
     ports:
     - protocol: tcp
       port: '443' 
@@ -106,10 +110,11 @@ type: Microsoft.ContainerInstance/containerGroups" > deploy-aci.yaml
 
 
 docker_push() {
-echo "docker push $DOCKER_USER version DOCKER_VERSION_TAG)"
+echo "To push a new tag to this repository, docker push $DOCKER_USER version DOCKER_VERSION_TAG)"
 docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
 docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
-docker push $DOCKER_USER/waardepapieren-mock-nl:$DOCKER_VERSION_TAG
+docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
+# https://hub.docker.com  boscp08 P...!2....
 
 }
 
@@ -117,7 +122,7 @@ docker_commit() {
 echo "docker commit $DOCKER_USER version DOCKER_VERSION_TAG)"
 docker commit waardepapieren_clerk-frontend_1 $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
 docker commit waardepapieren_waardepapieren-service_1 $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
-docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nl:$DOCKER_VERSION_TAG
+docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
 }
 
 
