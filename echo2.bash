@@ -21,28 +21,22 @@
 # rationale
 # Use this task in a build or release pipeline to run a Bash script on macOS, Linux, or Windows. 
 # DevOps: REST API Execution Through Bash Shell Scripting
+# I hope this helps my fellow (bash) hackers out there.
+
 
 # ********** instructies **********
 #1. start bash shell
-#2. run het script . echo2.bash   => serving needs  CERT_HOST_IP
-# ********** parameters **********
+#2. in wpprod_env.bash staan de modules hoef je in principe niet te wijzigen
+#3. in wpbatch_env.bash staan de stuurparameters worden aan begin getoond. naar behoefte wijzigen.
+#4  run het script `. echo2.bash`  
 
-CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN
-GITHUB_DIR=/Users/boscp08/Dropbox/github/Waardepapieren-AZURE-ACI
-PRJ_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
+# ********** functies **********
 
-# ********** stuur Parameters **********
-GIT_CLONE="NEE"
-SET_FQDN="NEE"
-COMPOSE="NEE"
+. wpprod_env.bash  
 
-### barf
-enter_cont() {
-    echo
-    echo
-    echo -n "Press enter to Continue"
-    read
-}
+# ********** Parameters **********
+
+. wpbatch_env.bash
 
 echo "***"   
 echo "***  Welcome to  docker-compose "
@@ -52,34 +46,26 @@ echo "***  You are about to start to build new waardepapieren images and contain
 echo "***  targethost= https://$CERT_HOST_IP " 
 echo "***" 
 
-echo "GIT_CLONE= " $GIT_CLONE
-echo "DOCKER-COMPOSE= " $COMPOSE
-echo "SET_FQDN=" $SET_FQDN
 
+echo "---"
+echo "directories"
+echo "GITHUB_DIR="$GITHUB_DIR
+echo "PRJ_DIR="$PRJ_DIR
+echo "MAIN_DIR="$MAIN_DIR
+echo "clerk_fontend="$CF_DIR
+echo "---"
+
+echo "content of wpbatch_env.bash  "
+echo "GIT_CLONE= "$GIT_CLONE
+echo "DOCKER-COMPOSE= "$COMPOSE
+echo "SET_FQDN="$SET_FQDN
 enter_cont
 
 #######################
 ## M A I N
 #######################
 
-#
-# A start from scratch  git clone 
-#
-
-if [ $GIT_CLONE = "JA" ]
-then
-echo "afhalen"
-cd $PRJ_DIR
-
- echo "rm -rf waardepapieren sure?"
- enter_cont
- rm -rf waardepapieren
- git clone https://github.com/discipl/waardepapieren.git
-fi
-
-MAIN_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
-CF_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-WP_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+if [ $GIT_CLONE = "JA" ] then git_clone fi 
 
 # B set docker-compose-travis.yml
 
