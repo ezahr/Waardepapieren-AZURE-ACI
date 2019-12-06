@@ -31,7 +31,9 @@ echo "content of wpbatch_env.bash  "
 echo "GIT_CLONE= "$GIT_CLONE
 echo "DOCKER-COMPOSE= "$COMPOSE
 echo "SET_FQDN="$SET_FQDN
-enter_cont
+
+
+
 
 
 
