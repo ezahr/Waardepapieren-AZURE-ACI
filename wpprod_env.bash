@@ -1,3 +1,31 @@
+#!/bin/bash
+
+# //////////////////////////////////////////////////////////////////////////////////////////
+#    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
+#  
+#    Description :- This script makes a backup using export tool (oracle)
+#    Modified           Date            Description
+#    --------           --------        -------------------------------------------------
+#    Peter Bosch       05.12.2019      Initial version.
+#
+# //////////////////////////////////////////////////////////////////////////////////////////
+# File:            :wpprod_env.bash
+# version          :20190412 v0
+# File Type        :Bash 
+# Purpose          :build waardepapieren Docker introductie.      
+# Title:           :
+# Category         :Discipl container deploy script
+# Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
+
+#'big thanks to pim Otte en Stef van Leeuwen Wigo4il  
+# rationale
+# software steeds complexer. Developerteam moet de productieomgeving begrijpen
+# operatie team moet software internals begrijpen
+# containers laten toe om applicaties samen met zijn runtime-omgevingen te implementeren
+# dezelfde bundel in verschillende omgevingen ontwikkeling test acceptatie productie, veel implementaties
+# vermijden configuratiedrift
+
+
 ### barf
 enter_cont() {
     echo
@@ -15,12 +43,12 @@ git_clone() {
 
 if [ $GIT_CLONE = "JA" ]
 then
-echo "afhalen"
+#echo "afhalen"
 cd $PRJ_DIR
 
- echo "rm -rf waardepapieren sure?"
- echo git --version
- enter_cont
+ #echo "rm -rf waardepapieren sure?"
+ #echo git --version
+ #enter_cont
  rm -rf waardepapieren
  git clone https://github.com/discipl/waardepapieren.git
 fi
