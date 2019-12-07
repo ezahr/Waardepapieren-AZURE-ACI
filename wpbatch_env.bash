@@ -40,6 +40,7 @@ enter_cont() {
 CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
 #CERT_HOST_IP=localhost  #FQDN linux
 #portal.azure.com
+#grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
 
 << "ECT-HOST_COMMENT"
 ## /etc/hosts 
@@ -64,13 +65,18 @@ GITHUB_DIR=/Users/boscp08/Dropbox/github/Waardepapieren-AZURE-ACI
 PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
 DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
 CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+
+
 
 echo "GITHUB_DIR="$GITHUB_DIR
 echo "PROJECT_DIR="$PROJECT_DIR
 echo "DOCKER_COMPOSE_DIR="$DOCKER_COMPOSE_DIR
 echo "CLIENT_FRONTEND_DIR="$CLIENT_FRONTEND_DIR
 echo "WAARDEPAPIEREN_SERVICE_DIR="$WAARDEPAPIEREN_SERVICE_DIR
+echo "NGINX_DIR="$NGINX_DIR
+
 echo "---" 
 # //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -85,6 +91,8 @@ SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="JA"
 SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="NEE"
 SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="NEE"
 SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="NEE"
+SET_NGINX_CONF="JA"
+
 
 echo "---"
 echo "SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME     
@@ -95,6 +103,8 @@ echo "SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUM
 echo "SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME
 echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME
 echo "---"
+echo "SET_NGINX_CONF="$SET_NGINX_CONF
+
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 ######################

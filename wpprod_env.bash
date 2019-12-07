@@ -146,10 +146,72 @@ cd $DOCKER_COMPOSE_DIR
 docker-compose -f docker-compose-travis.yml up --build
 }
 
+
+
+clerk_frontend_nginx_conf() {
+#NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
+#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
+echo "clerk_frontend_nginx_conf"
+sleep 1
+cd $NGINX_DIR
+mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
+touch nginx.conf
+
+echo "events {
+    worker_connections  1024;
+}
+
+
+http {
+
+    map \$http_upgrade \$connection_upgrade {
+        default upgrade;
+        '' close;
+    }
+
+    # Http server to obtain NLX certificate
+    server {
+        listen 8880;
+
+        location / {
+           root /usr/share/nginx/html;
+           include /etc/nginx/mime.types;
+        }
+    }
+
+    server {
+        listen 443 ssl;
+
+        ssl_certificate /etc/nginx/certs/org.crt;
+        ssl_certificate_key /etc/nginx/certs/org.key;
+
+        location /api/eph/ {
+            # proxy_pass https://waardepapieren-service:3232/;
+              proxy_pass https://$CERT_HOST_IP:3232/;
+
+        }
+
+        location /api/eph-ws {
+            proxy_pass https://waardepapieren-service:3232;
+            proxy_pass https://$CERT_HOST_IP:3232;
+
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade \$http_upgrade;
+            proxy_set_header Connection "Upgrade";
+        }
+        location / {
+            root /usr/share/nginx/html;
+            include /etc/nginx/mime.types;
+        }
+    }
+}" > nginx.conf
+}
+
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 clerk_frontend_dockerfile_with_volumes() {
-#CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 echo "clerk_frontend_dockerfile_with_volumes"
 sleep 1
 cd $CLERK_FRONTEND_DIR
