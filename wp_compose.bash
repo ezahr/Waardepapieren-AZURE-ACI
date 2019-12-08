@@ -86,10 +86,42 @@ if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = "JA" ]
   then waardepapieren_service_dockerfile_without_volumes
 fi 
 # //////////////////////////////////////////////////////////////////////////////////////////
+# netwerk config
 
 if [ $SET_NGINX_CONF = "JA" ]
-  then clerk_frontend_nginx_conf
+  then clerk_frontend_nginx_conf     #https://waardepapieren-service
 fi 
+ 
+if [ $SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON = "JA" ]
+  then waardepapieren_config_compose_travis_json      #https://localhost  mock-nlx
+fi 
+
+
+if [ $CLERK_FRONTEND_CYPRESS_JSON = "JA" ]
+  then clerk_frontend_nginx_conf     #https://localhost
+fi 
+
+
+if [ $CYPRESS_INTEGRATION_SCENARIO_SPEC_JS = "JA" ]
+  then clerk_frontend_nginx_conf     #https://waardepapieren-service
+fi 
+
+
+if [ $WAARDEPAPIEREN_CONFIG_COMPOSE_TRAVIS_JSON  = "JA" ]
+  then clerk_frontend_nginx_conf     #https://waardepapieren-service
+fi 
+
+
+
+
+
+if [ $SET_NGINX_CONF = "JA" ]
+  then clerk_frontend_nginx_conf     #https://waardepapieren-service
+fi 
+
+
+
+
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 

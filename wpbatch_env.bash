@@ -41,6 +41,7 @@ CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER 
 #CERT_HOST_IP=localhost  #FQDN linux
 #portal.azure.com
 #grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
+EPHEMERAL_RETENTION_TIME=86400
 
 << "ECT-HOST_COMMENT"
 ## /etc/hosts 
@@ -63,19 +64,26 @@ ECT-HOST_COMMENT
 
 GITHUB_DIR=/Users/boscp08/Dropbox/github/Waardepapieren-AZURE-ACI
 PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
-DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
-CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
-WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 
+DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
+
+CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+CLERK_FRONTEND_NGINX_DIR=$CLERK_FRONTEND_DIR/nginx
+CLERK_FRONTEND_CYPRESS_DIR=$CLERK_FRONTEND_DIR/cypress
+
+WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
 
 
 echo "GITHUB_DIR="$GITHUB_DIR
 echo "PROJECT_DIR="$PROJECT_DIR
 echo "DOCKER_COMPOSE_DIR="$DOCKER_COMPOSE_DIR
 echo "CLIENT_FRONTEND_DIR="$CLIENT_FRONTEND_DIR
+echo "CLIENT_FRONTEND_NGINX_DIR="$CLIENT_FRONTEND_NGINX_DIR
+echo "CLERK_FRONTEND_CYPRESS_DIR="$CLERK_FRONTEND_CYPRESS_DIR
+
 echo "WAARDEPAPIEREN_SERVICE_DIR="$WAARDEPAPIEREN_SERVICE_DIR
-echo "NGINX_DIR="$NGINX_DIR
+echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="$WAARDEPAPIEREN_SERVICE_CONFIG_DIR
 
 echo "---" 
 # //////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +99,21 @@ SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="JA"
 SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="NEE"
 SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="NEE"
 SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="NEE"
+
+
+# network related files
+
 SET_NGINX_CONF="JA"
+SET_WAARDEPAPIEREN_CONFIG_COMPOSE_TRAVIS_JSON="JA" 
+#SET_WAARDEPAPIEREN_CONFIG_JSON="JA" 
+#SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON="JA"
+
+
+SET_CLERK_FRONTEND_CYPRESS_JSON="JA" 
+SET_CYPRESS_INTEGRATION_SCENARIO_SPEC_JS="JA"
+
+
+
 
 
 echo "---"
@@ -104,6 +126,14 @@ echo "SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_
 echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME
 echo "---"
 echo "SET_NGINX_CONF="$SET_NGINX_CONF
+echo "SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON="$SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON
+#echo "SET_WAARDEPAPIEREN_CONFIG_COMPOSE_TRAVIS_JSON="$SET_WAARDEPAPIEREN_CONFIG_COMPOSE_TRAVIS_JSON
+#echo "SET_WAARDEPAPIEREN_CONFIG_JSON="$SET_WAARDEPAPIEREN_CONFIG_JSON
+
+
+echo "SET_CLERK_FRONTEND_CYPRESS_JSON="$SET_CLERK_FRONTEND_CYPRESS_JSON
+echo "SET_CYPRESS_INTEGRATION_SCENARIO_SPEC_JS"=$SET_CYPRESS_INTEGRATION_SCENARIO_SPEC_JS
+
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 
