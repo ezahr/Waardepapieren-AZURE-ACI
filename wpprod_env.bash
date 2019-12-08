@@ -33,20 +33,21 @@ enter_cont() {
     read
 }
 
-
-
 create_azure_container_group() {
+echo "running create_azure_container_group" 
 cd $PROJECT_DIR
 az container create --resource-group $AZ_RESOURCE_GROUP --file deploy-aci.yaml
 }
 
 create_azure_resource_group() {
+echo "create_azure_resource_group" 
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
 az group create --name $AZ_RESOURCE_GROUP --location 
 enter_cont
 }
 
 delete_azure_resource_group() {
+ echo "delete_azure_resource_group"
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
  echo sure ? delete $AZ_RESOURCE_GROUP
  enter_cont
@@ -54,11 +55,10 @@ az group delete --name $AZ_RESOURCE_GROUP
 }
 
 create_azure_deploy_aci_yaml() {
+echo "running create_azure_deploy_aci_yaml"
 #PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
 #DOCKER_VERSION_TAG="3.0"
 #$AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
-
-echo "create_azure_deploy_aci_yaml"
 cd $PROJECT_DIR
 touch deploy-aci.yaml
 mv deploy-aci.yaml  deploy-aci_`date "+%Y%m%d-%H%M%S"`.yaml
@@ -110,7 +110,7 @@ type: Microsoft.ContainerInstance/containerGroups" > deploy-aci.yaml
 
 
 docker_push() {
-echo "To push a new tag to this repository, docker push $DOCKER_USER version DOCKER_VERSION_TAG)"
+echo "running docker_push "
 docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
 docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
 docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
@@ -119,7 +119,7 @@ docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
 }
 
 docker_commit() {
-echo "docker commit $DOCKER_USER version DOCKER_VERSION_TAG)"
+echo "running docker_commit"
 docker commit waardepapieren_clerk-frontend_1 $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
 docker commit waardepapieren_waardepapieren-service_1 $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
 docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
@@ -127,8 +127,8 @@ docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nlx:$DO
 
 
 docker_compose_min_f_docker-travis_compose_yml_up() {
+echo "running ...docker_compose_min_f_docker-travis_compose_yml_up"
 #DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
-echo "docker_compose_min_f_docker-travis_compose_yml_up"
 echo " process is readay at: waardepapieren-service_1  | Serving needs"   
 echo "blader dan naar https://$CERT_HOST_IP "
 echo "hope the run will be okay! "
@@ -146,13 +146,12 @@ cd $DOCKER_COMPOSE_DIR
 docker-compose -f docker-compose-travis.yml up --build
 }
 
-# networking
-
+# networking settings 
 
 clerk_frontend_nginx_conf() {
 #NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-echo "clerk_frontend_nginx_conf"
+echo "running clerk_frontend_nginx_conf"
 sleep 1
 cd $NGINX_DIR
 mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
@@ -161,7 +160,6 @@ touch nginx.conf
 echo "events {
     worker_connections  1024;
 }
-
 
 http {
 
@@ -208,35 +206,22 @@ http {
 }" > nginx.conf
 }
 
-
-
 waardepapieren_config_compose_travis_json () {
+echo "running ... waardepapieren_config_compose_travis_json"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 #WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 #/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service/configuration
-
-echo "waardepapieren_config_compose_travis_json"
-sleep 1
 cd $WAARDEPAPIEREN_SERVICE_CONFIG_DIR
 mv waardepapieren-config-compose-travis.json  waardepapieren-config-compose-travis_`date "+%Y%m%d-%H%M%S"`.json
 touch waardepapieren-config-compose-travis.json
 
 echo " {
-  #\"EPHEMERAL_ENDPOINT\" : \"https://localhost:3232\",
-  #\"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://localhost:3232\",
-  
-  \"EPHEMERAL_ENDPOINT\" : \"https://l$CERT_HOST_IP:3232\",
+  \"EPHEMERAL_ENDPOINT\" : \"https://$CERT_HOST_IP:3232\",
   \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://$CERT_HOST_IP:3232\",
-
-
-  
   \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
   \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
-  
-  #\"NLX_OUTWAY_ENDPOINT\" : \"http://mock-nlx:80\",
   \"NLX_OUTWAY_ENDPOINT\" : \"http://$CERT_HOST_IP:80\",
-  
   \"NLX_CERT\": \"/certs/org.crt\",
   \"NLX_KEY\": \"/certs/org.key\",
   \"LOG_LEVEL\": \"info\",
@@ -256,22 +241,20 @@ echo " {
 }
 
 clerk_frontend_cypress_json () {
+echo "running clerk_frontend_nginx_conf"
 #NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-echo "clerk_frontend_nginx_conf"
-sleep 1
+
 cd $NGINX_DIR
 mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
 touch nginx.conf
 
-
-
 }
 
 cypress_integration_scenario_spec_js () {
+echo "running cypress_integration_scenario_spec_js "
 #NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-echo "clerk_frontend_nginx_conf"
 sleep 1
 cd $NGINX_DIR
 mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
@@ -280,9 +263,9 @@ touch nginx.conf
 }
 
 waardepapieren_config_json () {
+echo "running waardepapieren_config_json "
 #NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-echo "clerk_frontend_nginx_conf"
 sleep 1
 cd $NGINX_DIR
 mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
@@ -291,9 +274,9 @@ touch nginx.conf
 }
 
 waardepapieren_config_compose_json () {
+echo "running ... waardepapieren_config_compose_json "
 #NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-echo "clerk_frontend_nginx_conf"
 sleep 1
 cd $NGINX_DIR
 mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
@@ -304,9 +287,9 @@ touch nginx.conf
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 clerk_frontend_dockerfile_with_volumes() {
+echo "running  clerk_frontend_dockerfile_with_volumes"
 CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-echo "clerk_frontend_dockerfile_with_volumes"
 sleep 1
 cd $CLERK_FRONTEND_DIR
 mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
@@ -332,8 +315,8 @@ COPY --from=0 /app/build /usr/share/nginx/html"  > Dockerfile
 }
 
 clerk_frontend_dockerfile_without_volumes() {
+echo "running  clerk_frontend_dockerfile_without_volumes"
 #CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-echo "clerk_frontend_dockerfile_without_volumes"
 sleep 1
 cd $CLERK_FRONTEND_DIR
 mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
@@ -365,9 +348,8 @@ ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > Dockerfile
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 waardepapieren_service_dockerfile_with_volumes() {
-
+echo "running ... waardepapieren_service_dockerfile_with_volumes"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-echo "waardepapieren_service_dockerfile_with_volumes"
 sleep 1
 cd $WAARDEPAPIEREN_SERVICE_DIR
 mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
@@ -385,8 +367,8 @@ CMD npm start"  > Dockerfile
 }
 
 waardepapieren_service_dockerfile_without_volumes() {
+echo "running ... waardepapieren_service_dockerfile_without_volumes"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-echo "waardepapieren_service_dockerfile_without_volumes"
 sleep 1
 cd $WAARDEPAPIEREN_SERVICE_DIR
 mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
@@ -420,10 +402,8 @@ CMD npm start"  > Dockerfile
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 docker_compose_travis_yml_with_volumes() {
-
+echo "running  docker_compose_travis_yml_with_volumes"
 #DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
-
-echo "docker_compose_travis_yml_with_volumes"
 sleep 1
 cd $DOCKER_COMPOSE_DIR
 
@@ -468,7 +448,7 @@ services:
 }
 
 docker_compose_travis_yml_without_volumes() {
-echo "docker_compose_travis_yml_without_volumes"
+echo "running  docker_compose_travis_yml_without_volumes"
 sleep 1
 cd $DOCKER_COMPOSE_DIR
 touch docker-compose-travis.yml 
@@ -515,7 +495,7 @@ services:
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 git_clone() {
-#echo "git clone A start from scratch  git clone "
+echo "running git_clone"
  echo "rm -rf $PROJECT_DIR/waardepapieren sure?"
  enter_cont
  cd $PROJECT_DIR
@@ -523,7 +503,7 @@ git_clone() {
  git clone https://github.com/discipl/waardepapieren.git
 }
 
-
+# //////////////////////////////////////////////////////////////////////////////////////////
 
 << 'MULTILINE-COMMENT'
 
