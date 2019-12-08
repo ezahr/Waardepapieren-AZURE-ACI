@@ -31,6 +31,8 @@ echo "#######################"
 echo "## FQDN Fully Qualified Name `date "+%Y%m%d-%H%M%S"` "
 echo "#######################" 
 CMD_GIT_CLONE="NEE"
+CMD_DOCKER_COMPOSE="NEE"
+CMD_DOCKER_COMPOSE_BUILD=" --build"
 
 #CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN linux VVM
 CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
@@ -43,6 +45,8 @@ EPHEMERAL_RETENTION_TIME=86400  #24h
 echo "CMD_GIT_CLONE="$CMD_GIT_CLONE
 echo "CERT_HOST_IP="$CERT_HOST_IP
 echo "EPHEMERAL_RETENTION_TIME="$EPHEMERAL_RETENTION_TIME
+echo "CMD_DOCKER_COMPOSE="$CMD_DOCKER_COMPOSE
+echo "CMD_DOCKER_COMPOSE_BUILD="$CMD_DOCKER_COMPOSE_BUILD
 
 enter_cont
 
@@ -131,11 +135,8 @@ echo "######################"
 
 # docker -v  |Docker version 19.03.5, build 633a0ea
 # docker-compose -v |docker-compose version 1.24.1, build 4667896b
-
 CMD_CONTAINER_STOP_AND_PRUNE="NEE"
 CMD_IMAGE_REMOVE="NEE"
-CMD_DOCKER_COMPOSE="JA"
-CMD_DOCKER_COMPOSE_BUILD=" --build"
 DOCKER_USER="boscp08"  #NB repository name must be lowercase
 DOCKER_VERSION_TAG="4.0"
 DOCKER_COMMIT="NEE"
@@ -143,8 +144,6 @@ DOCKER_PUSH="NEE"
 
 echo "CMD_CONTAINER_STOP_AND_PRUNE="$CMD_CONTAINER_STOP_AND_PRUNE
 echo "CMD_IMAGE_REMOVE="$CMD_IMAGE_REMOVE
-echo "CMD_DOCKER_COMPOSE="$CMD_DOCKER_COMPOSE
-echo "CMD_DOCKER_COMPOSE_BUILD="$CMD_DOCKER_COMPOSE_BUILD
 echo "DOCKER_USER="$DOCKER_USER         
 echo "DOCKER_VERSION_TAG"=$DOCKER_VERSION_TAG
 echo "DOCKER_PUSH="$DOCKER_PUSH
@@ -158,8 +157,8 @@ echo "######################"
 AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
 AZ_RESOURCE_GROUP_DELETE="NEE"
 AZ_RESOURCE_GROUP_CREATE="NEE"
-CREATE_AZ_DEPLOY_ACI_YAML="JA"  #@PROJECT_DIR deploy_aci.yml
-CMD_AZ_CREATE_CONTAINERGROUP="JA"  #.. jeuh - Running ..
+CREATE_AZ_DEPLOY_ACI_YAML="NEE"  #@PROJECT_DIR deploy_aci.yml
+CMD_AZ_CREATE_CONTAINERGROUP="NEE"  #.. jeuh - Running ..
 
 echo "AZ_RESOURCE_GROUP="$AZ_RESOURCE_GROUP
 echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE

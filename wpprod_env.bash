@@ -10,7 +10,7 @@
 #
 # //////////////////////////////////////////////////////////////////////////////////////////
 # File:            :wpprod_env.bash
-# version          :20190412 v0
+# version          :20191204 v0
 # File Type        :Bash 
 # Purpose          :build waardepapieren Docker introductie.      
 # Title:           :
@@ -511,40 +511,6 @@ echo "running git_clone"
 # remove alle containers `docker stop $(docker ps -a -q)`
 # remove alle containers and images `docker rm $(docker ps -a -q) && docker rmi $(docker images -q)`
 # remove all stopped containers (just waist of storage} `docker container prune`
-
-# D docker-compose  
-if [ $COMPOSE = "JA" ]
-then
-cd $MAIN_DIR
-docker-compose -f docker-compose-travis.yml up --build 
-fi
-
-cd $GITHUB_DIR
-
-#  docker commit  
-
-
-
-# docker login
-
-
-# docker push
-
-
-# az login
-
-# Congratulations! You've configured a custom Linux AZURE container in App Service.
-
-
-
-# az delete resource group
-
-
-# az create resource group
-
-
-# az create containter group
-
 
 # blader naar protal.azure.com 
 

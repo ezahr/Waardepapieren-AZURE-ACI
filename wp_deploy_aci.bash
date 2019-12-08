@@ -9,7 +9,7 @@
 #
 # //////////////////////////////////////////////////////////////////////////////////////////
 # File:            :wp_deploy_aci.bash
-# version          :20190412 v0
+# version          :20191204 v0
 # File Type        :Bash 
 # Purpose          :Creating an optimized production build...     
 # Title:           :https://github.com/discipl/waardepapieren 

@@ -101,26 +101,18 @@ if [ $CLERK_FRONTEND_CYPRESS_JSON = "JA" ]
   then clerk_frontend_nginx_conf     #https://localhost
 fi 
 
-
 if [ $CYPRESS_INTEGRATION_SCENARIO_SPEC_JS = "JA" ]
   then clerk_frontend_nginx_conf     #https://waardepapieren-service
 fi 
-
 
 if [ $WAARDEPAPIEREN_CONFIG_COMPOSE_TRAVIS_JSON  = "JA" ]
   then clerk_frontend_nginx_conf     #https://waardepapieren-service
 fi 
 
 
-
-
-
 if [ $SET_NGINX_CONF = "JA" ]
   then clerk_frontend_nginx_conf     #https://waardepapieren-service
 fi 
-
-
-
 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
