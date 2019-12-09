@@ -92,10 +92,10 @@ if [ $SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON = "JA" ]
   then waardepapieren_service_config_compose_travis_json      #https://waardepapieren-service:3232 http://mock-nlx:80 docker network... 
 fi 
 
-if [ $SET_CLERK_FRONTEND_NGINX_CONF = "NEE" ]
+if [ $SET_CLERK_FRONTEND_NGINX_CONF = "JA" ]
     then clerk_frontend_nginx_conf      # docker network fix4https://waardepapieren-service
 fi 
-
+§
 
 #if [ $CLERK_FRONTEND_CYPRESS_JSON = "JA" ]
 #  then clerk_frontend_nginx_conf     #https://localhost
