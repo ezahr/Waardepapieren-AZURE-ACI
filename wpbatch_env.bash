@@ -74,7 +74,7 @@ echo "#######################"
 echo "# Directories used " 
 echo "#######################"
 
-#HOME_DIR=/hom/boscp08     # ubuntu 19.04  
+#HOME_DIR=/hom/boscp08     # ubuntu 19.04 
 HOME_DIR=/Users/boscp08    #"macos catalina"
 GITHUB_DIR=$HOME_DIR/Dropbox/github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
