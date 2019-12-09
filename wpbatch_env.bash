@@ -36,14 +36,14 @@ CMD_DOCKER_COMPOSE="NEE"
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 
 #CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN linux VVM
-CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
-#CERT_HOST_IP=localhost  #FQDN linux
+#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
+CERT_HOST_IP=localhost  #FQDN linux
 #portal.azure.com
 #grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
-EPHEMERAL_RETENTION_TIME=86400  #24h
+EPHEMERAL_RETENTION_TIME=86400  #24h 
 #EPHEMERAL_RETENTION_TIME=2592000 #30 dagen
 
-echo "CMD_GIT_CLONE="$CMD_GIT_CLONE
+echo "CMD_GIT_CLONE="$CMD_GIT_CLONE 
 echo "CERT_HOST_IP="$CERT_HOST_IP
 echo "EPHEMERAL_RETENTION_TIME="$EPHEMERAL_RETENTION_TIME
 echo "CMD_DOCKER_COMPOSE="$CMD_DOCKER_COMPOSE
@@ -128,7 +128,7 @@ echo "#######################"
 echo "## Networking setters" 
 echo "#######################"
 
-SET_CLERK_FRONTEND_NGINX_CONF="JA"
+SET_CLERK_FRONTEND_NGINX_CONF="NEE"
 SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON="JA" 
 #SET_WAARDEPAPIEREN_CONFIG_JSON="JA" 
 #SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON="JA"

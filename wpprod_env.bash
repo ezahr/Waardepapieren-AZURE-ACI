@@ -185,14 +185,14 @@ http {
         ssl_certificate_key /etc/nginx/certs/org.key;
 
         location /api/eph/ {
-            # proxy_pass https://waardepapieren-service:3232/;
+           
               proxy_pass https://$CERT_HOST_IP:3232/;
 
         }
 
         location /api/eph-ws {
-            proxy_pass https://waardepapieren-service:3232;
-            proxy_pass https://$CERT_HOST_IP:3232;
+           
+             proxy_pass https://$CERT_HOST_IP:3232;
 
             proxy_http_version 1.1;
             proxy_set_header Upgrade \$http_upgrade;
@@ -266,7 +266,7 @@ touch nginx.conf
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 clerk_frontend_dockerfile_with_volumes() {
-echo "running  clerk_frontend_dockerfile_with_volumes"
+echo "running clerk_frontend_dockerfile_with_volumes"
 CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 sleep 1
@@ -294,7 +294,7 @@ COPY --from=0 /app/build /usr/share/nginx/html"  > Dockerfile
 }
 
 clerk_frontend_dockerfile_without_volumes() {
-echo "running  clerk_frontend_dockerfile_without_volumes"
+echo "running   clerk_frontend_dockerfile_without_volumes"
 #CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 sleep 1
 cd $CLERK_FRONTEND_DIR
