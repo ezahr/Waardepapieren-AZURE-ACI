@@ -126,6 +126,7 @@ docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nlx:$DO
 }
 
 
+
 docker_compose_min_f_docker-travis_compose_yml_up() {
 echo "running docker_compose_min_f_docker-travis_compose_yml_up"
 #DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
@@ -145,6 +146,8 @@ enter_cont
 cd $DOCKER_COMPOSE_DIR
 docker-compose -f docker-compose-travis.yml up --build
 }
+
+
 
 # networking settings 
 
@@ -480,6 +483,14 @@ echo "running git_clone"
  cd $PROJECT_DIR
  rm -rf waardepapieren
  git clone https://github.com/discipl/waardepapieren.git
+
+cd $DOCKER_COMPOSE_DIR
+rm dc.bash
+touch touch dc.bash
+echo "
+#! /bin/bash
+docker-compose -f docker-compose-travis.yml up --build" > dc.bash  #shortcut. 
+
 }
 
 # //////////////////////////////////////////////////////////////////////////////////////////
