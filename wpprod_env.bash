@@ -25,7 +25,7 @@
 # dezelfde bundel in verschillende omgevingen ontwikkeling test acceptatie productie, veel implementaties
 # pssst vermijden configuratiedrift a.k.a. 100% genereren.
 
-### barf
+### barf  
 enter_cont() {
     echo
     echo

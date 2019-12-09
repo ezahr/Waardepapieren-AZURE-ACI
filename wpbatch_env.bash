@@ -73,13 +73,15 @@ echo "#######################"
 echo "# Directories used " 
 echo "#######################"
 
-GITHUB_DIR=/Users/boscp08/Dropbox/github/Waardepapieren-AZURE-ACI
-PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
-DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
-CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+#HOME_DIR=/hom/boscp08
+HOME_DIR=/Users/boscp08
+GITHUB_DIR=$HOME_DIR/Dropbox/github/Waardepapieren-AZURE-ACI
+PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity
+DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
+CLERK_FRONTEND_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 CLERK_FRONTEND_NGINX_DIR=$CLERK_FRONTEND_DIR/nginx
 CLERK_FRONTEND_CYPRESS_DIR=$CLERK_FRONTEND_DIR/cypress
-WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+WAARDEPAPIEREN_SERVICE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
 
 echo "GITHUB_DIR="$GITHUB_DIR
@@ -94,9 +96,10 @@ echo "#######################"
 echo "## Dockerfile  setters"
 echo "#######################" 
 
-SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="JA"
+SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="JA"       
 SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="JA"
 SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="JA"
+
 SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="NEE"
 SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="NEE"
 SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="NEE"
@@ -108,7 +111,7 @@ echo "SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUM
 echo "SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME
 echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME
 
- 
+
 # //////////////////////////////////////////////////////////////////////////////////////////
 echo "#######################"
 echo "## Networking setters" 
