@@ -72,7 +72,7 @@ if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = "JA" ]
 fi 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = "NEE" ]
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = "JA" ]
   then docker_compose_travis_yml_without_volumes 
 fi 
 
