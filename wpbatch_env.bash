@@ -31,7 +31,7 @@ enter_cont() {
 echo "#######################"
 echo "## FQDN Fully Qualified Name `date "+%Y%m%d-%H%M%S"` "
 echo "#######################" 
-CMD_GIT_CLONE="JA"
+CMD_GIT_CLONE="NEE"
 CMD_DOCKER_COMPOSE="JA"
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 
@@ -126,9 +126,9 @@ echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_
 echo "#######################"
 echo "## Networking setters" 
 echo "#######################"
-
+#icici
 SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON="JA" 
-SET_CLERK_FRONTEND_NGINX_CONF="NEE"
+SET_CLERK_FRONTEND_NGINX_CONF="JA"
 
 #SET_WAARDEPAPIEREN_CONFIG_JSON="JA" 
 #SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON="JA"

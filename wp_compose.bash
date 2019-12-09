@@ -70,11 +70,9 @@ fi
 if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = "JA" ]
   then waardepapieren_service_dockerfile_with_volumes 
 fi 
-# //////////////////////////////////////////////////////////////////////////////////////////
-
 
 # //////////////////////////////////////////////////////////////////////////////////////////
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = "JA" ]
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = "NEE" ]
   then docker_compose_travis_yml_without_volumes 
 fi 
 
@@ -85,8 +83,9 @@ fi
 if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = "JA" ]
   then waardepapieren_service_dockerfile_without_volumes
 fi 
+
 # //////////////////////////////////////////////////////////////////////////////////////////
-# netwerk config
+# bypass vilein docker netwerk effect docker maakt eigen netwerk... obv  waardepapieren-service  mock-nlx
 
 if [ $SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON = "JA" ]
   then waardepapieren_service_config_compose_travis_json      #https://waardepapieren-service:3232 http://mock-nlx:80 docker network... 
@@ -95,21 +94,6 @@ fi
 if [ $SET_CLERK_FRONTEND_NGINX_CONF = "JA" ]
     then clerk_frontend_nginx_conf      # docker network fix4https://waardepapieren-service
 fi 
-§
-
-#if [ $CLERK_FRONTEND_CYPRESS_JSON = "JA" ]
-#  then clerk_frontend_nginx_conf     #https://localhost
-#fi 
-
-#if [ $CYPRESS_INTEGRATION_SCENARIO_SPEC_JS = "JA" ]
-#  then clerk_frontend_nginx_conf     #https://waardepapieren-service
-#fi 
-
-#if [ $WAARDEPAPIEREN_CONFIG_COMPOSE_TRAVIS_JSON  = "JA" ]
-#  then clerk_frontend_nginx_conf     #https://waardepapieren-service
-#fi 
-
-
 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
@@ -120,9 +104,6 @@ if [ $CMD_DOCKER_COMPOSE = "JA" ]
 fi 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 echo
 echo "hope the run was ok!"
