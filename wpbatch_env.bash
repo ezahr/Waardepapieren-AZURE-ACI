@@ -74,8 +74,8 @@ echo "#######################"
 echo "# Directories used " 
 echo "#######################"
 
-HOME_DIR=/hom/boscp08
-#HOME_DIR=/Users/boscp08
+#HOME_DIR=/hom/boscp08
+HOME_DIR=/Users/boscp08
 GITHUB_DIR=$HOME_DIR/Dropbox/github/Waardepapieren-AZURE-ACI
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
