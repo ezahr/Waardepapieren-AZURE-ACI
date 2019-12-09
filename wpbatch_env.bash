@@ -16,8 +16,6 @@
 # Category         :Discipl deploy script
 # Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
 
-
-
 ### barf
 enter_cont() {
     echo
@@ -74,9 +72,9 @@ echo "#######################"
 echo "# Directories used " 
 echo "#######################"
 
-#HOME_DIR=/hom/boscp08     # ubuntu 19.04 
-HOME_DIR=/Users/boscp08    #"macos catalina"
-GITHUB_DIR=$HOME_DIR/Dropbox/github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
+HOME_DIR=/home/boscp08     # ubuntu 19.04 
+#HOME_DIR=/Users/boscp08    #"macos catalina"
+GITHUB_DIR=$HOME_DIR/Dropbox/github/waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
 CLERK_FRONTEND_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
@@ -118,12 +116,13 @@ echo "#######################"
 echo "## Networking setters" 
 echo "#######################"
 
-SET_NGINX_CONF="JA"
-SET_WAARDEPAPIEREN_CONFIG_COMPOSE_TRAVIS_JSON="JA" 
+SET_CLERK_FRONTEND_NGINX_CONF="JA"
+SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON="JA" 
 #SET_WAARDEPAPIEREN_CONFIG_JSON="JA" 
 #SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON="JA"
-SET_CLERK_FRONTEND_CYPRESS_JSON="JA" 
-SET_CYPRESS_INTEGRATION_SCENARIO_SPEC_JS="JA"
+
+#SET_CLERK_FRONTEND_CYPRESS_JSON="JA" 
+#SET_CYPRESS_INTEGRATION_SCENARIO_SPEC_JS="JA"
 
 echo "SET_NGINX_CONF="$SET_NGINX_CONF
 echo "SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON="$SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON

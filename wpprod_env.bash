@@ -40,14 +40,14 @@ az container create --resource-group $AZ_RESOURCE_GROUP --file deploy-aci.yaml
 }
 
 create_azure_resource_group() {
-echo "create_azure_resource_group" 
+echo "running create_azure_resource_group" 
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
 az group create --name $AZ_RESOURCE_GROUP --location 
 enter_cont
 }
 
 delete_azure_resource_group() {
- echo "delete_azure_resource_group"
+ echo "running delete_azure_resource_group"
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
  echo sure ? delete $AZ_RESOURCE_GROUP
  enter_cont
@@ -127,7 +127,7 @@ docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nlx:$DO
 
 
 docker_compose_min_f_docker-travis_compose_yml_up() {
-echo "running ...docker_compose_min_f_docker-travis_compose_yml_up"
+echo "running docker_compose_min_f_docker-travis_compose_yml_up"
 #DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
 echo " process is readay at: waardepapieren-service_1  | Serving needs"   
 echo "blader dan naar https://$CERT_HOST_IP "
@@ -153,7 +153,7 @@ clerk_frontend_nginx_conf() {
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 echo "running clerk_frontend_nginx_conf"
 sleep 1
-cd $NGINX_DIR
+cd $CLERK_FRONTEND_NGINX_DIR
 mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
 touch nginx.conf
 
@@ -204,10 +204,10 @@ http {
         }
     }
 }" > nginx.conf
-}
+} 
 
-waardepapieren_config_compose_travis_json () {
-echo "running ... waardepapieren_config_compose_travis_json"
+waardepapieren_service_config_compose_travis_json () {
+echo "running waardepapieren_service_config_compose_travis_json"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 #WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
@@ -256,33 +256,12 @@ echo "running cypress_integration_scenario_spec_js "
 #NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 sleep 1
-cd $NGINX_DIR
+cd $CLERK_FRONTEND_NGINX_DIR
 mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
 touch nginx.conf
 
 }
 
-waardepapieren_config_json () {
-echo "running waardepapieren_config_json "
-#NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-sleep 1
-cd $NGINX_DIR
-mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
-touch nginx.conf
-
-}
-
-waardepapieren_config_compose_json () {
-echo "running ... waardepapieren_config_compose_json "
-#NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-sleep 1
-cd $NGINX_DIR
-mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
-touch nginx.conf
-
-}
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -348,7 +327,7 @@ ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > Dockerfile
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 waardepapieren_service_dockerfile_with_volumes() {
-echo "running ... waardepapieren_service_dockerfile_with_volumes"
+echo "running waardepapieren_service_dockerfile_with_volumes"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 sleep 1
 cd $WAARDEPAPIEREN_SERVICE_DIR
@@ -367,7 +346,7 @@ CMD npm start"  > Dockerfile
 }
 
 waardepapieren_service_dockerfile_without_volumes() {
-echo "running ... waardepapieren_service_dockerfile_without_volumes"
+echo "running waardepapieren_service_dockerfile_without_volumes"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 sleep 1
 cd $WAARDEPAPIEREN_SERVICE_DIR
@@ -402,7 +381,7 @@ CMD npm start"  > Dockerfile
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 docker_compose_travis_yml_with_volumes() {
-echo "running  docker_compose_travis_yml_with_volumes"
+echo "running docker_compose_travis_yml_with_volumes"
 #DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
 sleep 1
 cd $DOCKER_COMPOSE_DIR
@@ -448,7 +427,7 @@ services:
 }
 
 docker_compose_travis_yml_without_volumes() {
-echo "running  docker_compose_travis_yml_without_volumes"
+echo "running docker_compose_travis_yml_without_volumes"
 sleep 1
 cd $DOCKER_COMPOSE_DIR
 touch docker-compose-travis.yml 
