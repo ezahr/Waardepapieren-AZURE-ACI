@@ -24,6 +24,8 @@ enter_cont() {
     read
 }
 
+
+
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 echo "#######################"
@@ -72,8 +74,17 @@ echo "#######################"
 echo "# Directories used " 
 echo "#######################"
 
-HOME_DIR=/home/boscp08     # ubuntu 19.04 
-#HOME_DIR=/Users/boscp08    #"macos catalina"
+if [ uname = 'Linux' ]
+  then  HOME_DIR=/home/boscp08 
+  echo "linux"
+fi  
+
+if  [ uname = 'Darwin' ]
+    then  HOME_DIR=/Users/boscp08   
+    echo "Darwin"
+fi
+
+
 GITHUB_DIR=$HOME_DIR/Dropbox/github/waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
@@ -83,6 +94,7 @@ CLERK_FRONTEND_CYPRESS_DIR=$CLERK_FRONTEND_DIR/cypress
 WAARDEPAPIEREN_SERVICE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
 
+echo "HOME_DIR"=$HOME_DIR
 echo "GITHUB_DIR="$GITHUB_DIR
 echo "PROJECT_DIR="$PROJECT_DIR
 echo "DOCKER_COMPOSE_DIR="$DOCKER_COMPOSE_DIR
