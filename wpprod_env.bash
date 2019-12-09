@@ -14,7 +14,7 @@
 # File Type        :Bash 
 # Purpose          :build waardepapieren Docker introductie.      
 # Title:           :
-# Category         :Discipl container deploy script
+# Category         :Discipl container deploy script.
 # Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
 
 #'big thanks to pim Otte en Stef van Leeuwen Wigo4il  

@@ -17,6 +17,7 @@
 # Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
 
 
+
 ### barf
 enter_cont() {
     echo
