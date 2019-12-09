@@ -31,13 +31,13 @@ enter_cont() {
 echo "#######################"
 echo "## FQDN Fully Qualified Name `date "+%Y%m%d-%H%M%S"` "
 echo "#######################" 
-CMD_GIT_CLONE="JA"
+CMD_GIT_CLONE="NEE"
 CMD_DOCKER_COMPOSE="NEE"
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 
 #CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN linux VVM
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
-CERT_HOST_IP=localhost  #FQDN linux
+CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
+#CERT_HOST_IP=localhost  #FQDN linux
 #portal.azure.com
 #grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
 #EPHEMERAL_RETENTION_TIME=86400  #24h 
@@ -84,7 +84,6 @@ if  [ uname = 'Darwin' ]
     echo "Darwin"
 fi
 
-
 GITHUB_DIR=$HOME_DIR/Dropbox/github/waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
@@ -107,13 +106,13 @@ echo "#######################"
 echo "## Dockerfile  setters"
 echo "#######################" 
 
-#SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="JA"       
-#SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="JA"
-#SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="JA"
+SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="JA"       
+SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="JA"
+SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="JA"
 
-SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="JA"
-SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="JA"
-SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="JA"
+SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="NEE"
+SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="NEE"
+SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="NEE"
 
 echo "SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME     
 echo "SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME
@@ -128,8 +127,10 @@ echo "#######################"
 echo "## Networking setters" 
 echo "#######################"
 
-SET_CLERK_FRONTEND_NGINX_CONF="NEE"
 SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON="JA" 
+
+SET_CLERK_FRONTEND_NGINX_CONF="NEE"
+
 #SET_WAARDEPAPIEREN_CONFIG_JSON="JA" 
 #SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON="JA"
 

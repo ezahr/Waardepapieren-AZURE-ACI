@@ -224,7 +224,7 @@ echo " {
   \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://$CERT_HOST_IP:3232\",
   \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
   \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
-  \"NLX_OUTWAY_ENDPOINT\" : \"http://$CERT_HOST_IP:80\",
+  \"NLX_OUTWAY_ENDPOINT\" : \"http://mock-nlx:80\",
   \"NLX_CERT\": \"/certs/org.crt\",
   \"NLX_KEY\": \"/certs/org.key\",
   \"LOG_LEVEL\": \"info\",
@@ -485,7 +485,6 @@ echo "running git_clone"
  git clone https://github.com/discipl/waardepapieren.git
 
 cd $DOCKER_COMPOSE_DIR
-rm dc.bash
 touch touch dc.bash
 echo "
 #! /bin/bash
