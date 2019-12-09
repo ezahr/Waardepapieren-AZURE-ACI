@@ -74,10 +74,10 @@ echo "#######################"
 echo "# Directories used " 
 echo "#######################"
 
-#HOME_DIR=/hom/boscp08
-HOME_DIR=/Users/boscp08
-GITHUB_DIR=$HOME_DIR/Dropbox/github/Waardepapieren-AZURE-ACI
-PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity
+#HOME_DIR=/hom/boscp08     # ubuntu 19.04  
+HOME_DIR=/Users/boscp08    #"macos catalina"
+GITHUB_DIR=$HOME_DIR/Dropbox/github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
+PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
 CLERK_FRONTEND_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 CLERK_FRONTEND_NGINX_DIR=$CLERK_FRONTEND_DIR/nginx
