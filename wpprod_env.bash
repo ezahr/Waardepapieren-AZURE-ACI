@@ -151,44 +151,8 @@ docker-compose -f docker-compose-travis.yml up --build
 
 # networking settings 
 
-
-
-waardepapieren_service_config_compose_travis_json () {
-echo "running waardepapieren_service_config_compose_travis_json"
-#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-#WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-#/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service/configuration
-cd $WAARDEPAPIEREN_SERVICE_CONFIG_DIR
-mv waardepapieren-config-compose-travis.json  waardepapieren-config-compose-travis_`date "+%Y%m%d-%H%M%S"`.json
-touch waardepapieren-config-compose-travis.json
-
-echo " {
-  \"EPHEMERAL_ENDPOINT\" : \"https://waardepapieren-service:3232\",
-  \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://waardepapieren-service:3232\",
-  \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
-  \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
-  \"NLX_OUTWAY_ENDPOINT\" : \"http://mock-nlx:80\",
-  \"NLX_CERT\": \"/certs/org.crt\",
-  \"NLX_KEY\": \"/certs/org.key\",
-  \"LOG_LEVEL\": \"info\",
-  \"EPHEMERAL_RETENTION_TIME\": $EPHEMERAL_RETENTION_TIME,
-  \"PRODUCT_NEED\" : \"BRP_UITTREKSEL_NEED\",
-  \"SOURCE_NLX_PATH\" : \"/brp/basisregistratie/natuurlijke_personen/bsn/{BSN}\",
-  \"SOURCE_ARGUMENT\" : \"BSN\",
-  \"PRODUCT_ACCEPT\" : \"BRP_UITTREKSEL_ACCEPT\",
-  \"PRODUCT_NAME\" : \"Gewaarmerkt digitaal afschrift van gegevens uit de basisregistratie personen (BRP)\",
-  \"PRODUCT_DESCRIPTION\" : \"Uittreksel Basis Registratie Persoonsgegevens\",
-  \"PRODUCT_PURPOSE\" : \"Bewijs verblijfadres in woonplaats\",
-  \"SOURCE_DATA_SELECTION\" : [
-    {\"Burgerservicenummer (BSN)\" : \"burgerservicenummer\"},
-    {\"Woonplaats verblijfadres\" : \"verblijfadres.woonplaats\"}
-  ]
-} " > waardepapieren-config-compose-travis.json
-}
-
 clerk_frontend_nginx_conf() {
-#NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
+#CLERK_FRONTEND_NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 echo "running clerk_frontend_nginx_conf"
 sleep 1
@@ -244,6 +208,43 @@ http {
     }
 }" > nginx.conf
 } 
+
+
+waardepapieren_service_config_compose_travis_json () {
+echo "running waardepapieren_service_config_compose_travis_json"
+#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+#WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
+#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
+#/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service/configuration
+cd $WAARDEPAPIEREN_SERVICE_CONFIG_DIR
+mv waardepapieren-config-compose-travis.json  waardepapieren-config-compose-travis_`date "+%Y%m%d-%H%M%S"`.json
+touch waardepapieren-config-compose-travis.json
+
+echo " {
+  \"EPHEMERAL_ENDPOINT\" : \"https://waardepapieren-service:3232\",
+  \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://waardepapieren-service:3232\",
+  \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
+  \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
+  \"NLX_OUTWAY_ENDPOINT\" : \"http://mock-nlx:80\",
+  \"NLX_CERT\": \"/certs/org.crt\",
+  \"NLX_KEY\": \"/certs/org.key\",
+  \"LOG_LEVEL\": \"info\",
+  \"EPHEMERAL_RETENTION_TIME\": $EPHEMERAL_RETENTION_TIME,
+  \"PRODUCT_NEED\" : \"BRP_UITTREKSEL_NEED\",
+  \"SOURCE_NLX_PATH\" : \"/brp/basisregistratie/natuurlijke_personen/bsn/{BSN}\",
+  \"SOURCE_ARGUMENT\" : \"BSN\",
+  \"PRODUCT_ACCEPT\" : \"BRP_UITTREKSEL_ACCEPT\",
+  \"PRODUCT_NAME\" : \"Gewaarmerkt digitaal afschrift van gegevens uit de basisregistratie personen (BRP)\",
+  \"PRODUCT_DESCRIPTION\" : \"Uittreksel Basis Registratie Persoonsgegevens\",
+  \"PRODUCT_PURPOSE\" : \"Bewijs verblijfadres in woonplaats\",
+  \"SOURCE_DATA_SELECTION\" : [
+    {\"Burgerservicenummer (BSN)\" : \"burgerservicenummer\"},
+    {\"Woonplaats verblijfadres\" : \"verblijfadres.woonplaats\"}
+  ]
+} " > waardepapieren-config-compose-travis.json
+}
+
+
 
 
 # //////////////////////////////////////////////////////////////////////////////////////////

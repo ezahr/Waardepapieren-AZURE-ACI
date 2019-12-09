@@ -95,7 +95,6 @@ if [ $SET_CLERK_FRONTEND_NGINX_CONF = "JA" ]
     then clerk_frontend_nginx_conf      # docker network fix4https://waardepapieren-service
 fi 
 
-
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 

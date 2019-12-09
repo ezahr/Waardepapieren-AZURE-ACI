@@ -31,8 +31,8 @@ enter_cont() {
 echo "#######################"
 echo "## FQDN Fully Qualified Name `date "+%Y%m%d-%H%M%S"` "
 echo "#######################" 
-CMD_GIT_CLONE="NEE"
-CMD_DOCKER_COMPOSE="JA"
+CMD_GIT_CLONE="JA"
+CMD_DOCKER_COMPOSE="NEE"
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 
 #CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN linux VVM
@@ -73,6 +73,8 @@ ECT-HOST_COMMENT
 echo "#######################" 
 echo "# Directories used " 
 echo "#######################"
+
+HOME_DIR=/Users/boscp08 
 
 if [ uname = 'Linux' ]
   then  HOME_DIR=/home/boscp08 
