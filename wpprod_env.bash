@@ -220,8 +220,8 @@ mv waardepapieren-config-compose-travis.json  waardepapieren-config-compose-trav
 touch waardepapieren-config-compose-travis.json
 
 echo " {
-  \"EPHEMERAL_ENDPOINT\" : \"https://$CERT_HOST_IP:3232\",
-  \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://$CERT_HOST_IP:3232\",
+  \"EPHEMERAL_ENDPOINT\" : \"https://waardepapieren-service:3232\",
+  \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://waardepapieren-service:3232\",
   \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
   \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
   \"NLX_OUTWAY_ENDPOINT\" : \"http://mock-nlx:80\",
