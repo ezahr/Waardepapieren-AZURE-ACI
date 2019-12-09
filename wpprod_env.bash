@@ -42,7 +42,7 @@ az container create --resource-group $AZ_RESOURCE_GROUP --file deploy-aci.yaml
 create_azure_resource_group() {
 echo "running create_azure_resource_group" 
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
-az group create --name $AZ_RESOURCE_GROUP --location 
+az group create --name $AZ_RESOURCE_GROUP --location westeurope
 enter_cont
 }
 
@@ -188,14 +188,14 @@ http {
         ssl_certificate_key /etc/nginx/certs/org.key;
 
         location /api/eph/ {
-            #    proxy_pass https://$CERT_HOST_IP:3232/;
-                 proxy_pass https://waardepapieren-service:3232/;
+                proxy_pass https://$CERT_HOST_IP:3232/;
+           #     proxy_pass https://waardepapieren-service:3232/;
         }
 
         location /api/eph-ws {
            
-             # proxy_pass https://$CERT_HOST_IP:3232;
-               proxy_pass https://waardepapieren-service:3232;
+              proxy_pass https://$CERT_HOST_IP:3232;
+             #  proxy_pass https://waardepapieren-service:3232;
             proxy_http_version 1.1;
             proxy_set_header Upgrade \$http_upgrade;
             proxy_set_header Connection "Upgrade";
@@ -224,11 +224,11 @@ mv waardepapieren-config-compose-travis.json  waardepapieren-config-compose-trav
 touch waardepapieren-config-compose-travis.json
 
 echo " {
-  \"EPHEMERAL_ENDPOINT\" : \"https://waardepapieren-service:3232\",
-  \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://waardepapieren-service:3232\",
+  \"EPHEMERAL_ENDPOINT\" : \"https://$CERT_HOST_IP:3232\",
+  \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://$CERT_HOST_IP:3232\",
   \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
   \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
-  \"NLX_OUTWAY_ENDPOINT\" : \"http://mock-nlx:80\",
+  \"NLX_OUTWAY_ENDPOINT\" : \"http://$CERT_HOST_IP:80\",
   \"NLX_CERT\": \"/certs/org.crt\",
   \"NLX_KEY\": \"/certs/org.key\",
   \"LOG_LEVEL\": \"info\",
@@ -281,7 +281,7 @@ COPY --from=0 /app/build /usr/share/nginx/html"  > Dockerfile
 }
 
 clerk_frontend_dockerfile_without_volumes() {
-echo "running   clerk_frontend_dockerfile_without_volumes"
+echo "running clerk_frontend_dockerfile_without_volumes"
 #CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 sleep 1
 cd $CLERK_FRONTEND_DIR

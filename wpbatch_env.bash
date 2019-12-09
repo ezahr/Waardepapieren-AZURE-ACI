@@ -36,7 +36,8 @@ CMD_DOCKER_COMPOSE="JA"
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 
 #CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN linux VVM
-CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
+#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
+CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
 #CERT_HOST_IP=localhost  #FQDN linux
 #portal.azure.com
 #grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
@@ -156,8 +157,8 @@ CMD_CONTAINER_STOP_AND_PRUNE="NEE"
 CMD_IMAGE_REMOVE="NEE"
 DOCKER_USER="boscp08"  #NB repository name must be lowercase
 DOCKER_VERSION_TAG="4.0"
-DOCKER_COMMIT="NEE"
-DOCKER_PUSH="NEE"
+DOCKER_COMMIT="JA"
+DOCKER_PUSH="JA"
 
 echo "CMD_CONTAINER_STOP_AND_PRUNE="$CMD_CONTAINER_STOP_AND_PRUNE
 echo "CMD_IMAGE_REMOVE="$CMD_IMAGE_REMOVE
@@ -175,7 +176,7 @@ AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
 AZ_RESOURCE_GROUP_DELETE="NEE"
 AZ_RESOURCE_GROUP_CREATE="NEE"
 CREATE_AZ_DEPLOY_ACI_YAML="NEE"  #@PROJECT_DIR deploy_aci.yml
-CMD_AZ_CREATE_CONTAINERGROUP="NEE"  #.. jeuh - Running ..
+CMD_AZ_CREATE_CONTAINERGROUP="JA"  #.. jeuh - Running ..
 
 echo "AZ_RESOURCE_GROUP="$AZ_RESOURCE_GROUP
 echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE
