@@ -24,13 +24,8 @@ enter_cont() {
     read
 }
 
-
-
 # //////////////////////////////////////////////////////////////////////////////////////////
 
-echo "#######################"
-echo "## FQDN Fully Qualified Name `date "+%Y%m%d-%H%M%S"` "
-echo "#######################" 
 CMD_GIT_CLONE="NEE"
 CMD_DOCKER_COMPOSE="JA"
 CMD_DOCKER_COMPOSE_BUILD=" --build"
@@ -47,6 +42,9 @@ EPHEMERAL_RETENTION_TIME=2592000 #30 dagen
 
 if [ $PROMPT = "JA" ] 
  then 
+  echo "#######################"
+  echo "## FQDN Fully Qualified Name $CERT_HOST_IP `date "+%Y%m%d-%H%M%S"` "
+  echo "#######################" 
   echo "CMD_GIT_CLONE="$CMD_GIT_CLONE
   echo "CERT_HOST_IP="$CERT_HOST_IP
   echo "EPHEMERAL_RETENTION_TIME="$EPHEMERAL_RETENTION_TIME
@@ -54,7 +52,6 @@ if [ $PROMPT = "JA" ]
   echo "CMD_DOCKER_COMPOSE_BUILD="$CMD_DOCKER_COMPOSE_BUILD
   enter_cont
 fi
-
 
 << "ECT-HOST_COMMENT"
 ## /etc/hosts 
@@ -113,7 +110,9 @@ echo "DOCKER_COMPOSE_DIR="$DOCKER_COMPOSE_DIR
 echo "CLERK_FRONTEND_CYPRESS_DIR="$CLERK_FRONTEND_CYPRESS_DIR
 echo "WAARDEPAPIEREN_SERVICE_DIR="$WAARDEPAPIEREN_SERVICE_DIR
 echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="$WAARDEPAPIEREN_SERVICE_CONFIG_DIR
- 
+ fi
+
+
 # //////////////////////////////////////////////////////////////////////////////////////////
 #echo "#######################"
 #echo "## Dockerfile  setters"
@@ -217,5 +216,4 @@ echo "CMD_AZ_CREATE_CONTAINERGROUP="$CMD_AZ_CREATE_CONTAINERGROUP
 fi
 
 # //////////////////////////////////////////////////////////////////////////////////////////
-
 #EOF  hope the run will be okay.
