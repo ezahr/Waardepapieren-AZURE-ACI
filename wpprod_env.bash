@@ -129,6 +129,10 @@ docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nlx:$DO
 
 docker_compose_min_f_docker-travis_compose_yml_up() {
 echo "running docker_compose_min_f_docker-travis_compose_yml_up"
+
+
+if [ $PROMPT = "JA" ] 
+ then
 #DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
 echo " process is readay at: waardepapieren-service_1  | Serving needs"   
 echo "blader dan naar https://$CERT_HOST_IP "
@@ -142,6 +146,7 @@ echo "Stopping waardepapieren_waardepapieren-service_1 ... done"
 echo "Stopping waardepapieren_mock-nlx_1               ... done"
 echo " here we go with docker-compose -f docker-compose-travis.yml up --build"
 enter_cont
+fi
 
 cd $DOCKER_COMPOSE_DIR
 docker-compose -f docker-compose-travis.yml up --build
@@ -155,7 +160,6 @@ clerk_frontend_nginx_conf() {
 #CLERK_FRONTEND_NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 echo "running clerk_frontend_nginx_conf"
-sleep 1
 cd $CLERK_FRONTEND_NGINX_DIR
 mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
 touch nginx.conf
@@ -188,14 +192,14 @@ http {
         ssl_certificate_key /etc/nginx/certs/org.key;
 
         location /api/eph/ {
-                proxy_pass https://$CERT_HOST_IP:3232/;
-           #     proxy_pass https://waardepapieren-service:3232/;
+           #     proxy_pass https://$CERT_HOST_IP:3232/;
+                proxy_pass https://waardepapieren-service:3232/;
         }
 
         location /api/eph-ws {
            
-              proxy_pass https://$CERT_HOST_IP:3232;
-             #  proxy_pass https://waardepapieren-service:3232;
+             # proxy_pass https://$CERT_HOST_IP:3232;
+               proxy_pass https://waardepapieren-service:3232;
             proxy_http_version 1.1;
             proxy_set_header Upgrade \$http_upgrade;
             proxy_set_header Connection "Upgrade";
@@ -207,8 +211,11 @@ http {
     }
 }" > nginx.conf
 
-cat nginx.conf
-enter_cont
+#if [ $PROMPT = "JA" ] 
+# then
+#  cat nginx.conf
+#  enter_cont
+#fi 
 
 } 
 
@@ -224,11 +231,11 @@ mv waardepapieren-config-compose-travis.json  waardepapieren-config-compose-trav
 touch waardepapieren-config-compose-travis.json
 
 echo " {
-  \"EPHEMERAL_ENDPOINT\" : \"https://$CERT_HOST_IP:3232\",
-  \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://$CERT_HOST_IP:3232\",
-  \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
-  \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
-  \"NLX_OUTWAY_ENDPOINT\" : \"http://$CERT_HOST_IP:80\",
+   \"EPHEMERAL_ENDPOINT\" : \"https://localhost:3232\",
+   \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://localhost:3232\",
+   \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
+   \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
+  \"NLX_OUTWAY_ENDPOINT\" : \"http://mock-nlx:80\",
   \"NLX_CERT\": \"/certs/org.crt\",
   \"NLX_KEY\": \"/certs/org.key\",
   \"LOG_LEVEL\": \"info\",
@@ -248,15 +255,12 @@ echo " {
 }
 
 
-
-
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 clerk_frontend_dockerfile_with_volumes() {
 echo "running clerk_frontend_dockerfile_with_volumes"
 CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-sleep 1
 cd $CLERK_FRONTEND_DIR
 mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
 touch Dockerfile
@@ -281,9 +285,9 @@ COPY --from=0 /app/build /usr/share/nginx/html"  > Dockerfile
 }
 
 clerk_frontend_dockerfile_without_volumes() {
+
 echo "running clerk_frontend_dockerfile_without_volumes"
 #CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-sleep 1
 cd $CLERK_FRONTEND_DIR
 mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
 touch Dockerfile
@@ -299,6 +303,7 @@ ADD public /app/public
 ADD src /app/src
 ARG CERTIFICATE_HOST
 ENV REACT_APP_CERTIFICATE_HOST=
+# RUN apt-getinstall iputils-ping
 RUN npm run build
 
 FROM nginx:1.15.8
@@ -311,12 +316,12 @@ ADD nginx/certs/org.crt /etc/nginx/certs/org.crt
 ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > Dockerfile
 }
 
+
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 waardepapieren_service_dockerfile_with_volumes() {
 echo "running waardepapieren_service_dockerfile_with_volumes"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-sleep 1
 cd $WAARDEPAPIEREN_SERVICE_DIR
 mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
 touch Dockerfile
@@ -339,6 +344,7 @@ sleep 1
 cd $WAARDEPAPIEREN_SERVICE_DIR
 mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
 touch Dockerfile
+
 echo "FROM node:10
 RUN mkdir /app
 ADD .babelrc package.json package-lock.json /app/
@@ -363,6 +369,7 @@ ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
 
 RUN npm install --production
 CMD npm start"  > Dockerfile
+
 }
 
 
@@ -415,7 +422,6 @@ services:
 
 docker_compose_travis_yml_without_volumes() {
 echo "running docker_compose_travis_yml_without_volumes"
-sleep 1
 cd $DOCKER_COMPOSE_DIR
 touch docker-compose-travis.yml 
 mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
