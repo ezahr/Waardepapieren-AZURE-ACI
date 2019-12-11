@@ -11,7 +11,7 @@
 # File:            :wp_compose.bash
 # version          :20190412 v0
 # File Type        :Bash 
-# Purpose          :Creating an optimized production build...     
+# Purpose          : Creating an optimized production build...     
 # Title:           :https://github.com/discipl/waardepapieren 
 # Category         :Discipl deploy script
 # Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI wp_compose.bash
@@ -22,6 +22,7 @@
 # DevOps: REST API Execution Through Bash Shell Scripting
 # I hope this helps my fellow (bash) hackers out there.
 # container brings its own file system, on every type of system
+# Run applications in isolated environment, own filesystem with programs, libraries configuration files, data files etcetcect
 
 # ********** instructies **********
 #1. start bash shell
@@ -56,7 +57,7 @@ enter_cont
 if [ $CMD_GIT_CLONE = "JA" ] 
   then git_clone 
 fi 
- //////////////////////////////////////////////////////////////////////////////////////////
+ #//////////////////////////////////////////////////////////////////////////////////////////
 
 if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = "JA" ]
   then docker_compose_travis_yml_with_volumes

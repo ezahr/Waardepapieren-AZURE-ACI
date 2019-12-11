@@ -37,6 +37,11 @@ create_azure_container_group() {
 echo "running create_azure_container_group" 
 cd $PROJECT_DIR
 az container create --resource-group $AZ_RESOURCE_GROUP --file deploy-aci.yaml
+# https://docs.microsoft.com/en-us/azure/container-instances/container-instances-multi-container-yaml
+# View deployment state
+# az container show --resource-group $AZ_RESOURCE_GROUP  --name myContainerGroup --output table
+
+
 }
 
 create_azure_resource_group() {
@@ -148,10 +153,12 @@ echo " here we go with docker-compose -f docker-compose-travis.yml up --build"
 enter_cont
 fi
 
+# Met docker-compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiëren die uit meerdere Docker-containers bestaat. 
+# Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren.  
+
 cd $DOCKER_COMPOSE_DIR
 docker-compose -f docker-compose-travis.yml up --build
 }
-
 
 
 # networking settings 
@@ -192,14 +199,16 @@ http {
         ssl_certificate_key /etc/nginx/certs/org.key;
 
         location /api/eph/ {
-           #     proxy_pass https://$CERT_HOST_IP:3232/;
-                proxy_pass https://waardepapieren-service:3232/;
+           #     proxy_pass https://$CERT_HOST_IP:3232/;    #pdf effect
+           #     proxy_pass https://waardepapieren-service:3232/;
+                 proxy_pass https://172.19.0.3:3232/;
         }
 
         location /api/eph-ws {
            
-             # proxy_pass https://$CERT_HOST_IP:3232;
-               proxy_pass https://waardepapieren-service:3232;
+             # proxy_pass https://$CERT_HOST_IP:3232;   # pdf effect
+             #  proxy_pass https://waardepapieren-service:3232;
+                proxy_pass https://172.19.0.3:3232;
             proxy_http_version 1.1;
             proxy_set_header Upgrade \$http_upgrade;
             proxy_set_header Connection "Upgrade";
@@ -303,7 +312,6 @@ ADD public /app/public
 ADD src /app/src
 ARG CERTIFICATE_HOST
 ENV REACT_APP_CERTIFICATE_HOST=
-# RUN apt-getinstall iputils-ping
 RUN npm run build
 
 FROM nginx:1.15.8
@@ -391,6 +399,9 @@ services:
       - ./waardepapieren-service/system-test/ephemeral-certs:/ephemeral-certs:ro
       - ./waardepapieren-service/configuration/:/app/configuration:ro
     build: waardepapieren-service/.
+    # network_mode: host
+    #networks:
+    #  test:
     links:
       - mock-nlx
     ports:
@@ -402,22 +413,36 @@ services:
       - NODE_TLS_REJECT_UNAUTHORIZED=0
   clerk-frontend:
     build:
+      #network_mode: host
+    #  networks:
+    #  test:
       context: clerk-frontend/
       args:
         - CERTIFICATE_HOST=http://$CERT_HOST_IP:8880
     links:
       - waardepapieren-service
-    ports:
+        ports:
       - 443:443
       - 8880:8880
+
     healthcheck:
       test: service nginx status
     volumes:
       - ./clerk-frontend/nginx/certs:/etc/nginx/certs:ro
   mock-nlx:
     build: mock-nlx/
+    #network_mode: host
+    #networks:
+    #  test:
     ports:
-      - 80:80"  > docker-compose-travis.yml
+      - 80:80
+    
+    #networks:
+    #test:
+    #driver: bridge  "  > docker-compose-travis.yml
+
+
+
 }
 
 docker_compose_travis_yml_without_volumes() {
@@ -482,14 +507,48 @@ docker-compose -f docker-compose-travis.yml up --build" > dc.bash  #shortcut.
 
 }
 
+
+
+<<DOCKER-INSTALLATION-AND-CONFIGURATION
+
+
+# container brings itś own file system, on every type of system
+## docker 
+#|step|description|command|
+#|--|------------|----------------|
+#|1|	install docker download | `sudo  install -y docker docker-common docker-client`  |
+#|2| enable docker daemon| 	` systemctl enable docker ` |
+#|3| and start docker daemon	| 	` systemctl start docker ` |
+#|4| verify that docker daemon is active by running your first container| ` sudo docker run hello-world` |
+#
+# but now as a 'normal'  user
+#`groupadd docker`
+#`usermod -aG docker boscp08`
+#`systemctl restart docker `
+#`docker run hello-world` 
+# hello from docker This message shows that your installation appears to be working correctly. *
+
+
+groupadd docker usermod -aG docker boscp08 systemctl restart docker docker run hello-world
+*hello from docker This message shows that your installation appears to be working correctly. *
+
+remove alle containers docker stop $(docker ps -a -q) 
+remove alle containers and images docker rm $(docker ps -a -q) && docker rmi $(docker images -q) 
+remove all stopped containers (just waist of storage} docker container prune
+
+DOCKER-INSTALLATION-AND-CONFIGURATION
+
+
+<<AZURE-INSTALLATION-AND-CONFIGURATION
+
+pending
+
+AZURE-INSTALLATION-AND-CONFIGURATION
+
+
 # //////////////////////////////////////////////////////////////////////////////////////////
 
 << 'MULTILINE-COMMENT'
-
-#  Clean up previous deployment (containersk and images)
-# remove alle containers `docker stop $(docker ps -a -q)`
-# remove alle containers and images `docker rm $(docker ps -a -q) && docker rmi $(docker images -q)`
-# remove all stopped containers (just waist of storage} `docker container prune`
 
 # blader naar protal.azure.com 
 
@@ -526,21 +585,6 @@ docker-compose -f docker-compose-travis.yml up --build" > dc.bash  #shortcut.
 #boscp08@waardepapierenVM:~$ 
 
 
-# container brings itś own file system, on every type of system
-## docker 
-#|step|description|command|
-#|--|------------|----------------|
-#|1|	install docker download | `sudo  install -y docker docker-common docker-client`  |
-#|2| enable docker daemon| 	` systemctl enable docker ` |
-#|3| and start docker daemon	| 	` systemctl start docker ` |
-#|4| verify that docker daemon is active by running your first container| ` docker run hello-world` |
-#
-#but now as a 'normal'  user
-#`groupadd docker`
-#` usermod -aG docker boscp08`
-#`systemctl restart docker `
-#`docker run hello-world` 
-#*hello from docker This message shows that your installation appears to be working correctly. *
 
 
 # https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf
