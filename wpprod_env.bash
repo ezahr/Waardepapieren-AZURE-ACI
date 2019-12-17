@@ -199,16 +199,16 @@ http {
         ssl_certificate_key /etc/nginx/certs/org.key;
 
         location /api/eph/ {
-           #     proxy_pass https://$CERT_HOST_IP:3232/;    #pdf effect
+               proxy_pass https://$CERT_HOST_IP:3232/;    #pdf effect
            #     proxy_pass https://waardepapieren-service:3232/;
-                 proxy_pass https://172.19.0.3:3232/;
+            #     proxy_pass https://172.19.0.3:3232/;
         }
 
         location /api/eph-ws {
            
-             # proxy_pass https://$CERT_HOST_IP:3232;   # pdf effect
+              proxy_pass https://$CERT_HOST_IP:3232;   # pdf effect
              #  proxy_pass https://waardepapieren-service:3232;
-                proxy_pass https://172.19.0.3:3232;
+            #  proxy_pass https://172.19.0.3:3232;
             proxy_http_version 1.1;
             proxy_set_header Upgrade \$http_upgrade;
             proxy_set_header Connection "Upgrade";
@@ -507,125 +507,3 @@ docker-compose -f docker-compose-travis.yml up --build" > dc.bash  #shortcut.
 
 }
 
-
-
-<<DOCKER-INSTALLATION-AND-CONFIGURATION
-
-
-# container brings itś own file system, on every type of system
-## docker 
-#|step|description|command|
-#|--|------------|----------------|
-#|1|	install docker download | `sudo  install -y docker docker-common docker-client`  |
-#|2| enable docker daemon| 	` systemctl enable docker ` |
-#|3| and start docker daemon	| 	` systemctl start docker ` |
-#|4| verify that docker daemon is active by running your first container| ` sudo docker run hello-world` |
-#
-# but now as a 'normal'  user
-#`groupadd docker`
-#`usermod -aG docker boscp08`
-#`systemctl restart docker `
-#`docker run hello-world` 
-# hello from docker This message shows that your installation appears to be working correctly. *
-
-
-groupadd docker usermod -aG docker boscp08 systemctl restart docker docker run hello-world
-*hello from docker This message shows that your installation appears to be working correctly. *
-
-remove alle containers docker stop $(docker ps -a -q) 
-remove alle containers and images docker rm $(docker ps -a -q) && docker rmi $(docker images -q) 
-remove all stopped containers (just waist of storage} docker container prune
-
-DOCKER-INSTALLATION-AND-CONFIGURATION
-
-
-<<AZURE-INSTALLATION-AND-CONFIGURATION
-
-pending
-
-AZURE-INSTALLATION-AND-CONFIGURATION
-
-
-# //////////////////////////////////////////////////////////////////////////////////////////
-
-<< 'MULTILINE-COMMENT'
-
-# blader naar protal.azure.com 
-
-
-
-#boscp08s-mbp:~ boscp08$ ssh boscp08@waardepapieren.westeurope.cloudapp.azure.com
-#Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 5.0.0-1025-azure x86_64)
-#
-# * Documentation:  https://help.ubuntu.com
-# * Management:     https://landscape.canonical.com
-# * Support:        https://ubuntu.com/advantage
-#
-#  System information as of Thu Dec  5 17:38:25 UTC 2019
-#
-#  System load:  0.0                Users logged in:                0
-#  Usage of /:   17.3% of 28.90GB   IP address for eth0:            10.0.0.4
-#  Memory usage: 35%                IP address for docker0:         172.17.0.1
-#  Swap usage:   0%                 IP address for br-f50a21cd3c1e: 172.24.0.1
-#  Processes:    134
-#
-# * Overheard at KubeCon: "microk8s.status just blew my mind".
-#
-#     https://microk8s.io/docs/commands#microk8s.status
-#
-# * Canonical Livepatch is available for installation.
-#   - Reduce system reboots and improve kernel security. Activate at:
-#     https://ubuntu.com/livepatch
-#
-#15 packages can be updated.
-#0 updates are security updates.#
-#
-#
-#Last login: Thu Dec  5 15:02:36 2019 from 85.159.97.71
-#boscp08@waardepapierenVM:~$ 
-
-
-
-
-# https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf
-# https://code.visualstudio.com/docs/getstarted/tips-and-tricks
-# In Visual Studio Code  you can now select columns by holding down Shift + Alt , 
-# then click and drag with the mouse. This can also be done using just the keyboard by holding down 
-# Ctrl + Shift + Alt and then using the arrow keys.
-
-# You can select blocks of text by holding Shift+Alt (Shift+Option on macOS) while you drag your mouse. 
-# A separate cursor will be added to the end of each selected line. You can also use keyboard shortcuts to trigger 
-# column selection.
-
-
-boscp08s-MacBook-Pro:~ boscp08$ ssh boscp08@waardepapieren.westeurope.cloudapp.azure.com
-Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 5.0.0-1025-azure x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
-  System information as of Fri Dec  6 14:24:04 UTC 2019
-
-  System load:  0.09               Users logged in:                0
-  Usage of /:   18.3% of 28.90GB   IP address for eth0:            10.0.0.4
-  Memory usage: 35%                IP address for docker0:         172.17.0.1
-  Swap usage:   0%                 IP address for br-f50a21cd3c1e: 172.24.0.1
-  Processes:    132
-
- * Overheard at KubeCon: "microk8s.status just blew my mind".
-
-     https://microk8s.io/docs/commands#microk8s.status
-
- * Canonical Livepatch is available for installation.
-   - Reduce system reboots and improve kernel security. Activate at:
-     https://ubuntu.com/livepatch
-
-16 packages can be updated.
-0 updates are security updates.
-
-
-*** System restart required ***
-Last login: Thu Dec  5 17:38:25 2019 from 86.86.102.241
-
-MULTILINE-COMMENT
