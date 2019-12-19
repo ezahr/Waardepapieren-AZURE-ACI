@@ -103,6 +103,10 @@ properties:
     ports:
     - protocol: tcp
       port: '443' 
+    - protocol: tcp
+      port: '3232' 
+    - protocol: tcp
+      port: '80'     
 tags: null
 type: Microsoft.ContainerInstance/containerGroups" > deploy-aci.yaml
 
@@ -225,7 +229,7 @@ echo " {
    \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://localhost:3232\",
    \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
    \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
-  \"NLX_OUTWAY_ENDPOINT\" : \"http://mock-nlx:80\",
+  \"NLX_OUTWAY_ENDPOINT\" : \"http://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:80\",
   \"NLX_CERT\": \"/certs/org.crt\",
   \"NLX_KEY\": \"/certs/org.key\",
   \"LOG_LEVEL\": \"info\",
