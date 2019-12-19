@@ -62,7 +62,7 @@ CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN linux
 CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=discipl.westeurope.azurecontainer.io
 #grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
 #EPHEMERAL_RETENTION_TIME=86400  #24h 
-EPHEMERAL_RETENTION_TIME=2592000 #30 dagen
+EPHEMERAL_RETENTION_TIME=2592001 #30 dagen
 
 echo "***  You are about to start to build new waardepapieren images and containers "
 echo "***  droplet-targethost= https://$CERT_HOST_IP " 
@@ -251,6 +251,8 @@ if [ $DOCKER_PUSH = "JA" ]
   then docker_push
 fi 
 
+echo " cd back into " $GITHUB_DIR
+cd $GITHUB_DIR
 
 . wp_deploy_aci.bash  
 

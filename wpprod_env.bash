@@ -95,6 +95,7 @@ properties:
           memoryInGb: 0.5
       ports:
       - port: 443
+      - port: 8880
   osType: Linux
   ipAddress:
     type: Public
@@ -106,9 +107,9 @@ properties:
     - protocol: tcp
       port: '3232' 
     - protocol: tcp
-      port: '80'  
-   -  protocol: tcp
-      port: '8880'       
+      port: '80'    
+    - protocol: tcp
+      port: '8880'      
 tags: null
 type: Microsoft.ContainerInstance/containerGroups" > deploy-aci.yaml
 
@@ -268,7 +269,7 @@ RUN npm install --unsafe-perm
 ADD public /app/public
 ADD src /app/src
 ARG CERTIFICATE_HOST
-ENV REACT_APP_CERTIFICATE_HOST=\${CERTIFICATE_HOST}
+ENV REACT_APP_CERTIFICATE_HOST=http://$CERT_HOST_IP:8880
 RUN npm run build
 
 FROM nginx:1.15.8
@@ -295,7 +296,7 @@ RUN npm install --unsafe-perm
 ADD public /app/public
 ADD src /app/src
 ARG CERTIFICATE_HOST
-ENV REACT_APP_CERTIFICATE_HOST=
+ENV REACT_APP_CERTIFICATE_HOST=${CERTIFICATE_HOST}
 RUN npm run build
 
 FROM nginx:1.15.8
