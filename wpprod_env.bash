@@ -100,7 +100,7 @@ properties:
   ipAddress:
     type: Public
     # fqdn wordt: discipl_waardepapieren.westeurope.azurecontainer.io
-    dnsNameLabel: "discipl" 
+    dnsNameLabel: "waardepapieren" 
     ports:
     - protocol: tcp
       port: '443' 

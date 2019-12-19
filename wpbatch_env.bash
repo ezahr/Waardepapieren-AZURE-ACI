@@ -59,6 +59,8 @@ if  [ uname = 'Darwin' ]
     echo "Darwin"
 fi
 
+PROMPT="JA"
+
 #GITHUB_DIR=$HOME_DIR/Dropbox/github/waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 
 GITHUB_DIR=$HOME_DIR/github/Waardepapieren-AZURE-ACI 
