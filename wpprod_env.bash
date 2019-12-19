@@ -16,11 +16,7 @@
 # Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
 
 #'big thanks to pim Otte ,stef van Leeuwen Wigo4it vincent van der laar.  
-# https://github.com/Peter-Bosch/Workbook_Docker_fundamentals
-#
-# remove alle containers docker stop $(docker ps -a -q) 
-# remove alle containers and images docker rm $(docker ps -a -q) && docker rmi $(docker images -q) 
-# remove all stopped containers (just waist of storage}   
+
 
 ### barf  
 enter_cont() {

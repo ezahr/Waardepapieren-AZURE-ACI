@@ -251,8 +251,8 @@ enter_cont
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 
-if [ $DOCKER_COMMIT = "JA" ]
-  then docker_commit
+if [ $DOCKER_TAG = "JA" ]
+  then docker_tag
 fi 
 
 if [ $DOCKER_PUSH = "JA" ]
