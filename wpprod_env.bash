@@ -106,7 +106,9 @@ properties:
     - protocol: tcp
       port: '3232' 
     - protocol: tcp
-      port: '80'     
+      port: '80'  
+   -  protocol: tcp
+      port: '8880'       
 tags: null
 type: Microsoft.ContainerInstance/containerGroups" > deploy-aci.yaml
 
