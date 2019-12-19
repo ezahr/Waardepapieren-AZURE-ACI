@@ -142,6 +142,7 @@ docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
 
 # networking settings 
 
+
 clerk_frontend_nginx_conf() {
 #CLERK_FRONTEND_NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
@@ -299,6 +300,10 @@ COPY --from=0 /app/build /usr/share/nginx/html
 RUN mkdir /etc/nginx/certs
 ADD nginx/certs/org.crt /etc/nginx/certs/org.crt
 ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > Dockerfile
+
+echo "clerk-frontend Dockerfile"
+#cat Dockerfile
+#enter_cont
 }
 
 

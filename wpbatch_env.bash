@@ -26,8 +26,6 @@ enter_cont() {
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 
-
-
 #CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN linux VVM
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
 #CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
@@ -40,13 +38,15 @@ enter_cont() {
 
 
 
-
 # //////////////////////////////////////////////////////////////////////////////////////////
 #echo "#######################" 
 #echo "# Directories used " 
 #echo "#######################"
 
 HOME_DIR=/Users/boscp08 
+#echo $HOME_DIR
+#enter_cont
+
 
 if [ uname = 'Linux' ]
   then  HOME_DIR=/home/boscp08 
@@ -80,11 +80,8 @@ echo "DOCKER_COMPOSE_DIR="$DOCKER_COMPOSE_DIR
 echo "CLERK_FRONTEND_CYPRESS_DIR="$CLERK_FRONTEND_CYPRESS_DIR
 echo "WAARDEPAPIEREN_SERVICE_DIR="$WAARDEPAPIEREN_SERVICE_DIR
 echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="$WAARDEPAPIEREN_SERVICE_CONFIG_DIR
- fi
-
-# //////////////////////////////////////////////////////////////////////////////////////////
-
-
+#enter_cont
+fi
 
 
 # //////////////////////////////////////////////////////////////////////////////////////////

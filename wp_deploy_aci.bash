@@ -94,15 +94,12 @@ az group list
 enter_cont
 
 
-
-
 # //////////////////////////////////////////////////////////////////////////////////////
 
 
 if [ $CREATE_AZ_DEPLOY_ACI_YAML = "JA" ]
   then create_azure_deploy_aci_yaml
 fi 
-
 
 
 if [ $AZ_RESOURCE_GROUP_DELETE = "JA" ]

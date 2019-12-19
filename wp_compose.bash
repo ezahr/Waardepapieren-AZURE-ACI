@@ -27,7 +27,7 @@
 # ********** instructies **********
 #1. start bash shell
 #2. in wpprod_env.bash staan de modules hoef je in principe niet te wijzigen
-#3. in wpbatch_env.bash staan de stuurparameters worden aan begin getoond. naar behoefte wijzigen.
+#3. in wpbatch_env.bash staan de  mappen . naar behoefte wijzigen.
 #4  run het script `. wp_compose.bash`  
 
 # ********** Parameters **********
@@ -42,29 +42,33 @@ echo "***"
 echo "***  Welcome to  docker-compose "
 echo "***"   
 echo "***" 
+
+
+
+CMD_CONTAINER_STOP_AND_PRUNE="NEE"
+CMD_IMAGE_REMOVE="NEE"
+CMD_GIT_CLONE="NEE"
+CMD_DOCKER_COMPOSE="JA"
+CMD_DOCKER_COMPOSE_BUILD=" --build"
+DOCKER_USER="boscp08"  #NB repository name must be lowercase
+DOCKER_VERSION_TAG="4.0"
+DOCKER_COMMIT="JA"
+DOCKER_PUSH="JA"
+PROMPT="JA"
+
+
+
+CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN linux
+CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=discipl.westeurope.azurecontainer.io
+#grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
+#EPHEMERAL_RETENTION_TIME=86400  #24h 
+EPHEMERAL_RETENTION_TIME=2592000 #30 dagen
+
 echo "***  You are about to start to build new waardepapieren images and containers "
 echo "***  droplet-targethost= https://$CERT_HOST_IP " 
 echo "***" 
 
 enter_cont
-
-CMD_GIT_CLONE="NEE"
-CMD_DOCKER_COMPOSE="JA"
-CMD_DOCKER_COMPOSE_BUILD=" --build"
-CMD_CONTAINER_STOP_AND_PRUNE="NEE"
-CMD_IMAGE_REMOVE="NEE"
-DOCKER_USER="boscp08"  #NB repository name must be lowercase
-DOCKER_VERSION_TAG="4.0"
-DOCKER_COMMIT="JA"
-DOCKER_PUSH="JA"
-PROMPT="NEE"
-
-
-CERT_HOST_IP=localhost  #FQDN linux
-CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=waardepapieren.westeurope.azurecontainer.io
-#grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
-#EPHEMERAL_RETENTION_TIME=86400  #24h 
-EPHEMERAL_RETENTION_TIME=2592000 #30 dagen
 
 if [ $PROMPT = "JA" ] 
  then 
@@ -73,6 +77,7 @@ if [ $PROMPT = "JA" ]
   echo "#######################" 
   echo "CMD_GIT_CLONE="$CMD_GIT_CLONE
   echo "CERT_HOST_IP="$CERT_HOST_IP
+  echo "CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME" = $CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME
   echo "EPHEMERAL_RETENTION_TIME="$EPHEMERAL_RETENTION_TIME
   echo "CMD_DOCKER_COMPOSE="$CMD_DOCKER_COMPOSE
   echo "CMD_DOCKER_COMPOSE_BUILD="$CMD_DOCKER_COMPOSE_BUILD
@@ -118,6 +123,7 @@ echo "#######################"
 echo "SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME     
 echo "SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME
 echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME
+
 echo "SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME
 echo "SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME
 echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME
@@ -187,17 +193,19 @@ if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = "JA" ]
   then docker_compose_travis_yml_with_volumes
 fi 
 
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = "JA" ]
+  then docker_compose_travis_yml_without_volumes 
+fi 
+
+# //////////////////////////////////////////////////////////////////////////////////////////
+# docker files
+
 if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = "JA" ]
   then clerk_frontend_dockerfile_with_volumes
 fi 
 
 if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = "JA" ]
   then waardepapieren_service_dockerfile_with_volumes 
-fi 
-
-# //////////////////////////////////////////////////////////////////////////////////////////
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = "JA" ]
-  then docker_compose_travis_yml_without_volumes 
 fi 
 
 if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = "JA" ]
@@ -207,6 +215,9 @@ fi
 if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = "JA" ]
   then waardepapieren_service_dockerfile_without_volumes
 fi 
+
+
+
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 # bypass vilein docker netwerk effect docker maakt eigen netwerk... obv  waardepapieren-service  mock-nlx
@@ -220,7 +231,6 @@ if [ $SET_CLERK_FRONTEND_NGINX_CONF = "JA" ]
 fi 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
-
 
 if [ $CMD_DOCKER_COMPOSE = "JA" ]
   then docker_compose_min_f_docker-travis_compose_yml_up
@@ -240,8 +250,6 @@ fi
 if [ $DOCKER_PUSH = "JA" ]
   then docker_push
 fi 
-
-
 
 echo
 echo "hope the run was ok!"
