@@ -44,25 +44,33 @@ echo "***"
 echo "***" 
 
 
-
-CMD_CONTAINER_STOP_AND_PRUNE="NEE"
-CMD_IMAGE_REMOVE="NEE"
+# https://github.com/Peter-Bosch/Workbook_Docker_fundamentals
+#
+# 
+  
+CMD_CONTAINER_STOP_AND_PRUNE="NEE" #stop containers docker stop $(docker ps -a -q) 
+CMD_IMAGE_REMOVE="NEE" #remove alle containers and images docker rm $(docker ps -a -q) && docker rmi $(docker images -q) 
 CMD_GIT_CLONE="NEE"
 CMD_DOCKER_COMPOSE="JA"
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 DOCKER_USER="boscp08"  #NB repository name must be lowercase
-DOCKER_VERSION_TAG="4.0"
-DOCKER_COMMIT="JA"
+DOCKER_VERSION_TAG="3.0"
+DOCKER_TAG="JA"
 DOCKER_PUSH="JA"
 PROMPT="JA"
 
 
 
-CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN linux
-CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=discipl.westeurope.azurecontainer.io
+#CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN linux
+#CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=discipl.westeurope.azurecontainer.io
+
+CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN linux
+CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=waardepapieren.westeurope.azurecontainer.io
+
+
 #grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
 #EPHEMERAL_RETENTION_TIME=86400  #24h 
-EPHEMERAL_RETENTION_TIME=2592001 #30 dagen
+EPHEMERAL_RETENTION_TIME=2592002 #30 dagen
 
 echo "***  You are about to start to build new waardepapieren images and containers "
 echo "***  droplet-targethost= https://$CERT_HOST_IP " 
@@ -173,7 +181,7 @@ echo "CMD_IMAGE_REMOVE="$CMD_IMAGE_REMOVE
 echo "DOCKER_USER="$DOCKER_USER         
 echo "DOCKER_VERSION_TAG"=$DOCKER_VERSION_TAG
 echo "DOCKER_PUSH="$DOCKER_PUSH
-echo "DOCKER_COMMIT="$DOCKER_COMMIT
+echo "DOCKER_TAG="$DOCKER_TAG
 fi
 
 

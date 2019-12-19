@@ -58,9 +58,9 @@ echo "***"
 #echo "## AZURE CLI"
 #echo "######################"
 
-AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
-AZ_RESOURCE_GROUP_DELETE="NEE"
-AZ_RESOURCE_GROUP_CREATE="NEE"
+AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
+AZ_RESOURCE_GROUP_DELETE="JA"
+AZ_RESOURCE_GROUP_CREATE="JA"
 CREATE_AZ_DEPLOY_ACI_YAML="JA"  #@PROJECT_DIR deploy_aci.yml
 CMD_AZ_CREATE_CONTAINERGROUP="JA"  #.. jeuh - Running ..
 

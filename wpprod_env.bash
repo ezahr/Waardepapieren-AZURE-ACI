@@ -16,7 +16,11 @@
 # Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
 
 #'big thanks to pim Otte ,stef van Leeuwen Wigo4it vincent van der laar.  
-
+# https://github.com/Peter-Bosch/Workbook_Docker_fundamentals
+#
+# remove alle containers docker stop $(docker ps -a -q) 
+# remove alle containers and images docker rm $(docker ps -a -q) && docker rmi $(docker images -q) 
+# remove all stopped containers (just waist of storage}   
 
 ### barf  
 enter_cont() {
@@ -119,7 +123,7 @@ enter_cont
 
 
 docker_push() {
-echo "running docker_push "
+echo "running docker_push $DOCKER_VERSION_TAG"
 docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
 docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
 docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
@@ -127,11 +131,11 @@ docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
 
 }
 
-docker_commit() {
-echo "running docker_commit"
-docker commit waardepapieren_clerk-frontend_1 $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
-docker commit waardepapieren_waardepapieren-service_1 $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
-docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
+docker_tag() {
+echo "running docker_tag $DOCKER_VERSION_TAG"
+docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
+docker tag waardepapieren_waardepapieren-service $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
+docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
 }
 
 

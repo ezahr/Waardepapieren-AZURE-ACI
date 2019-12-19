@@ -43,7 +43,8 @@ enter_cont() {
 #echo "# Directories used " 
 #echo "#######################"
 
-HOME_DIR=/Users/boscp08 
+#HOME_DIR=/Users/boscp08 
+HOME_DIR=/home/boscp08
 #echo $HOME_DIR
 #enter_cont
 
