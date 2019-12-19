@@ -35,7 +35,7 @@ PROMPT="NEE"
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
 #CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
 CERT_HOST_IP=localhost  #FQDN linux
-#portal.azure.com
+CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=waardepapieren.westeurope.azurecontainer.io
 #grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
 #EPHEMERAL_RETENTION_TIME=86400  #24h 
 EPHEMERAL_RETENTION_TIME=2592000 #30 dagen

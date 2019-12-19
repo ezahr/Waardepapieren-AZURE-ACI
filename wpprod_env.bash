@@ -199,14 +199,14 @@ http {
         ssl_certificate_key /etc/nginx/certs/org.key;
 
         location /api/eph/ {
-               proxy_pass https://$CERT_HOST_IP:3232/;    #pdf effect
+               proxy_pass https://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232/;    #pdf effect
            #     proxy_pass https://waardepapieren-service:3232/;
             #     proxy_pass https://172.19.0.3:3232/;
         }
 
         location /api/eph-ws {
            
-              proxy_pass https://$CERT_HOST_IP:3232;   # pdf effect
+              proxy_pass https://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232;   # pdf effect
              #  proxy_pass https://waardepapieren-service:3232;
             #  proxy_pass https://172.19.0.3:3232;
             proxy_http_version 1.1;
