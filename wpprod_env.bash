@@ -39,16 +39,16 @@ az container create --resource-group $AZ_RESOURCE_GROUP --file deploy-aci.yaml
 create_azure_resource_group() {
 echo "running create_azure_resource_group" 
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
-echo sure ? createw $AZ_RESOURCE_GROUP
-enter_cont
+#echo sure ? createw $AZ_RESOURCE_GROUP
+#enter_cont
 az group create --name $AZ_RESOURCE_GROUP --location westeurope
 }
 
 delete_azure_resource_group() {
  echo "running delete_azure_resource_group"
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
- echo sure ? delete $AZ_RESOURCE_GROUP
- enter_cont
+ # echo sure ? delete $AZ_RESOURCE_GROUP
+ # enter_cont
 az group delete --name $AZ_RESOURCE_GROUP 
 }
 

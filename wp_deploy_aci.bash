@@ -47,7 +47,7 @@ echo "***  Welcome to  depdocker-compose "
 echo "***"   
 echo "***" 
 echo "***  You are about to bring waardepapieren new images via dockerhub to azure cloud  AZURE Container Instances "
-echo "***  droplet-targethost= https://$CERT_HOST_IP " 
+echo "***  droplet-targethost= https://$CERT_HOST_IP  with DOCKER_VERSION_TAG = $DOCKER_VERSION_TAG "
 echo "***" 
 
 
@@ -59,11 +59,10 @@ echo "***"
 #echo "######################"
 
 AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
-AZ_RESOURCE_GROUP_DELETE="NEE"
-AZ_RESOURCE_GROUP_CREATE="NEE"
+AZ_RESOURCE_GROUP_DELETE="JA"
+AZ_RESOURCE_GROUP_CREATE="JA"
 CREATE_AZ_DEPLOY_ACI_YAML="JA"  #@PROJECT_DIR deploy_aci.yml
 CMD_AZ_CREATE_CONTAINERGROUP="JA"  #.. jeuh - Running ..
-DOCKER_VERSION_TAG="4.0"
 
 
 
@@ -89,10 +88,7 @@ enter_cont
 #https://docs.microsoft.com/en-us/azure/virtual-machines/azure-cli-arm-commands
 #https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli?view=azure-cli-latest
 
-az group list
-
-enter_cont
-
+# az group list
 
 # //////////////////////////////////////////////////////////////////////////////////////
 

@@ -251,6 +251,9 @@ if [ $DOCKER_PUSH = "JA" ]
   then docker_push
 fi 
 
+
+. wp_deploy_aci.bash  
+
 echo
 echo "hope the run was ok!"
 echo
