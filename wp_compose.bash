@@ -175,6 +175,8 @@ fi
 ## M A I N
 # program starts here actually
 #######################
+echo "program starts here actually"
+enter_cont
 
 if [ $CMD_GIT_CLONE = "JA" ] 
   then git_clone 

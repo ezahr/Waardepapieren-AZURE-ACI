@@ -1,3 +1,4 @@
+#!/bin/bash
 # //////////////////////////////////////////////////////////////////////////////////////////
 #    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
 #  
@@ -110,7 +111,6 @@ cat deploy-aci.yaml
 enter_cont
 }
 
-
 docker_push() {
 echo "running docker_push "
 docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
@@ -129,85 +129,12 @@ docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nlx:$DO
 
 
 
-docker_compose_min_f_docker-travis_compose_yml_up() {
-echo "running docker_compose_min_f_docker-travis_compose_yml up $CMD_DOCKER_COMPOSE_BUILD "
 
-# Met docker-compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiëren die uit meerdere Docker-containers bestaat. 
-# Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren.  
 
-cd $DOCKER_COMPOSE_DIR
-docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
 
-}
-
-# networking settings 
-
-clerk_frontend_nginx_conf() {
-#CLERK_FRONTEND_NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-echo "running clerk_frontend_nginx_conf"
+echo "ici"
 enter_cont
 
-cd $CLERK_FRONTEND_NGINX_DIR
-mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
-touch nginx.conf
-
-echo "events {
-    worker_connections  1024;
-}
-
-http {
-
-    map \$http_upgrade \$connection_upgrade {
-        default upgrade;
-        '' close;
-    }
-
-    # Http server to obtain NLX certificate
-    server {
-        listen 8880;
-
-        location / {
-           root /usr/share/nginx/html;
-           include /etc/nginx/mime.types;
-        }
-    }
-
-    server {
-        listen 443 ssl;
-
-        ssl_certificate /etc/nginx/certs/org.crt;
-        ssl_certificate_key /etc/nginx/certs/org.key;
-
-        location /api/eph/ {
-               proxy_pass https://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232/;    #pdf effect
-           #     proxy_pass https://waardepapieren-service:3232/;
-            #     proxy_pass https://172.19.0.3:3232/;
-        }
-
-        location /api/eph-ws {
-           
-              proxy_pass https://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232;   # pdf effect
-             #  proxy_pass https://waardepapieren-service:3232;
-            #  proxy_pass https://172.19.0.3:3232;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade \$http_upgrade;
-            proxy_set_header Connection "Upgrade";
-        }
-        location / {
-            root /usr/share/nginx/html;
-            include /etc/nginx/mime.types;
-        }
-    }
-}" > nginx.conf
-
-#if [ $PROMPT = "JA" ] 
-# then
-#  cat nginx.conf
-#  enter_cont
-#fi 
-
-} 
 
 waardepapieren_service_config_compose_travis_json () {
 echo "running waardepapieren_service_config_compose_travis_json"
