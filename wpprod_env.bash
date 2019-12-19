@@ -111,6 +111,9 @@ properties:
       port: '443' 
 tags: null
 type: Microsoft.ContainerInstance/containerGroups" > deploy-aci.yaml
+
+cat deploy-aci.yaml
+enter_cont
 }
 
 
@@ -129,7 +132,6 @@ docker commit waardepapieren_clerk-frontend_1 $DOCKER_USER/waardepapieren-clerk-
 docker commit waardepapieren_waardepapieren-service_1 $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
 docker commit waardepapieren_mock-nlx_1 $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
 }
-
 
 
 docker_compose_min_f_docker-travis_compose_yml_up() {
@@ -157,8 +159,7 @@ fi
 # Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren.  
 
 cd $DOCKER_COMPOSE_DIR
-docker-compose -f docker-compose-travis.yml up --build
-}
+docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
 
 
 # networking settings 
@@ -167,6 +168,8 @@ clerk_frontend_nginx_conf() {
 #CLERK_FRONTEND_NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 echo "running clerk_frontend_nginx_conf"
+enter_cont
+
 cd $CLERK_FRONTEND_NGINX_DIR
 mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
 touch nginx.conf

@@ -50,28 +50,72 @@ echo "***  You are about to bring waardepapieren new images via dockerhub to azu
 echo "***  droplet-targethost= https://$CERT_HOST_IP " 
 echo "***" 
 
+
+
+
+# ////////////////////////////////////////////////////////////////////////////////////////// 
+#echo "######################"
+#echo "## AZURE CLI"
+#echo "######################"
+
+AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
+AZ_RESOURCE_GROUP_DELETE="NEE"
+AZ_RESOURCE_GROUP_CREATE="NEE"
+CREATE_AZ_DEPLOY_ACI_YAML="JA"  #@PROJECT_DIR deploy_aci.yml
+CMD_AZ_CREATE_CONTAINERGROUP="JA"  #.. jeuh - Running ..
+DOCKER_VERSION_TAG="4.0"
+
+
+
+if [ $PROMPT = "JA" ] 
+ then
+echo "######################"
+echo "## AZURE CLI"
+echo "######################"
+echo "AZ_RESOURCE_GROUP="$AZ_RESOURCE_GROUP
+echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE
+echo "AZ_RESOURCE_GROUP_CREATE="$AZ_RESOURCE_GROUP_CREATE
+echo "CREATE_AZ_DEPLOY_ACI_YAML="$CREATE_AZ_DEPLOY_ACI_YAML
+echo "CMD_AZ_CREATE_CONTAINERGROUP="$CMD_AZ_CREATE_CONTAINERGROUP
+fi
+
 #######################
 ## M A I N
 # program starts here actually
 #######################
 
+echo "az login succeeded ?"
+enter_cont
+#https://docs.microsoft.com/en-us/azure/virtual-machines/azure-cli-arm-commands
+#https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli?view=azure-cli-latest
 
-echo "docker login succeeded ?"
+az group list
+
 enter_cont
 
-# //////////////////////////////////////////////////////////////////////////////////////////
 
-if [ $DOCKER_COMMIT = "JA" ]
-  then docker_commit
-fi 
 
-if [ $DOCKER_PUSH = "JA" ]
-  then docker_push
-fi 
 
 # //////////////////////////////////////////////////////////////////////////////////////
 
 
+if [ $CREATE_AZ_DEPLOY_ACI_YAML = "JA" ]
+  then create_azure_deploy_aci_yaml
+fi 
+
+
+
+if [ $AZ_RESOURCE_GROUP_DELETE = "JA" ]
+  then delete_azure_resource_group
+fi 
+
+if [ $AZ_RESOURCE_GROUP_CREATE = "JA" ]
+  then create_azure_resource_group
+fi 
+
+if [ $CMD_AZ_CREATE_CONTAINERGROUP =  "JA" ]
+  then create_azure_container_group   #blader naar portal.azure.com  bosch.peter@outlook.com 0l....n
+fi 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 
