@@ -1,4 +1,5 @@
-
+#!/bin/bash
+#basic statements
 # //////////////////////////////////////////////////////////////////////////////////////////
 #    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
 #  
@@ -58,13 +59,12 @@ echo "***"
 #echo "## AZURE CLI"
 #echo "######################"
 
-AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
-AZ_RESOURCE_GROUP_DELETE="NEE"
+AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
+AZ_RESOURCE_GROUP_DELETE="JA"
 AZ_RESOURCE_GROUP_CREATE="JA"
 CREATE_AZ_DEPLOY_ACI_YAML="JA"  #@PROJECT_DIR deploy_aci.yml
 CMD_AZ_CREATE_CONTAINERGROUP="JA"  #.. jeuh - Running ..
-DOCKER_USER="boscp08"  #NB repository name must be lowercase
-DOCKER_VERSION_TAG="3.0"
+
 
 
 if [ $PROMPT = "JA" ] 
@@ -118,11 +118,7 @@ echo
 echo "hope the run was ok!"
 echo
 sleep  2
-enter_cont
+
 echo " cd back into " $GITHUB_DIR
 cd $GITHUB_DIR
 clear
-
-
-
-

@@ -1,3 +1,5 @@
+#!/bin/bash
+#basic statements
 # //////////////////////////////////////////////////////////////////////////////////////////
 #    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
 #  
@@ -100,7 +102,7 @@ properties:
   ipAddress:
     type: Public
     # fqdn wordt: discipl_waardepapieren.westeurope.azurecontainer.io
-    dnsNameLabel: "waardepapieren" 
+    dnsNameLabel: "discipl" 
     ports:
     - protocol: tcp
       port: '443' 
@@ -119,7 +121,7 @@ enter_cont
 
 
 docker_push() {
-echo "running docker_push $DOCKER_VERSION_TAG"
+echo "running docker_push "
 docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
 docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
 docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
@@ -128,7 +130,7 @@ docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
 }
 
 docker_tag() {
-echo "running docker_tag $DOCKER_VERSION_TAG"
+echo "running docker_tag"
 docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
 docker tag waardepapieren_waardepapieren-service $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
 docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
