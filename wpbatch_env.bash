@@ -1,3 +1,5 @@
+#!/bin/bash
+#basic statements
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 #    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
@@ -43,8 +45,7 @@ enter_cont() {
 #echo "# Directories used " 
 #echo "#######################"
 
-#HOME_DIR=/Users/boscp08 
-HOME_DIR=/home/boscp08
+HOME_DIR=/Users/boscp08 
 #echo $HOME_DIR
 #enter_cont
 
@@ -59,11 +60,7 @@ if  [ uname = 'Darwin' ]
     echo "Darwin"
 fi
 
-PROMPT="JA"
-
-#GITHUB_DIR=$HOME_DIR/Dropbox/github/waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
-
-GITHUB_DIR=$HOME_DIR/github/Waardepapieren-AZURE-ACI 
+GITHUB_DIR=$HOME_DIR/Dropbox/github/waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
 CLERK_FRONTEND_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
