@@ -37,151 +37,11 @@
 #if [ "$the_world_is_flat" = true ] ; then
 #    echo 'Be careful not to fall off!'
 #fi
+# grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
+# echo "birthday-091216-pics" | cut -d'-' -f 2
+# echo "waardepapieren.westeurope.azurecontainer.io" | cut -d'.' -f 1
 
-### barf
-enter_cont() {
-    echo
-    echo
-    echo -n "Press enter to Continue"
-    read
-}
-
-
-if [ `uname` = 'Linux' ]
-  then  HOME_DIR=/home/boscp08 
-  echo "linux"
-fi  
-
-if  [ `uname` = 'Darwin' ]
-    then  HOME_DIR=/Users/boscp08   
-    echo "Darwin"
-fi
-
-cd $HOME_DIR
-
-enter_cont
-
-CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN linux
-CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=discipl.westeurope.azurecontainer.io
-#grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
-#EPHEMERAL_RETENTION_TIME=86400  #24h 
-EPHEMERAL_RETENTION_TIME=2592001 #30 dage
-
-
-PROMPT=true
-CMD_CONTAINER_STOP_AND_PRUNE=false
-CMD_IMAGE_REMOVE=false
-CMD_GIT_CLONE=false
-CMD_DOCKER_COMPOSE=true
-CMD_DOCKER_COMPOSE_BUILD=" --build"
-DOCKER_USER="boscp08"  #NB repository name must be lowercase
-DOCKER_VERSION_TAG="3.0"
-DOCKER_TAG=true
-
-AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
-AZ_RESOURCE_GROUP_DELETE=true
-AZ_RESOURCE_GROUP_CREATE=true
-CREATE_AZ_DEPLOY_ACI_YAML=true  #@PROJECT_DIR deploy_aci.yml
-CMD_AZ_CREATE_CONTAINERGROUP=true  #.. jeuh - Running ..
-
-
-# //////////////////////////////////////////////////////////////////////////////////////////
-#echo "#######################"
-#echo "## Dockerfile  setters"
-#echo "#######################" 
-
-SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true       
-SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=true
-SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=true
-
-SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME=false
-SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME=false
-SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME=false
-
-if [ $PROMPT = true ] 
- then 
-echo "#######################"
-echo "## Dockerfile  setters"
-echo "#######################" 
-echo "SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME     
-echo "SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME
-echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME
-
-echo "SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME
-echo "SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME
-echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME
-fi
-
-# //////////////////////////////////////////////////////////////////////////////////////////
-#echo "#######################"
-#echo "## Networking setters" 
-#echo "#######################"
-
-SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=true 
-SET_CLERK_FRONTEND_NGINX_CONF=true
-
-#SET_WAARDEPAPIEREN_CONFIG_JSON=true 
-#SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON=true
-#SET_CLERK_FRONTEND_CYPRESS_JSON=true 
-#SET_CYPRESS_INTEGRATION_SCENARIO_SPEC_JS=true
-
-if [ $PROMPT = true ] 
- then
-echo "#######################"
-echo "## Networking setters" 
-echo "#######################"
-echo "SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON="$SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON
-echo "SET_CLERK_FRONTEND_NGINX_CONF="$SET_CLERK_FRONTEND_NGINX_CONF
-#echo "SET_WAARDEPAPIEREN_CONFIG_COMPOSE_TRAVIS_JSON="$SET_WAARDEPAPIEREN_CONFIG_COMPOSE_TRAVIS_JSON
-#echo "SET_WAARDEPAPIEREN_CONFIG_JSON="$SET_WAARDEPAPIEREN_CONFIG_JSON
-echo "SET_CLERK_FRONTEND_CYPRESS_JSON="$SET_CLERK_FRONTEND_CYPRESS_JSON
-echo "SET_CYPRESS_INTEGRATION_SCENARIO_SPEC_JS"=$SET_CYPRESS_INTEGRATION_SCENARIO_SPEC_JS
-fi
-
-#echo "######################" 
-#echo "## docker CLI" 
-#echo "######################"
-
-# docker -v  |Docker version 19.03.5, build 633a0ea
-# docker-compose -v |docker-compose version 1.24.1, build 4667896b
-
-
-if [ $PROMPT = true ] 
- then
-echo "######################" 
-echo "## docker CLI" 
-echo "######################"
-echo "CMD_CONTAINER_STOP_AND_PRUNE="$CMD_CONTAINER_STOP_AND_PRUNE
-echo "CMD_IMAGE_REMOVE="$CMD_IMAGE_REMOVE
-echo "DOCKER_USER="$DOCKER_USER         
-echo "DOCKER_VERSION_TAG"=$DOCKER_VERSION_TAG
-echo "DOCKER_TAG="$DOCKER_TAG
-echo "DOCKER_PUSH="$DOCKER_PUSH
-
-fi
-
-
-#echo "#######################" 
-#echo "# Directories used " 
-#echo "#######################"
-
-
-
-
-if [ $PROMPT = true ] 
- then 
-  echo "#######################"
-  echo "## FQDN Fully Qualified Name $CERT_HOST_IP `date "+%Y%m%d-%H%M%S"` "
-  echo "#######################" 
-  echo "CMD_GIT_CLONE="$CMD_GIT_CLONE
-  echo "CERT_HOST_IP="$CERT_HOST_IP
-  echo "CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME" = $CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME
-  echo "EPHEMERAL_RETENTION_TIME="$EPHEMERAL_RETENTION_TIME
-  echo "CMD_DOCKER_COMPOSE="$CMD_DOCKER_COMPOSE
-  echo "CMD_DOCKER_COMPOSE_BUILD="$CMD_DOCKER_COMPOSE_BUILD
-  enter_cont
-fi
-
+# tricks
 << "ECT-HOST_COMMENT"
 ## /etc/hosts 
 # Host Database
@@ -200,6 +60,87 @@ fi
 # End of section
 ECT-HOST_COMMENT
 
+
+
+### barf
+enter_cont() {
+    echo
+    echo
+    echo -n "Press enter to Continue"
+    read
+}
+
+# //////////////////////////////////////////////////////////////////////////////////////////
+#echo "#######################"
+#echo "##  check environment
+#echo "#######################" 
+
+if [ `uname` = 'Linux' ]
+  then  HOME_DIR=/home/boscp08 
+  echo "linux"
+fi  
+
+if  [ `uname` = 'Darwin' ]
+    then  HOME_DIR=/Users/boscp08   
+    echo "Darwin"
+fi
+
+# //////////////////////////////////////////////////////////////////////////////////////////
+#echo "#######################"
+#echo "##  setters 
+#echo "#######################" 
+
+CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN linux
+CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=discipl.westeurope.azurecontainer.io
+AZ_DNSNAMELABEL=discipl  # `$CERT_HOST_IP | cut -d'.' -f 1`   #waardepapieren or disciple
+
+#EPHEMERAL_RETENTION_TIME=86400  #24h 
+EPHEMERAL_RETENTION_TIME=2592001 #30 dage
+
+CMD_CONTAINER_STOP_AND_PRUNE=false
+CMD_IMAGE_REMOVE=false
+CMD_GIT_CLONE=false
+
+#echo "#######################"
+#echo "## Dockerfile  configuration "
+#echo "#######################" 
+
+SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true       
+SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=true
+SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=true
+
+SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME=false
+SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME=false
+SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME=false
+
+SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=true 
+SET_CLERK_FRONTEND_NGINX_CONF=true
+
+#echo "#######################"
+#echo "## Dockerfile  build and ship 
+#echo "#######################" 
+
+CMD_DOCKER_COMPOSE=true  #volumes and links depreciated
+CMD_DOCKER_BUILD=false  # build by container
+CMD_DOCKER_COMPOSE_BUILD=" --build"
+
+DOCKER_TAG=true
+DOCKER_USER="boscp08"  #NB repository name must be lowercase
+DOCKER_VERSION_TAG="3.0"
+DOCKER_PUSH=true  #hub.docker.com 
+
+#echo "#######################"
+#echo "## AZURE CONTAINER INSTANCE   setters"
+#echo "#######################" 
+
+AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
+#AZ_DNSNAMELABEL=  # `$CERT_HOST_IP | cut -d'.' -f 1`   #waardepapieren or disciple
+
+AZ_RESOURCE_GROUP_DELETE=true
+AZ_RESOURCE_GROUP_CREATE=true
+CREATE_AZ_DEPLOY_ACI_YAML=true  #@PROJECT_DIR deploy_aci.yml
+CMD_AZ_CREATE_CONTAINERGROUP=true  #.. jeuh - Running ..
+
 GITHUB_DIR=$HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
@@ -210,8 +151,74 @@ WAARDEPAPIEREN_SERVICE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepap
 WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
 
 
+# //////////////////////////////////////////////////////////////////////////////////////////
+#echo "#######################"
+#echo "## feedbak 
+#echo "#######################" 
+
+PROMPT=true
+CHECK_CHECK_DOUBLE_CHECK=true
+
 if [ $PROMPT = true ] 
  then 
+clear
+enter_cont
+
+echo "#######################"
+echo "## CERT_HOST_IP "
+echo "#######################" 
+echo "CERT_HOST_IP"=$CERT_HOST_IP       #discipl.westeurope.azurecontainer.io  #FQDN linux
+echo "CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME"=$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME #discipl.westeurope.azurecontainer.io
+echo "EPHEMERAL_RETENTION_TIME"=$EPHEMERAL_RETENTION_TIME #2592001 #30 dagen
+echo "" 
+echo "#######################"
+echo "## Github clean up disposables  tabula rasa "
+echo "#######################" 
+echo "CMD_DOCKER_CONTAINER_STOP_AND_PRUNE"=$CMD_CONTAINER_STOP_AND_PRUNE #false
+echo "CMD_DOCKER_IMAGE_REMOVE"=$CMD_IMAGE_REMOVE #false
+echo "CMD_DOCKER_CONTAINER_PRUNE"=$CMD_DOCKER_CONTAINER_PRUNE #false
+echo "CMD_GIT_CLONE"=$CMD_GIT_CLONE #false
+echo "" 
+enter_cont
+echo "#######################"
+echo "## Dockerfile  configuration "
+echo "#######################" 
+echo "SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME"=$SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME #true       
+echo "SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME"=$SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME #true
+echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME"=$SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME #true
+echo "SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON"=$SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON #true 
+echo "SET_CLERK_FRONTEND_NGINX_CONF"=$SET_CLERK_FRONTEND_NGINX_CONF #true
+echo "" 
+echo "#######################"
+echo "## Docke compose volume  configuration "  # depreciated 
+echo "#######################" 
+echo "SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME"=$SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME #false
+echo "SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME"=$SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME #false
+echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME"=$SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME #false
+echo "" 
+echo "#######################"
+echo "## Dockerfile  build and ship "
+echo "#######################" 
+echo "CMD_DOCKER_COMPOSE"=$CMD_DOCKER_COMPOSE #true
+echo "CMD_DOCKER_BUILD"=$CMD_DOCKER_BUILD #true
+echo "CMD_DOCKER_COMPOSE_BUILD"=#" --build"
+echo "" 
+echo "DOCKER_TAG"=$DOCKER_TAG #true
+echo "DOCKER_USER"=$DOCKER_USER  #"boscp08"  #NB repository name must be lowercase
+echo "DOCKER_VERSION_TAG"=$DOCKER_VERSION_TAG #"3.0"
+
+enter_cont
+
+echo "#######################"
+echo "## Ezah ACI Azure Container instance setters"
+echo "#######################" 
+echo "AZ_RESOURCE_GROUP"=$AZ_RESOURCE_GROUP #"Discipl_Wigo4it_DockerGroup2"
+echo "AZ_DNSNAMELABEL"=$AZ_DNSNAMELABEL #$CERT_HOST_IP | cut -d'.' -f 1  #waardepapieren or disciple
+echo "AZ_RESOURCE_GROUP_DELETE"=$AZ_RESOURCE_GROUP_DELETE #true
+echo "AZ_RESOURCE_GROUP_CREATE"=$AZ_RESOURCE_GROUP_CREATE #true
+echo "CREATE_AZ_DEPLOY_ACI_YAML"=$CREATE_AZ_DEPLOY_ACI_YAML #true  #@PROJECT_DIR deploy_aci.yml
+echo "CMD_AZ_CREATE_CONTAINERGROUP"=$CMD_AZ_CREATE_CONTAINERGROUP #true  #.. jeuh - Running .. portal.azure.com
+echo "" 
 echo "#######################" 
 echo "# Directories used " 
 echo "#######################"
@@ -222,21 +229,19 @@ echo "DOCKER_COMPOSE_DIR="$DOCKER_COMPOSE_DIR
 echo "CLERK_FRONTEND_CYPRESS_DIR="$CLERK_FRONTEND_CYPRESS_DIR
 echo "WAARDEPAPIEREN_SERVICE_DIR="$WAARDEPAPIEREN_SERVICE_DIR
 echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="$WAARDEPAPIEREN_SERVICE_CONFIG_DIR
-#enter_cont
+
+# //////////////////////////////////////////////////////////////////////////////////////////
+#echo "#######################"
+#echo "## end of feedbak 
+#echo "#######################" 
+echo "" 
+echo "" 
+echo "hope the run will be okay. "
+enter_cont
+
 fi
 
 
-if [ $PROMPT = true ] 
- then
-echo "######################"
-echo "## AZURE CLI"
-echo "######################"
-echo "AZ_RESOURCE_GROUP="$AZ_RESOURCE_GROUP
-echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE
-echo "AZ_RESOURCE_GROUP_CREATE="$AZ_RESOURCE_GROUP_CREATE
-echo "CREATE_AZ_DEPLOY_ACI_YAML="$CREATE_AZ_DEPLOY_ACI_YAML
-echo "CMD_AZ_CREATE_CONTAINERGROUP="$CMD_AZ_CREATE_CONTAINERGROUP
-fi
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 #EOF  hope the run will be okay.
