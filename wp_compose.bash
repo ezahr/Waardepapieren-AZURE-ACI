@@ -35,10 +35,6 @@
 
 . wp_parameters.bash
 
-# ********** directories  **********
-
-. wpbatch_env.bash
-
 # ********** functions **********
 
 . wpprod_env.bash  
