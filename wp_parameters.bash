@@ -38,7 +38,7 @@
 #    echo 'Be careful not to fall off!'
 #fi
 
-### barff ddd
+### barf
 enter_cont() {
     echo
     echo
