@@ -18,7 +18,7 @@
 # Category         :Discipl deploy script
 # Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
 
-### barfff
+### barf
 enter_cont() {
     echo
     echo
