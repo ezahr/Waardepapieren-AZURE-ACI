@@ -61,52 +61,52 @@ enter_cont
 echo "program starts here actually"
 enter_cont
 
-if [ $CMD_GIT_CLONE = "JA" ] 
+if [ $CMD_GIT_CLONE = true ] 
   then git_clone 
 fi 
  #//////////////////////////////////////////////////////////////////////////////////////////
 
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = "JA" ]
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = true ]
   then docker_compose_travis_yml_with_volumes
 fi 
 
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = "JA" ]
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = true ]
   then docker_compose_travis_yml_without_volumes 
 fi 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 # docker files
 
-if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = "JA" ]
+if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = true ]
   then clerk_frontend_dockerfile_with_volumes
 fi 
 
-if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = "JA" ]
+if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = true ]
   then waardepapieren_service_dockerfile_with_volumes 
 fi 
 
-if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = "JA" ]
+if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = true ]
   then clerk_frontend_dockerfile_without_volumes
 fi 
 
-if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = "JA" ]
+if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = true ]
   then waardepapieren_service_dockerfile_without_volumes
 fi 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 # bypass vilein docker netwerk effect docker maakt eigen netwerk... obv  waardepapieren-service  mock-nlx
 
-if [ $SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON = "JA" ]
+if [ $SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON = true ]
   then waardepapieren_service_config_compose_travis_json      #https://waardepapieren-service:3232 http://mock-nlx:80 docker network... 
 fi 
 
-if [ $SET_CLERK_FRONTEND_NGINX_CONF = "JA" ]
+if [ $SET_CLERK_FRONTEND_NGINX_CONF = true ]
     then clerk_frontend_nginx_conf      # docker network fix4https://waardepapieren-service
 fi 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 
-if [ $CMD_DOCKER_COMPOSE = "JA" ]
+if [ $CMD_DOCKER_COMPOSE = true ]
   then docker_compose_min_f_docker-travis_compose_yml_up
 fi 
 
@@ -117,11 +117,11 @@ enter_cont
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 
-if [ $DOCKER_TAG = "JA" ]
+if [ $DOCKER_TAG = true ]
   then docker_tag
 fi 
 
-if [ $DOCKER_PUSH = "JA" ]
+if [ $DOCKER_PUSH = true ]
   then docker_push
 fi 
 

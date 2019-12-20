@@ -74,8 +74,8 @@ CMD_DOCKER_COMPOSE=true
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 DOCKER_USER="boscp08"  #NB repository name must be lowercase
 DOCKER_VERSION_TAG="3.0"
-DOCKER_COMMIT=true
 DOCKER_TAG=true
+
 AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
 AZ_RESOURCE_GROUP_DELETE=true
 AZ_RESOURCE_GROUP_CREATE=true
