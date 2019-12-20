@@ -3,7 +3,7 @@
 # //////////////////////////////////////////////////////////////////////////////////////////
 #    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
 #  
-#    Description :- This script makes a backup using export tool (oracle)
+#    Description :- This script builds "waardepapieren" containers and ships images to hub.docker.com
 #    Modified           Date            Description
 #    --------           --------        -------------------------------------------------
 #    Peter Bosch       05.12.2019      Initial version.

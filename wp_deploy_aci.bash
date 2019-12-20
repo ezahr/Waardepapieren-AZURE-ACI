@@ -3,7 +3,7 @@
 # //////////////////////////////////////////////////////////////////////////////////////////
 #    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
 #  
-#    Description :- This script makes a backup using export tool (oracle)
+#    Description :- This script  "waardepapieren" containers and ships images to hub.docker.com.
 #    Modified           Date            Description
 #    --------           --------        -------------------------------------------------
 #    Peter Bosch       05.12.2019      Initial version.
@@ -37,14 +37,24 @@
 
 # ********** Parameters **********
 
-. wpbatch_env.bash
+. wp_parameters.bash
 
-# ********** functies **********
 
-. wpprod_env.bash  
+# ////////////////////////////////////////////////////////////////////////////////////////// 
+#echo "######################"
+#echo "## AZURE CLI"
+#echo "######################"
+
+#AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
+#AZ_RESOURCE_GROUP_DELETE="JA"
+#AZ_RESOURCE_GROUP_CREATE="JA"
+#CREATE_AZ_DEPLOY_ACI_YAML="JA"  #@PROJECT_DIR deploy_aci.yml
+#CMD_AZ_CREATE_CONTAINERGROUP="JA"  #.. jeuh - Running ..
+
+
 
 echo "***"   
-echo "***  Welcome to  depdocker-compose "
+echo "***  Welcome to  dockerhub2azure "
 echo "***"   
 echo "***" 
 echo "***  You are about to bring waardepapieren new images via dockerhub to azure cloud  AZURE Container Instances "
@@ -54,30 +64,6 @@ echo "***"
 
 
 
-# ////////////////////////////////////////////////////////////////////////////////////////// 
-#echo "######################"
-#echo "## AZURE CLI"
-#echo "######################"
-
-AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
-AZ_RESOURCE_GROUP_DELETE="JA"
-AZ_RESOURCE_GROUP_CREATE="JA"
-CREATE_AZ_DEPLOY_ACI_YAML="JA"  #@PROJECT_DIR deploy_aci.yml
-CMD_AZ_CREATE_CONTAINERGROUP="JA"  #.. jeuh - Running ..
-
-
-
-if [ $PROMPT = "JA" ] 
- then
-echo "######################"
-echo "## AZURE CLI"
-echo "######################"
-echo "AZ_RESOURCE_GROUP="$AZ_RESOURCE_GROUP
-echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE
-echo "AZ_RESOURCE_GROUP_CREATE="$AZ_RESOURCE_GROUP_CREATE
-echo "CREATE_AZ_DEPLOY_ACI_YAML="$CREATE_AZ_DEPLOY_ACI_YAML
-echo "CMD_AZ_CREATE_CONTAINERGROUP="$CMD_AZ_CREATE_CONTAINERGROUP
-fi
 
 #######################
 ## M A I N

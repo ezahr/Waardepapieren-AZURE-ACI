@@ -4,7 +4,7 @@
 # //////////////////////////////////////////////////////////////////////////////////////////
 #    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
 #  
-#    Description :- This script makes a backup using export tool (oracle)
+#    Description :- his script builds "waardepapieren" containers and ships images to hub.docker.com
 #    Modified           Date            Description
 #    --------           --------        -------------------------------------------------
 #    Peter Bosch       05.12.2019      Initial version.
@@ -31,7 +31,7 @@ enter_cont() {
 #CERT_HOST_IP=waardepapieren.westeurope.cloudapp.azure.com  #FQDN linux VVM
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
 #CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN AZURE CONTAINER INSTANCES
-#  https://waardepapieren-demo.discipl.org/   PIM OTTE
+# https://waardepapieren-demo.discipl.org/   PIM OTTE
 # zou nu in een staat moeten zijn dat deze redelijk stabiel is, en ook werkt van achter firewalls. 
 #Er is wel een kleine issue dat je het soms 2x moet proberen voor het werkt.
 #Als mensen het uitproberen hoor ik graag:
@@ -50,6 +50,7 @@ HOME_DIR=/Users/boscp08
 #enter_cont
 
 
+
 if [ uname = 'Linux' ]
   then  HOME_DIR=/home/boscp08 
   echo "linux"
@@ -60,12 +61,12 @@ if  [ uname = 'Darwin' ]
     echo "Darwin"
 fi
 
-GITHUB_DIR=$HOME_DIR/Dropbox/github/waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
+GITHUB_DIR=$HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
 CLERK_FRONTEND_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-CLERK_FRONTEND_NGINX_DIR=$CLERK_FRONTEND_DIR/nginx
-CLERK_FRONTEND_CYPRESS_DIR=$CLERK_FRONTEND_DIR/cypress
+#CLERK_FRONTEND_NGINX_DIR=$CLERK_FRONTEND_DIR/nginx
+#CLERK_FRONTEND_CYPRESS_DIR=$CLERK_FRONTEND_DIR/cypress
 WAARDEPAPIEREN_SERVICE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
 
