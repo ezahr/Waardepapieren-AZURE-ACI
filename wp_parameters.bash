@@ -59,6 +59,8 @@ fi
 
 cd $HOME_DIR
 
+enter_cont
+
 CERT_HOST_IP=discipl.westeurope.azurecontainer.io  #FQDN linux
 CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=discipl.westeurope.azurecontainer.io
 #grep -lr "waardepapieren.westeurope.azurecontainer.io" * 
