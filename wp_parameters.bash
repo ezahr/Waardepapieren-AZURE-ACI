@@ -66,21 +66,21 @@ CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=discipl.westeurope.azurecontainer.i
 EPHEMERAL_RETENTION_TIME=2592001 #30 dage
 
 
-PROMPT="JA"
-CMD_CONTAINER_STOP_AND_PRUNE="NEE"
-CMD_IMAGE_REMOVE="NEE"
-CMD_GIT_CLONE="NEE"
-CMD_DOCKER_COMPOSE="JA"
+PROMPT=true
+CMD_CONTAINER_STOP_AND_PRUNE=false
+CMD_IMAGE_REMOVE=false
+CMD_GIT_CLONE=false
+CMD_DOCKER_COMPOSE=true
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 DOCKER_USER="boscp08"  #NB repository name must be lowercase
 DOCKER_VERSION_TAG="3.0"
-DOCKER_COMMIT="JA"
-DOCKER_TAG="JA"
+DOCKER_COMMIT=true
+DOCKER_TAG=true
 AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
-AZ_RESOURCE_GROUP_DELETE="JA"
-AZ_RESOURCE_GROUP_CREATE="JA"
-CREATE_AZ_DEPLOY_ACI_YAML="JA"  #@PROJECT_DIR deploy_aci.yml
-CMD_AZ_CREATE_CONTAINERGROUP="JA"  #.. jeuh - Running ..
+AZ_RESOURCE_GROUP_DELETE=true
+AZ_RESOURCE_GROUP_CREATE=true
+CREATE_AZ_DEPLOY_ACI_YAML=true  #@PROJECT_DIR deploy_aci.yml
+CMD_AZ_CREATE_CONTAINERGROUP=true  #.. jeuh - Running ..
 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
@@ -88,15 +88,15 @@ CMD_AZ_CREATE_CONTAINERGROUP="JA"  #.. jeuh - Running ..
 #echo "## Dockerfile  setters"
 #echo "#######################" 
 
-SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="JA"       
-SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="JA"
-SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="JA"
+SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true       
+SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=true
+SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=true
 
-SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="NEE"
-SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="NEE"
-SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="NEE"
+SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME=false
+SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME=false
+SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME=false
 
-if [ $PROMPT = "JA" ] 
+if [ $PROMPT = true ] 
  then 
 echo "#######################"
 echo "## Dockerfile  setters"
@@ -115,15 +115,15 @@ fi
 #echo "## Networking setters" 
 #echo "#######################"
 
-SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON="JA" 
-SET_CLERK_FRONTEND_NGINX_CONF="JA"
+SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=true 
+SET_CLERK_FRONTEND_NGINX_CONF=true
 
-#SET_WAARDEPAPIEREN_CONFIG_JSON="JA" 
-#SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON="JA"
-#SET_CLERK_FRONTEND_CYPRESS_JSON="JA" 
-#SET_CYPRESS_INTEGRATION_SCENARIO_SPEC_JS="JA"
+#SET_WAARDEPAPIEREN_CONFIG_JSON=true 
+#SET_WAARDEPAPIEREN_CONFIG_COMPOSE_JSON=true
+#SET_CLERK_FRONTEND_CYPRESS_JSON=true 
+#SET_CYPRESS_INTEGRATION_SCENARIO_SPEC_JS=true
 
-if [ $PROMPT = "JA" ] 
+if [ $PROMPT = true ] 
  then
 echo "#######################"
 echo "## Networking setters" 
@@ -144,7 +144,7 @@ fi
 # docker-compose -v |docker-compose version 1.24.1, build 4667896b
 
 
-if [ $PROMPT = "JA" ] 
+if [ $PROMPT = true ] 
  then
 echo "######################" 
 echo "## docker CLI" 
@@ -166,7 +166,7 @@ fi
 
 
 
-if [ $PROMPT = "JA" ] 
+if [ $PROMPT = true ] 
  then 
   echo "#######################"
   echo "## FQDN Fully Qualified Name $CERT_HOST_IP `date "+%Y%m%d-%H%M%S"` "
@@ -208,7 +208,7 @@ WAARDEPAPIEREN_SERVICE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepap
 WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
 
 
-if [ $PROMPT = "JA" ] 
+if [ $PROMPT = true ] 
  then 
 echo "#######################" 
 echo "# Directories used " 
@@ -224,7 +224,7 @@ echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="$WAARDEPAPIEREN_SERVICE_CONFIG_DIR
 fi
 
 
-if [ $PROMPT = "JA" ] 
+if [ $PROMPT = true ] 
  then
 echo "######################"
 echo "## AZURE CLI"
