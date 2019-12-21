@@ -500,22 +500,41 @@ clear
 #way to include
 INSPECT_FILE=$DOCKER_COMPOSE_DIR/docker-compose-travis.yml  #"D:/SIEB_BATCH/BASH/default/batchenv.bsh" 
 
- if [ -x ${INSPECT_FILE} ]
- then 
-clear
+# if [ x ${INSPECT_FILE} ]
+# then 
+#clear
+#echo "========="
+#echo "enter inspect  ${INSPECT_FILE}"
+#echo "========="
+#echo ""
+#cat   ${INSPECT_FILE}
+# else
+#     echo "File ${INSPECT_FILE} is missing or cannot be executed"     
+    	#exit 1
+# fi  
+
+#enter_cont
+
+
+if [ -f "$INSPECT_FILE" ]; then
+ 
 echo "========="
 echo "enter inspect  ${INSPECT_FILE}"
 echo "========="
 echo ""
 cat   ${INSPECT_FILE}
- else
-     echo "File ${INSPECT_FILE} is missing or cannot be executed"     
-    	#exit 1
- fi  
+echo ""
+echo "========="
+echo "eof inspect  ${INSPECT_FILE}"
+echo "========="
+else
+clear
+cd $DOCKER_COMPOSE_DIR
+echo "File ${INSPECT_FILE} is missing or cannot be executed"   
 
 enter_cont
 
+fi
 }
-
 
 # eof
