@@ -1,15 +1,15 @@
 #!/bin/bash
 #basic statements
 # //////////////////////////////////////////////////////////////////////////////////////////
-#    File Type   :- BASH Script (needs docker and docker-composeenvironment installed)
+#    File Type   :- BASH Script (needs docker-CLI and AZURE-CLI installed)
 #  
-#    Description :- This script builds "waardepapieren" containers and ships images to hub.docker.com
+#    Description :- This script builds "waardepapieren" containers and ships images to hub.docker.com and beyond to ACI
 #    Modified           Date            Description
 #    --------           --------        -------------------------------------------------
 #    Peter Bosch       05.12.2019      Initial version.
 #
 # //////////////////////////////////////////////////////////////////////////////////////////
-# File:            :wpprod_env.bash
+# File:            :az_clone_build_ship_deploy.bash
 # version          :20191204 v0
 # File Type        :Bash 
 # Purpose          :build waardepapieren Docker introductie.      
@@ -20,6 +20,124 @@
 #'big thanks to pim Otte ,stef van Leeuwen Wigo4it vincent van der laar.  
 
 
+#'********** instructions **********
+#'1. enter your parameters  
+# 2  modify functions docker config build files (be carefull)
+#'2. run script . az_clone_build_ship_deploy.bash
+
+#'********** parameters **********
+
+#echo "#######################"
+#echo "## DOCKER SHIP 
+#echo "#######################" 
+
+DOCKER_TAG=false
+DOCKER_USER="boscp08"  #NB repository name must be lowercase
+DOCKER_VERSION_TAG="2.0"
+DOCKER_PUSH=false  #hub.docker.com 
+
+#echo "#######################"
+#echo "## AZURE DEPLOY
+#echo "#######################" 
+
+AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
+AZ_RESOURCE_GROUP_DELETE=false
+AZ_RESOURCE_GROUP_CREATE=flase
+
+CREATE_AZ_DEPLOY_ACI_YAML=true  #@PROJECT_DIR deploy_aci.yml
+CMD_AZ_CREATE_CONTAINERGROUP=false  #.. jeuh - Running ..
+
+#echo "#######################"
+#echo "## FQDN
+#echo "#######################" 
+
+AZ_DNSNAMELABEL=discipl
+
+#TARGET_HOST=linux_VM
+
+TARGET_HOST=azure_container_instance
+
+ if [ "$TARGET_HOST" = "linux_VM" ]; then
+       echo expression evaluated as linux_VM
+       AZ_TLD=cloudapp.azure.com
+ fi
+
+if [ "$TARGET_HOST" = "azure_container_instance" ]; then
+       echo expression evaluated as azure_container_instance
+       AZ_TLD=azurecontainer.io
+fi
+
+CERT_HOST_IP=$AZ_DNSNAMELABEL.westeurope."$AZ_TLD"  #FQDN linux
+CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=$AZ_DNSNAMELABEL.westeurope.$AZ_TLD
+
+
+#echo "#######################"
+#echo "## DOWNLOAD / directories used 
+#echo "#######################" 
+
+if [ `uname` = 'Linux' ]
+  then  HOME_DIR=/home/boscp08 
+  echo "linux"
+fi  
+
+if  [ `uname` = 'Darwin' ]
+    then  HOME_DIR=/Users/boscp08   
+    echo "Darwin"
+fi
+
+GITHUB_DIR=$HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
+PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
+DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
+CLERK_FRONTEND_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+#CLERK_FRONTEND_NGINX_DIR=$CLERK_FRONTEND_DIR/nginx
+#CLERK_FRONTEND_CYPRESS_DIR=$CLERK_FRONTEND_DIR/cypress
+WAARDEPAPIEREN_SERVICE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
+
+#echo "#######################"
+#echo "## CLONE
+#echo "#######################" 
+
+CMD_CONTAINER_STOP=false
+CMD_IMAGE_REMOVE=false
+CMD_CONTAINER_PRUNE=false
+CMD_GIT_CLONE=false
+
+#echo "#######################"
+#echo "## BUILD
+#echo "#######################" 
+
+CMD_DOCKER_COMPOSE=false  #volumes and links depreciated
+CMD_DOCKER_BUILD=false  # build by container PENDING
+CMD_DOCKER_COMPOSE_BUILD=" --build"
+
+SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true       # Dockerfile #!
+SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=true  # Dockerfile #!
+SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=true  # Dockerfile #!
+
+SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME=false         # bypass docker-compose
+SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME=false    # bypass docker-compose
+SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME=false    # bypass docker-compose
+
+#EPHEMERAL_RETENTION_TIME=86400  #24h 
+EPHEMERAL_RETENTION_TIME=2592001 #30 dage
+SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=true 
+
+#echo "#######################"
+#echo "## feedbak 
+#echo "#######################" 
+
+PROMPT=true  # echo parameters
+DOUBLE_CHECK=true  #cat content files  with enter_inspect
+
+#'********** end of parameters **********
+
+#'>>> below the functions that are called by other functions
+# modify at your own peril! because of configuration drift 
+#'# Structured programming:
+#'# Entire program logic modularized in functions.
+#' ------------------------------
+ 
 ### barf  
 enter_cont() {
     echo
@@ -28,14 +146,47 @@ enter_cont() {
     read
 }
 
+enter_inspect() {
+clear
+#way to include
+#INSPECT_FILE=$DOCKER_COMPOSE_DIR/docker-compose-travis.yml  #"D:/SIEB_BATCH/BASH/default/batchenv.bsh" 
 
-PARAMETER_FILE=~/Dropbox/Github/Waardepapieren-AZURE-ACI/wp_parameters.bash
+# if [ x ${INSPECT_FILE} ]
+# then 
+#clear
+#echo "========="
+#echo "enter inspect  ${INSPECT_FILE}"
+#echo "========="
+#echo ""
+#cat   ${INSPECT_FILE}
+# else
+#     echo "File ${INSPECT_FILE} is missing or cannot be executed"     
+    	#exit 1
+# fi  
 
-if [ -f "$PARAMETER_FILE" ]; then
-    echo "$PARAMETER_FILE exist"
-    . $PARAMETER_FILE
+#enter_cont
+
+
+if [ -f "$INSPECT_FILE" ]; then
+ 
+echo "========="
+echo "enter inspect  ${INSPECT_FILE}"
+echo "========="
+echo ""
+cat   ${INSPECT_FILE}
+echo ""
+echo "========="
+echo "eof inspect  ${INSPECT_FILE}"
+echo "========="
+else
+clear
+cd $DOCKER_COMPOSE_DIR
+echo "File ${INSPECT_FILE} is missing or cannot be executed"   
+
+enter_cont
+
 fi
-
+}
 
 
 create_azure_container_group() {
@@ -63,7 +214,6 @@ delete_azure_resource_group() {
 az group delete --name $AZ_RESOURCE_GROUP 
 }
 
-
 create_azure_deploy_aci_yaml() {
 echo "running create_azure_deploy_aci_yaml"
 #PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
@@ -73,6 +223,8 @@ cd $PROJECT_DIR
 touch deploy-aci.yaml
 mv deploy-aci.yaml  deploy-aci_`date "+%Y%m%d-%H%M%S"`.yaml
 touch deploy-aci.yaml
+INSPECT_FILE=$PROJECT_DIR/deploy-aci.yaml
+
 echo "" > deploy-aci.yaml
 
 echo "location: westeurope
@@ -111,7 +263,7 @@ properties:
   ipAddress:
     type: Public
     # fqdn wordt: discipl_waardepapieren.westeurope.azurecontainer.io
-    dnsNameLabel: "discipl" 
+    dnsNameLabel: "$AZ_DNSNAMELABEL" 
     ports:
     - protocol: tcp
       port: '443' 
@@ -124,8 +276,11 @@ properties:
 tags: null
 type: Microsoft.ContainerInstance/containerGroups" > deploy-aci.yaml
 
-cat deploy-aci.yaml
-enter_cont
+if [ $DOUBLE_CHECK = true ]
+  then enter_inspect
+fi 
+
+
 }
 
 
@@ -146,7 +301,6 @@ docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_
 }
 
 
-
 docker_compose_min_f_docker-travis_compose_yml_up() {
 echo "running docker_compose_min_f_docker-travis_compose_yml up $CMD_DOCKER_COMPOSE_BUILD "
 
@@ -159,7 +313,6 @@ docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
 }
 
 # networking settings 
-
 
 clerk_frontend_nginx_conf() {
 #CLERK_FRONTEND_NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
@@ -324,7 +477,6 @@ echo "clerk-frontend Dockerfile"
 #enter_cont
 }
 
-
 waardepapieren_service_dockerfile_with_volumes() {
 echo "running waardepapieren_service_dockerfile_with_volumes"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
@@ -481,12 +633,10 @@ services:
     ports:
       - 80:80" > docker-compose-travis.yml
 
-
-
 }
 
 git_clone() {
-echo "running git_clone"
+ echo "running git_clone"
  echo "rm -rf $PROJECT_DIR/waardepapieren sure?"
  enter_cont
  cd $PROJECT_DIR
@@ -495,46 +645,273 @@ echo "running git_clone"
 }
 
 
-enter_inspect() {
-clear
-#way to include
-INSPECT_FILE=$DOCKER_COMPOSE_DIR/docker-compose-travis.yml  #"D:/SIEB_BATCH/BASH/default/batchenv.bsh" 
 
-# if [ x ${INSPECT_FILE} ]
-# then 
-#clear
-#echo "========="
-#echo "enter inspect  ${INSPECT_FILE}"
-#echo "========="
-#echo ""
-#cat   ${INSPECT_FILE}
-# else
-#     echo "File ${INSPECT_FILE} is missing or cannot be executed"     
-    	#exit 1
-# fi  
+#######################
+## M A I N
+# program starts here actually building the three containers.
+# ships images to docker hub
+# deploys images to azure.portal.com
+#######################
 
-#enter_cont
-
-
-if [ -f "$INSPECT_FILE" ]; then
- 
-echo "========="
-echo "enter inspect  ${INSPECT_FILE}"
-echo "========="
-echo ""
-cat   ${INSPECT_FILE}
-echo ""
-echo "========="
-echo "eof inspect  ${INSPECT_FILE}"
-echo "========="
-else
-clear
-cd $DOCKER_COMPOSE_DIR
-echo "File ${INSPECT_FILE} is missing or cannot be executed"   
+echo "***"   
+echo "***  Welcome to  docker-compose "
+echo "***"   
+echo "***" 
+echo "***  You are about to start to build new waardepapieren images and containers "
+echo "***  droplet-targethost= https://$CERT_HOST_IP docker-tag = $DOCKER_VERSION_TAG  ACI-resourcegroup=$AZ_RESOURCE_GROUP " 
+echo "***" 
 
 enter_cont
 
+if [ $PROMPT = true ] 
+ then 
+clear
+enter_cont
+
+echo "#######################"
+echo "## DOWNLOAD"  
+echo "#######################" 
+echo "GITHUB_DIR="$GITHUB_DIR        # $HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
+echo "PROJECT_DIR="$PROJECT_DIR         #$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
+echo "DOCKER_COMPOSE_DIR="$DOCKER_COMPOSE_DIR        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
+echo "CLERK_FRONTEND_DIR="$CLERK_FRONTEND_DIR        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+#CLERK_FRONTEND_NGINX_DIR="$         #$CLERK_FRONTEND_DIR/nginx
+#CLERK_FRONTEND_CYPRESS_DIR="$         #$CLERK_FRONTEND_DIR/cypress
+echo "WAARDEPAPIEREN_SERVICE_DIR="$WAARDEPAPIEREN_SERVICE_DIR        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="$WAARDEPAPIEREN_SERVICE_CONFIG_DIR        #$WAARDEPAPIEREN_SERVICE_DIR/configuration
+echo ""
+echo "#######################"
+echo "## CLONE GITHUB" 
+echo "#######################" 
+echo "CMD_CONTAINER_STOP="$CMD_CONTAINER_STOP        #false
+echo "CMD_IMAGE_REMOVE="$CMD_IMAGE_REMOVE         #false
+echo "CMD_CONTAINER_PRUNE="$CMD_CONTAINER_PRUNE         #false
+echo ""
+echo "CMD_GIT_CLONE="$CMD_GIT_CLONE        #false  #git clone https://github.com/disciplo/waardepapieren.git
+echo ""
+enter_cont
+clear
+echo "#######################"
+echo "## BUILD "
+echo "#######################" 
+echo "CMD_DOCKER_COMPOSE="$CMD_DOCKER_COMPOSE        #true  #volumes and links depreciated
+echo "CMD_DOCKER_BUILD="$CMD_DOCKER_BUILD         #false  # build by container
+echo "CMD_DOCKER_COMPOSE_BUILD="$CMD_DOCKER_COMPOSE_BUILD        #" --build"
+echo ""
+echo "SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME         #true       
+echo "SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME         #true
+echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME         #true
+echo ""
+echo "SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME        #false
+echo "SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME        #false
+echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME        #false
+echo ""
+echo "SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON="$SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON        #true 
+echo "SET_CLERK_FRONTEND_NGINX_CONF="$SET_CLERK_FRONTEND_NGINX_CONF        #rue
+enter_cont
+clear
+echo "#######################"
+echo "## SHIP DOCKER HUB"
+echo "#######################" 
+echo "DOCKER_TAG="$DOCKER_TAG         #true
+echo "DOCKER_USER="$DOCKER_USER       #"boscp08"  #NB repository name must be lowercase
+echo "DOCKER_VERSION_TAG="$DOCKER_VERSION_TAG        #"2.0"
+echo "DOCKER_PUSH="$DOCKER_PUSH         #true  #hub.docker.com 
+echo ""
+echo "#######################"
+echo "## DEPLOY AZURE"
+echo "#######################" 
+echo "AZ_RESOURCE_GROUP="$AZ_RESOURCE_GROUP        #"Discipl_Wigo4it_DockerGroup2"
+echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE         #true
+echo "AZ_RESOURCE_GROUP_CREATE="$AZ_RESOURCE_GROUP_CREATE        #true
+echo "CREATE_AZ_DEPLOY_ACI_YAML="$CREATE_AZ_DEPLOY_ACI_YAML        #true  #@PROJECT_DIR deploy_aci.yml
+echo "CMD_AZ_CREATE_CONTAINERGROUP="$CMD_AZ_CREATE_CONTAINERGROUP        #true  #.. jeuh - Running ..
+enter_cont
+
+#echo "#######################"
+#echo "## end of feedbak 
+#echo "#######################" 
+echo "" 
+echo "" 
+echo "hope the run will be okay. "
+enter_cont
+clear
 fi
-}
+
+if [ $CMD_GIT_CLONE = true ] 
+  then git_clone 
+fi 
+
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = true ]
+  then docker_compose_travis_yml_with_volumes
+fi 
+
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = true ]
+  then docker_compose_travis_yml_without_volumes 
+fi 
+
+# docker files
+
+if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = true ]
+  then clerk_frontend_dockerfile_with_volumes
+fi 
+
+if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = true ]
+  then waardepapieren_service_dockerfile_with_volumes 
+fi 
+
+if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = true ]
+  then clerk_frontend_dockerfile_without_volumes
+fi 
+
+if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = true ]
+  then waardepapieren_service_dockerfile_without_volumes
+fi 
+
+if [ $SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON = true ]
+  then waardepapieren_service_config_compose_travis_json      #https://waardepapieren-service:3232 http://mock-nlx:80 docker network... 
+fi 
+
+if [ $SET_CLERK_FRONTEND_NGINX_CONF = true ]
+    then clerk_frontend_nginx_conf      # docker network fix4https://waardepapieren-service
+fi 
+
+if [ $CMD_DOCKER_COMPOSE = true ]
+  then docker_compose_min_f_docker-travis_compose_yml_up # 
+fi 
+
+if [ $CMD_DOCKER_BUILD= true ]
+  then  echo "PENDING"
+fi
+
+#######################
+## M A I N
+#  shipping tot docker repository starts here actually
+#######################
+
+if [ $DOCKER_TAG = true ]
+  then docker_tag
+fi 
+
+if [ $DOCKER_PUSH = true ]
+  then 
+  docker login  #Authenticating with existing credentials...
+  docker_push  #check hub.docker.com
+ fi 
+
+
+#######################
+## M A I N
+#  deploy to portal.azure.com  starts here actually
+#######################
+
+if [ $CREATE_AZ_DEPLOY_ACI_YAML = true  ]
+  then create_azure_deploy_aci_yaml
+fi 
+
+if [ $AZ_RESOURCE_GROUP_DELETE = true ]
+  then 
+  #az login\
+  echo "***"   
+  echo "***  Welcome to  dockerhub2azure "
+  echo "***"   
+  echo "***" 
+  echo "***  You are about to delete resource group $AZ_RESOURCE_GROUP "
+  echo "***" 
+  echo "az login succeeded ?" 
+  enter_cont
+  delete_azure_resource_group
+fi 
+
+if [ $AZ_RESOURCE_GROUP_CREATE = true  ]
+  then 
+  #az login
+  echo "***"   
+  echo "***  Welcome to  dockerhub2azure "
+  echo "***"   
+  echo "***" 
+  echo "***  You are about to create resource group $AZ_RESOURCE_GROUP"
+  echo "***" 
+  echo "az login succeeded ?" 
+  enter_cont
+  create_azure_resource_group
+fi 
+
+if [ $CMD_AZ_CREATE_CONTAINERGROUP =  true ]
+  then 
+  #az logon
+  echo "***"   
+  echo "***  Welcome to  dockerhub2azure "
+  echo "***"   
+  echo "***" 
+  echo "***  You are about to deploy waardepapieren images fromdockerhub to ACI AZURE Container Instances "
+  echo "***  droplet-targethost= https://$CERT_HOST_IP  with DOCKER_VERSION_TAG = $DOCKER_VERSION_TAG "
+  echo "***  resourcegroup = $AZ_RESOURCE_GROUP  "
+  echo "az login succeeded ?" 
+  enter_cont
+  create_azure_container_group   #blader naar portal.azure.com  bosch.peter@outlook.com 0l....n
+fi 
+
+# //////////////////////////////////////////////////////////////////////////////////////////
+#  az account list
+#[
+#  {
+#    "cloudName": "AzureCloud",
+#    "id": "cfcb03ea-255b-42f8-beca-2d4ac30779bb",
+#    "isDefault": true,
+#    "name": "Azure-abonnement 1",
+#    "state": "Enabled",
+#    "tenantId": "62123322-502d-493f-b543-503672043240",
+#    "user": {
+#      "name": "bosch.peter@outlook.com", 0l..ten
+#      "type": "user"
+#    }
+#  }
+#]
+
+
+#If you’re in a hurry, here is a brief summary of somecommands used in this post:
+
+## List currently authenticated subscriptions
+#az account list
+
+## Log in to a subscription
+#az login
+
+## Display subscriptions by Name and show which is selected
+#az account list --query "[].{Name:name, IsDefault:isDefault}"
+
+## Select a specific subscription by name
+#az account set --subscription "Visual Studio Enterprise"
+
+## Show usernames associated with specific subscriptions
+#az account list --query "[].{Name:name, User:user.name}"
+
+## Show usernames associated with a specific subscriptio matching Name
+#az account list --query "[?contains(name, 'Visual')].{Name:name, User:user.name}"
+
+## Log out of a specific subscription by username
+#az logout --username "user@example.com"
+
+## List virtual machines for select account
+#az vm list
+
+
+#https://docs.microsoft.com/en-us/azure/virtual-machines/azure-cli-arm-commands
+#https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli?view=azure-cli-latest
+
+# az group list
+
+
+echo
+echo "hope the run will be ok!"
+echo
+sleep  2
+
+
+echo " cd back into " $GITHUB_DIR
+cd $GITHUB_DIR
+clear
+
 
 # eof
