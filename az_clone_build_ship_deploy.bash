@@ -81,15 +81,17 @@ if  [ `uname` = 'Darwin' ]
     echo "Darwin"
 fi
 
-LOG_DIR=$HOME_DIR/LOG_DIR
+LOG_START_DATE_TIME=`date +%Y%m%d_%H_%M`  
+LOG_DIR=$HOME_DIR/LOG_$LOG_START_DATE_TIME
+LOG_FILE=$LOG_DIR/LOG_$LOG_START_DATE_TIME.log
 GITHUB_DIR=$HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
 CLERK_FRONTEND_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-CLERK_FRONTEND_NGINX_DIR=$CLERK_FRONTEND_DIR/nginx
-#CLERK_FRONTEND_CYPRESS_DIR=$CLERK_FRONTEND_DIR/cypress
+CLERK_FRONTEND_NGINX_DIR=${CLERK_FRONTEND_DIR}/nginx
+#CLERK_FRONTEND_CYPRESS_DIR=${CLERK_FRONTEND_DIR}/cypress
 WAARDEPAPIEREN_SERVICE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
+WAARDEPAPIEREN_SERVICE_CONFIG_DIR=${WAARDEPAPIEREN_SERVICE_DIR}/configuration
 
 #echo "#######################"
 #echo "## CLONE
@@ -127,8 +129,8 @@ SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=false
 #echo "## feedbak 
 #echo "#######################" 
 PROMPT=false  # echo parameters
-DOUBLE_CHECK=true  #cat content files  with echo "#enter_inspect"
-LOG_START_DATE_TIME=`date +%Y%m%d_%H_%M`   
+DOUBLE_CHECK=true  #cat content modified files to $LOG_DIR
+ 
 
 #'********** end of parameters **********
 
@@ -142,7 +144,7 @@ LOG_START_DATE_TIME=`date +%Y%m%d_%H_%M`
 #////////////////////////////////// hack into docker-compose-travis.yml
 
 ##################################################################
-# Purpose: 
+# Purpose: modify docker-compose-travis.yml 
 # Arguments: 
 # Return: 
 ##################################################################
@@ -209,7 +211,7 @@ services:
     #test:
     #driver: bridge  "  > ${TT_INSPECT_FILE} #docker-compose-travis.yml
 
-if [ ${DOUBLE_CHECK}= true ]
+if [ ${DOUBLE_CHECK} =  true ]
   then enter_inspect
 fi 
 
@@ -219,7 +221,7 @@ TT_INSPECT_FILE=""
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: modify docker-compose-travis.yml 
 # Arguments: 
 # Return: 
 ##################################################################
@@ -289,13 +291,13 @@ clerk_frontend_dockerfile_with_volumes() {
 echo "running clerk_frontend_dockerfile_with_volumes"
 #CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-#cd $CLERK_FRONTEND_DIR
+#cd ${CLERK_FRONTEND_DIR}
 #mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
 #touch Dockerfile
 
-TT_DIRECTORY=$CLERK_FRONTEND_DIR
+TT_DIRECTORY=${CLERK_FRONTEND_DIR}
 TT_INSPECT_FILE=Dockerfile 
-# enter_touch
+enter_touch
 
 echo "FROM node:10
 RUN mkdir /app
@@ -307,15 +309,15 @@ RUN npm install --unsafe-perm
 ADD public /app/public
 ADD src /app/src
 ARG CERTIFICATE_HOST
-ENV REACT_APP_CERTIFICATE_HOST=$CERTIFICATE_HOST
+ENV REACT_APP_CERTIFICATE_HOST=${CERTIFICATE_HOST}
 RUN npm run build
 
 FROM nginx:1.15.8
 ADD nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=0 /app/build /usr/share/nginx/html"  > ${TT_INSPECT_FILE} #Dockerfile
 
-if [ ${DOUBLE_CHECK}= true ]
-  then echo "#enter_inspect"
+if [ ${DOUBLE_CHECK} =  true ]
+  then enter_inspect
 fi 
 
 TT_DIRECTORY=""
@@ -332,13 +334,13 @@ clerk_frontend_dockerfile_without_volumes() {
 
 echo "running clerk_frontend_dockerfile_without_volumes"
 #CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-#cd $CLERK_FRONTEND_DIR
+#cd ${CLERK_FRONTEND_DIR}
 #mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
 #touch Dockerfile
 
-TT_DIRECTORY=$CLERK_FRONTEND_DIR
+TT_DIRECTORY=${CLERK_FRONTEND_DIR}
 TT_INSPECT_FILE=Dockerfile 
-# enter_touch
+enter_touch
 
 echo "FROM node:10
 RUN mkdir /app
@@ -362,8 +364,8 @@ RUN mkdir /etc/nginx/certs
 ADD nginx/certs/org.crt /etc/nginx/certs/org.crt
 ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > ${TT_INSPECT_FILE} # Dockerfile
 
-if [ ${DOUBLE_CHECK}= true ]
-  then echo "#enter_inspect"
+if [ ${DOUBLE_CHECK} = true ]
+  then enter_inspect
 fi 
 
 TT_DIRECTORY=""
@@ -371,10 +373,8 @@ TT_INSPECT_FILE=""
 
 }
 
-#////////////////////////////////// hack into clerk-frontend build in nginx
-
 ##################################################################
-# Purpose: 
+# Purpose: hack into clerk-frontend build in nginx
 # Arguments: 
 # Return: 
 ##################################################################
@@ -383,9 +383,9 @@ clerk_frontend_nginx_conf() {
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 echo "running clerk_frontend_nginx_conf"
 
-TT_DIRECTORY=$CLERK_FRONTEND_NGINX_DIR
+TT_DIRECTORY=${CLERK_FRONTEND_NGINX_DIR}
 TT_INSPECT_FILE=nginx.conf
-# enter_touch
+enter_touch
 
 echo "events {
     worker_connections  1024;
@@ -436,8 +436,8 @@ http {
     }
 }" > ${TT_INSPECT_FILE}  #nginx.conf
 
-if [ ${DOUBLE_CHECK}= true ]
-  then echo "#enter_inspect"
+if [ ${DOUBLE_CHECK} =  true ]
+  then enter_inspect
 fi 
 
 TT_DIRECTORY=""
@@ -445,21 +445,21 @@ TT_INSPECT_FILE=""
 
 } 
 
-#////////////////////////////////// hack into waardepapieren-servcie Dockerfile
+
 ##################################################################
-# Purpose: 
+# Purpose: hack into waardepapieren-servcie Dockerfile
 # Arguments: 
 # Return: 
 ##################################################################
 waardepapieren_service_dockerfile_with_volumes() {
 echo "running waardepapieren_service_dockerfile_with_volumes"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-#cd $WAARDEPAPIEREN_SERVICE_DIR
+#cd ${WAARDEPAPIEREN_SERVICE_DIR}
 #mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
 #touch Dockerfile
-TT_DIRECTORY=$WAARDEPAPIEREN_SERVICE_DIR
+TT_DIRECTORY=${WAARDEPAPIEREN_SERVICE_DIR}
 TT_INSPECT_FILE=Dockerfile
-# enter_touch
+enter_touch
 
 
 echo "FROM node:10
@@ -472,8 +472,8 @@ WORKDIR /app
 RUN npm install --production
 CMD npm start"  > ${TT_INSPECT_FILE} #Dockerfile
 
-if [ ${DOUBLE_CHECK}= true ]
-  then echo "#enter_inspect"
+if [ ${DOUBLE_CHECK} =  true ]
+  then enter_inspect
 fi 
 TT_DIRECTORY=""
 TT_INSPECT_FILE=""
@@ -481,7 +481,7 @@ TT_INSPECT_FILE=""
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: hack into waardepapieren-service Dockerfile
 # Arguments: 
 # Return: 
 ##################################################################
@@ -489,13 +489,12 @@ waardepapieren_service_dockerfile_without_volumes() {
 echo "running waardepapieren_service_dockerfile_without_volumes"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 #sleep 1
-#cd $WAARDEPAPIEREN_SERVICE_DIR
+#cd ${WAARDEPAPIEREN_SERVICE_DIR}
 #mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
 #touch Dockerfile
-TT_DIRECTORY=$WAARDEPAPIEREN_SERVICE_DIR
+TT_DIRECTORY=${WAARDEPAPIEREN_SERVICE_DIR}
 TT_INSPECT_FILE=Dockerfile
-# enter_touch
-
+enter_touch
 
 echo "FROM node:10
 RUN mkdir /app
@@ -520,10 +519,10 @@ ADD configuration/waardepapieren-config.json /app/configuration
 ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
 
 RUN npm install --production
-CMD npm start"  > Dockerfile
+CMD npm start"  > ${TT_INSPECT_FILE} #Dockerfile
 
-if [ ${DOUBLE_CHECK}= true ]
-  then echo "#enter_inspect"
+if [ ${DOUBLE_CHECK} =  true ]
+  then enter_inspect
 fi 
 TT_DIRECTORY=""
 TT_INSPECT_FILE=""
@@ -531,14 +530,14 @@ TT_INSPECT_FILE=""
 }
 
 ##################################################################
-# Purpose: hack into waardepapieren-servcic config
+# Purpose: hack into waardepapieren-service config
 # Arguments: 
 # Return: 
 ##################################################################
 waardepapieren_service_config_compose_travis_json () {
 echo "running waardepapieren_service_config_compose_travis_json"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-#WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
+#WAARDEPAPIEREN_SERVICE_CONFIG_DIR=${WAARDEPAPIEREN_SERVICE_DIR}/configuration
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 #/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service/configuration
 #cd $WAARDEPAPIEREN_SERVICE_CONFIG_DIR
@@ -547,7 +546,7 @@ echo "running waardepapieren_service_config_compose_travis_json"
 
 TT_DIRECTORY=$WAARDEPAPIEREN_SERVICE_CONFIG_DIR
 TT_INSPECT_FILE=waardepapieren-config-compose-travis.json
-# enter_touch
+enter_touch
 
 echo " {
    \"EPHEMERAL_ENDPOINT\" : \"https://localhost:3232\",
@@ -558,7 +557,7 @@ echo " {
   \"NLX_CERT\": \"/certs/org.crt\",
   \"NLX_KEY\": \"/certs/org.key\",
   \"LOG_LEVEL\": \"info\",
-  \"EPHEMERAL_RETENTION_TIME\": $EPHEMERAL_RETENTION_TIME,
+  \"EPHEMERAL_RETENTION_TIME\": ${EPHEMERAL_RETENTION_TIME},
   \"PRODUCT_NEED\" : \"BRP_UITTREKSEL_NEED\",
   \"SOURCE_NLX_PATH\" : \"/brp/basisregistratie/natuurlijke_personen/bsn/{BSN}\",
   \"SOURCE_ARGUMENT\" : \"BSN\",
@@ -572,8 +571,8 @@ echo " {
   ]
 } " > ${TT_INSPECT_FILE} # waardepapieren-config-compose-travis.json
 
-if [ ${DOUBLE_CHECK}= true ]
-  then echo "#enter_inspect"
+if [ ${DOUBLE_CHECK} =  true ]
+  then enter_inspect
 fi 
 
 TT_DIRECTORY=""
@@ -581,9 +580,8 @@ TT_INSPECT_FILE=""
 
 }
 
-#////////////////////////////////// hack into azure deploy ACI
 ##################################################################
-# Purpose: 
+# Purpose: hack into azure deploy ACI
 # Arguments: 
 # Return: 
 ##################################################################
@@ -591,9 +589,9 @@ create_azure_deploy_aci_yaml() {
 echo "running create_azure_deploy_aci_yaml"
 #PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
 
-TT_DIRECTORY=$PROJECT_DIR
+TT_DIRECTORY=${PROJECT_DIR}
 TT_INSPECT_FILE=deploy-aci.yaml
-# enter_touch
+enter_touch
 
 echo "location: westeurope
 name: $AZ_RESOURCE_GROUP
@@ -644,8 +642,8 @@ properties:
 tags: null
 type: Microsoft.ContainerInstance/containerGroups" > ${TT_INSPECT_FILE}  #deploy-aci.yaml
 
-if [ ${DOUBLE_CHECK}= true ]
-  then echo "#enter_inspect"
+if [ ${DOUBLE_CHECK} =  true ]
+  then enter_inspect
 fi 
 
 TT_DIRECTORY=""
@@ -684,6 +682,27 @@ create_logfile_footer() {
     echo ----------------------------------------------------------------------------- >> $LOG_FILE
     }
 
+# /////////////////////////////////////////////////////////////////////////////////
+#  Create a log directory
+# /////////////////////////////////////////////////////////////////////////////////
+create_logdir() {
+     mkdir $LOG_DIR
+    }
+
+
+##################################################################
+# Purpose: Procedure to create an empty file
+# Arguments: 
+# Return: 
+##################################################################
+enter_touch () {
+
+cd ${TT_DIRECTORY}
+touch ${TT_INSPECT_FILE}
+
+
+}
+
 ##################################################################
 # Purpose: 
 # Arguments: 
@@ -699,7 +718,16 @@ echo "enter inspect  ${TT_INSPECT_FILE}"
 echo "========="
 echo ""
 cat  ${TT_INSPECT_FILE}
-cp  ${TT_INSPECT_FILE}  $LOG_DIR/${TT_INSPECT_FILE}.$LOG_START_DATE_TIME   #`date "+%Y%m%d-%H%M%S"`
+
+create_logfile_header
+
+echo "| $LOG_START_DATE_TIME | ${TT_INSPECT_FILE}|"                                >> $LOG_FILE
+echo "<code>"                                                                      >> $LOG_FILE
+cat  ${TT_INSPECT_FILE}                                                            >> $LOG_FILE
+echo "</code>"                                                                     >> $LOG_FILE
+create_logfile_footer
+
+#cp   ${TT_INSPECT_FILE}  $LOG_DIR/${TT_INSPECT_FILE}.$LOG_START_DATE_TIME   #`date "+%Y%m%d-%H%M%S"`
 echo ""
 echo "========="
 echo "eof inspect  ${TT_INSPECT_FILE}"
@@ -714,22 +742,11 @@ enter_cont
 fi
 }
 
-##################################################################
-# Purpose: 
-# Arguments: 
-# Return: 
-##################################################################
-enter_touch () {
 
-cd ${TT_DIRECTORY}
-touch ${TT_INSPECT_FILE}
-
-
-}
 
 
 ##################################################################
-# Purpose: 
+# Purpose: Procedure to stop running docker containers
 # Arguments: 
 # Return: 
 ##################################################################
@@ -738,7 +755,7 @@ docker_containers_stop() {
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: Procedure to remove docker images
 # Arguments: 
 # Return: 
 ##################################################################
@@ -747,7 +764,7 @@ docker_images_remove() {
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: Procedure to remove stopped containers (waste of storage)
 # Arguments: 
 # Return: 
 ##################################################################
@@ -756,7 +773,7 @@ docker_containers_prune() {
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: Procedure to install Docker command line interface
 # Arguments: 
 # Return: 
 ##################################################################
@@ -765,7 +782,7 @@ install_docker_cli() {
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: Procedure to download azure command line interface
 # Arguments: 
 # Return: 
 ##################################################################
@@ -774,21 +791,7 @@ install_azure_cli() {
 }
 
 ##################################################################
-# Purpose: 
-# Arguments: 
-# Return: 
-##################################################################
-create_azure_container_group() {
-echo "running create_azure_container_group" 
-cd $PROJECT_DIR
-az container create --resource-group $AZ_RESOURCE_GROUP --file deploy-aci.yaml
-# https://docs.microsoft.com/en-us/azure/container-instances/container-instances-multi-container-yaml
-# View deployment state
-# az container show --resource-group $AZ_RESOURCE_GROUP  --name myContainerGroup --output table
-}
-
-##################################################################
-# Purpose: 
+# Purpose: Procedure to create azure resource group
 # Arguments: 
 # Return: 
 ##################################################################
@@ -797,11 +800,27 @@ echo "running create_azure_resource_group"
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
 #echo sure ? createw $AZ_RESOURCE_GROUP
 #enter_cont
-az group create --name $AZ_RESOURCE_GROUP --location westeurope
+az group create --name ${AZ_RESOURCE_GROUP}--location westeurope
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: Procedure to create the azure containergroup
+# Arguments: 
+# Return: 
+##################################################################
+create_azure_container_group() {
+echo "running create_azure_container_group" 
+cd ${PROJECT_DIR}
+az container create --resource-group ${AZ_RESOURCE_GROUP}--file deploy-aci.yaml
+# https://docs.microsoft.com/en-us/azure/container-instances/container-instances-multi-container-yaml
+# View deployment state
+# az container show --resource-group ${AZ_RESOURCE_GROUP} --name myContainerGroup --output table
+}
+
+
+
+##################################################################
+# Purpose: Procedure to delete azure resource group (a.k.a costcentre )
 # Arguments: 
 # Return: 
 ##################################################################
@@ -810,11 +829,11 @@ delete_azure_resource_group() {
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
  # echo sure ? delete $AZ_RESOURCE_GROUP
  # enter_cont
-az group delete --name $AZ_RESOURCE_GROUP 
+az group delete --name ${AZ_RESOURCE_GROUP}
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: Procedure to ship docker container images to docker hub
 # Arguments: 
 # Return: 
 ##################################################################
@@ -828,7 +847,7 @@ docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: Procedure to tag docker images (Version)
 # Arguments: 
 # Return: 
 ##################################################################
@@ -840,7 +859,7 @@ docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_
 }
 
 ##################################################################
-# Purpose: 
+# Purpose:  Procedure to build the waardepapieren images and run containers.  
 # Arguments: 
 # Return: 
 ##################################################################
@@ -856,15 +875,15 @@ docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: Procedure to clone de github repo on your pc
 # Arguments: 
 # Return: 
 ##################################################################
 git_clone() {
  echo "running git_clone"
- echo "rm -rf $PROJECT_DIR/waardepapieren sure?"
+ echo "rm -rf ${PROJECT_DIR}/waardepapieren sure?"
  enter_cont
- cd $PROJECT_DIR
+ cd ${PROJECT_DIR}
  rm -rf waardepapieren
  git clone https://github.com/discipl/waardepapieren.git
 }
@@ -885,10 +904,13 @@ echo "***"
 echo "***  You are about to start to build new waardepapieren images and containers "
 echo "***  FQDN = https://${CERT_HOST_IP} "
 echo "***  docker-tag = $DOCKER_VERSION_TAG "
-echo "***  AZURE ACI-resourcegroup=$AZ_RESOURCE_GROUP " 
+echo "***  AZURE ACI-resourcegroup=${AZ_RESOURCE_GROUP}" 
 echo "***" 
 
 enter_cont
+
+create_logdir
+
 
 if [ $PROMPT = true ] 
  then 
@@ -900,14 +922,15 @@ echo "## DOWNLOAD"
 echo "#######################"
 echo "HOME_DIR="$HOME_DIR 
 echo "LOG_DIR="$LOG_DIR   
+echo "LOG_FILE="$LOG_FILE  
 echo "GITHUB_DIR="$GITHUB_DIR        # $HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
-echo "PROJECT_DIR="$PROJECT_DIR         #$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
+echo "PROJECT_DIR="${PROJECT_DIR}         #$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 echo "DOCKER_COMPOSE_DIR="${DOCKER_COMPOSE_DIR}        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
-echo "CLERK_FRONTEND_DIR="$CLERK_FRONTEND_DIR        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-echo "CLERK_FRONTEND_NGINX_DIR="$CLERK_FRONTEND_NGINX_DIR        #$CLERK_FRONTEND_DIR/nginx
-#CLERK_FRONTEND_CYPRESS_DIR="$         #$CLERK_FRONTEND_DIR/cypress
-echo "WAARDEPAPIEREN_SERVICE_DIR="$WAARDEPAPIEREN_SERVICE_DIR        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="$WAARDEPAPIEREN_SERVICE_CONFIG_DIR        #$WAARDEPAPIEREN_SERVICE_DIR/configuration
+echo "CLERK_FRONTEND_DIR="${CLERK_FRONTEND_DIR}        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+echo "CLERK_FRONTEND_NGINX_DIR="${CLERK_FRONTEND_NGINX_DIR}        #${CLERK_FRONTEND_DIR}/nginx
+#CLERK_FRONTEND_CYPRESS_DIR="$         #${CLERK_FRONTEND_DIR}/cypress
+echo "WAARDEPAPIEREN_SERVICE_DIR="${WAARDEPAPIEREN_SERVICE_DIR}        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="$WAARDEPAPIEREN_SERVICE_CONFIG_DIR        #${WAARDEPAPIEREN_SERVICE_DIR}/configuration
 echo ""
 echo "#######################"
 echo "## CLONE GITHUB" 
@@ -942,15 +965,15 @@ clear
 echo "#######################"
 echo "## SHIP DOCKER HUB"
 echo "#######################" 
-echo "DOCKER_TAG="$DOCKER_TAG         #true
-echo "DOCKER_USER="$DOCKER_USER       #"boscp08"  #NB repository name must be lowercase
+echo "DOCKER_TAG="${DOCKER_TAG}        #true
+echo "DOCKER_USER="${DOCKER_USER}      #"boscp08"  #NB repository name must be lowercase
 echo "DOCKER_VERSION_TAG="$DOCKER_VERSION_TAG        #"2.0"
 echo "DOCKER_PUSH="$DOCKER_PUSH         #true  #hub.docker.com 
 echo ""
 echo "#######################"
 echo "## DEPLOY AZURE"
 echo "#######################" 
-echo "AZ_RESOURCE_GROUP="$AZ_RESOURCE_GROUP        #"Discipl_Wigo4it_DockerGroup2"
+echo "AZ_RESOURCE_GROUP="${AZ_RESOURCE_GROUP}       #"Discipl_Wigo4it_DockerGroup2"
 echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE         #true
 echo "AZ_RESOURCE_GROUP_CREATE="$AZ_RESOURCE_GROUP_CREATE        #true
 echo "CREATE_AZ_DEPLOY_ACI_YAML="$CREATE_AZ_DEPLOY_ACI_YAML        #true  #@PROJECT_DIR deploy_aci.yml
@@ -976,7 +999,7 @@ fi
 #  shipping tot docker repository starts here actually
 #######################
 
-if [ $DOCKER_TAG = true ]
+if [ ${DOCKER_TAG}= true ]
   then docker_tag
 fi 
 
@@ -1003,7 +1026,7 @@ if [ $AZ_RESOURCE_GROUP_DELETE = true ]
   echo "***  Welcome to  dockerhub2azure "
   echo "***"   
   echo "***" 
-  echo "***  You are about to delete resource group $AZ_RESOURCE_GROUP "
+  echo "***  You are about to delete resource group ${AZ_RESOURCE_GROUP}"
   echo "***" 
   echo "az login succeeded ?" 
   enter_cont
@@ -1086,7 +1109,7 @@ if [ $CMD_AZ_CREATE_CONTAINERGROUP =  true ]
   echo "***" 
   echo "***  You are about to deploy waardepapieren images fromdockerhub to ACI AZURE Container Instances "
   echo "***  droplet-targethost= https://${CERT_HOST_IP}  with DOCKER_VERSION_TAG = $DOCKER_VERSION_TAG "
-  echo "***  resourcegroup = $AZ_RESOURCE_GROUP  "
+  echo "***  resourcegroup = ${AZ_RESOURCE_GROUP} "
   echo "az login succeeded ?" 
   enter_cont
   create_azure_container_group   #blader naar portal.azure.com  bosch.peter@outlook.com 0l....n
