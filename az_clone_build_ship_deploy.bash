@@ -64,7 +64,7 @@ AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
 AZ_RESOURCE_GROUP_DELETE=false
 AZ_RESOURCE_GROUP_CREATE=flase
 
-CREATE_AZ_DEPLOY_ACI_YAML=false  #@PROJECT_DIR deploy_aci.yml
+CREATE_AZ_DEPLOY_ACI_YAML=true  #@PROJECT_DIR deploy_aci.yml
 CMD_AZ_CREATE_CONTAINERGROUP=false  #.. jeuh - Running ..
 
 #echo "#######################"
@@ -128,7 +128,7 @@ SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=true
 #echo "#######################"
 #echo "## feedbak 
 #echo "#######################" 
-PROMPT=true # echo parameters
+PROMPT=false # echo parameters
 DOUBLE_CHECK=true  #cat content modified files to $LOG_DIR
  
 
@@ -553,7 +553,7 @@ echo " {
    \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://localhost:3232\",
    \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
    \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
-  \"NLX_OUTWAY_ENDPOINT\" : \"http://${CERT_HOST_IP}_WAARDEPAPIEREN_SERVICE_HOSTNAME:80\",
+  \"NLX_OUTWAY_ENDPOINT\" : \"http://${CERT_HOST_IP}:80\",
   \"NLX_CERT\": \"/certs/org.crt\",
   \"NLX_KEY\": \"/certs/org.key\",
   \"LOG_LEVEL\": \"info\",
@@ -714,6 +714,7 @@ clear
 if [ -f "${TT_INSPECT_FILE}" ]; then
  
 create_logfile_header
+echo "| $LOG_START_DATE_TIME | ${TT_DIRECTORY} |"                                >> $LOG_FILE
 echo "| $LOG_START_DATE_TIME | ${TT_INSPECT_FILE}|"                                >> $LOG_FILE
 echo "<code>"                                                                      >> $LOG_FILE
 cat  ${TT_INSPECT_FILE}                                                            >> $LOG_FILE
