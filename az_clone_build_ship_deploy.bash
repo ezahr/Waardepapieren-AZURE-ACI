@@ -82,7 +82,7 @@ if  [ `uname` = 'Darwin' ]
 fi
 
 LOG_START_DATE_TIME=`date +%Y%m%d_%H_%M`  
-LOG_DIR=$HOME_DIR/LOG_$LOG_START_DATE_TIME
+LOG_DIR=$HOME_DIR/LOG_DIR
 LOG_FILE=$LOG_DIR/LOG_$LOG_START_DATE_TIME.log
 GITHUB_DIR=$HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
@@ -111,8 +111,8 @@ CMD_DOCKER_COMPOSE_BUILD=" --build"
 
 
 SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true        # Dockerfile #!
-SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=false  # Dockerfile #!
-SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=false  # Dockerfile #!
+SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=true  # Dockerfile #!
+SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=true  # Dockerfile #!
 
 SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME=false         # bypass docker-compose depreciated and causes cloud / k8s issues
 SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME=false    # bypass docker-compose ACI cloud volume issue
@@ -120,15 +120,15 @@ SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME=false    # bypass docker-compose ACI c
 
 #EPHEMERAL_RETENTION_TIME=86400  #24h 
 EPHEMERAL_RETENTION_TIME=2592001 #30 dage
-SET_CLERK_FRONTEND_NGINX_CONF=false
-SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=false 
+SET_CLERK_FRONTEND_NGINX_CONF=true
+SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=true
 
 
 
 #echo "#######################"
 #echo "## feedbak 
 #echo "#######################" 
-PROMPT=false  # echo parameters
+PROMPT=true # echo parameters
 DOUBLE_CHECK=true  #cat content modified files to $LOG_DIR
  
 
@@ -713,33 +713,38 @@ clear
 
 if [ -f "${TT_INSPECT_FILE}" ]; then
  
-echo "========="
-echo "enter inspect  ${TT_INSPECT_FILE}"
-echo "========="
-echo ""
-cat  ${TT_INSPECT_FILE}
-
 create_logfile_header
-
 echo "| $LOG_START_DATE_TIME | ${TT_INSPECT_FILE}|"                                >> $LOG_FILE
 echo "<code>"                                                                      >> $LOG_FILE
 cat  ${TT_INSPECT_FILE}                                                            >> $LOG_FILE
 echo "</code>"                                                                     >> $LOG_FILE
 create_logfile_footer
 
-#cp   ${TT_INSPECT_FILE}  $LOG_DIR/${TT_INSPECT_FILE}.$LOG_START_DATE_TIME   #`date "+%Y%m%d-%H%M%S"`
+else 
+cd ${DOCKER_COMPOSE_DIR}
+clear
+echo "File ${TT_INSPECT_FILE} is missing or cannot be executed"   
+enter_cont
+fi
+
+if [ ${PROMPT} = true ] 
+then 
+clear
+echo "========="
+echo "enter inspect  ${TT_INSPECT_FILE}"
+echo "========="
+echo ""
+cat  ${TT_INSPECT_FILE}
 echo ""
 echo "========="
 echo "eof inspect  ${TT_INSPECT_FILE}"
 echo "========="
-else
-clear
-cd ${DOCKER_COMPOSE_DIR}
-echo "File ${TT_INSPECT_FILE} is missing or cannot be executed"   
-
 enter_cont
 
 fi
+
+
+
 }
 
 
@@ -912,7 +917,7 @@ enter_cont
 create_logdir
 
 
-if [ $PROMPT = true ] 
+if [ ${PROMPT} = true ] 
  then 
 clear
 enter_cont
