@@ -1,57 +1,36 @@
-#!/bin/bash
-#basic statements
+#! /bin/bash
 # //////////////////////////////////////////////////////////////////////////////////////////
 #    File Type   :- BASH Script (needs docker-CLI and AZURE-CLI installed)
 #  
 #    Description :- This script builds "waardepapieren" containers and ships images to hub.docker.com and beyond to ACI
-#    Modified           Date            Description
-#    --------           --------        -------------------------------------------------
+#    Modified           Date           Description
+#    --------           --------       -------------------------------------------------
+#    Peter Bosch       20.12.2019      processing technical dept
 #    Peter Bosch       05.12.2019      Initial version.
 #
 # //////////////////////////////////////////////////////////////////////////////////////////
-# File:            :az_clone_build_ship_deploy.bash
-# version          :20191204 v0
-# File Type        :Bash 
-# Purpose          :build waardepapieren Docker introductie.      
-# Title:           :
-# Category         :Discipl container deploy script.
-# Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
-
-#'big thanks to pim Otte ,stef van Leeuwen Wigo4it vincent van der laar.  
-
+#   File:            :az_clone_build_ship_deploy.bash
+#   version          :20191204 v0
+#   File Type        :Bash 
+#   Purpose          :download - Clone - Build - Ship - Deploy https://github.com/dsicipl/waardepapieren.git     
+#   Title:           :
+#   Category         :Discipl DEV2PROD 
+#   Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
+#   big thanks to pim Otte ,stef van Leeuwen Wigo4it vincent van der laar.  
+# //////////////////////////////////////////////////////////////////////////////////////////
 
 #'********** instructions **********
-#'1. enter your parameters  
-# 2  modify functions docker config build files (be carefull)
-#'2. run script . az_clone_build_ship_deploy.bash
+#1. enter your parameters  
+#2  modify functions docker config build files (be carefull)
+#3 run script . az_clone_build_ship_deploy.bash
 
 #'********** parameters **********
-
-#echo "#######################"
-#echo "## DOCKER SHIP 
-#echo "#######################" 
-
-DOCKER_TAG=false
-DOCKER_USER="boscp08"  #NB repository name must be lowercase
-DOCKER_VERSION_TAG="2.0"
-DOCKER_PUSH=false  #hub.docker.com 
-
-#echo "#######################"
-#echo "## AZURE DEPLOY
-#echo "#######################" 
-
-AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
-AZ_RESOURCE_GROUP_DELETE=false
-AZ_RESOURCE_GROUP_CREATE=flase
-
-CREATE_AZ_DEPLOY_ACI_YAML=true  #@PROJECT_DIR deploy_aci.yml
-CMD_AZ_CREATE_CONTAINERGROUP=false  #.. jeuh - Running ..
 
 #echo "#######################"
 #echo "## FQDN
 #echo "#######################" 
 
-AZ_DNSNAMELABEL=discipl
+AZ_DNSNAMELABEL=waardepapieren
 
 #TARGET_HOST=linux_VM
 
@@ -70,6 +49,23 @@ fi
 CERT_HOST_IP=$AZ_DNSNAMELABEL.westeurope."$AZ_TLD"  #FQDN linux
 CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=$AZ_DNSNAMELABEL.westeurope.$AZ_TLD
 
+#echo "#######################"
+#echo "## DOCKER SHIP 
+#echo "#######################" 
+DOCKER_TAG=false
+DOCKER_USER="boscp08"  #NB repository name must be lowercase
+DOCKER_VERSION_TAG="2.0"
+DOCKER_PUSH=false  #hub.docker.com 
+
+#echo "#######################"
+#echo "## AZURE DEPLOY
+#echo "#######################" 
+AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
+AZ_RESOURCE_GROUP_DELETE=false
+AZ_RESOURCE_GROUP_CREATE=flase
+
+CREATE_AZ_DEPLOY_ACI_YAML=true  #@PROJECT_DIR deploy_aci.yml
+CMD_AZ_CREATE_CONTAINERGROUP=false  #.. jeuh - Running ..
 
 #echo "#######################"
 #echo "## DOWNLOAD / directories used 
@@ -89,7 +85,7 @@ GITHUB_DIR=$HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https:/
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
 CLERK_FRONTEND_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-#CLERK_FRONTEND_NGINX_DIR=$CLERK_FRONTEND_DIR/nginx
+CLERK_FRONTEND_NGINX_DIR=$CLERK_FRONTEND_DIR/nginx
 #CLERK_FRONTEND_CYPRESS_DIR=$CLERK_FRONTEND_DIR/cypress
 WAARDEPAPIEREN_SERVICE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
@@ -106,438 +102,60 @@ CMD_GIT_CLONE=false
 #echo "#######################"
 #echo "## BUILD
 #echo "#######################" 
-
 CMD_DOCKER_COMPOSE=false  #volumes and links depreciated
 CMD_DOCKER_BUILD=false  # build by container PENDING
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 
 SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true       # Dockerfile #!
-SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=true  # Dockerfile #!
-SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=true  # Dockerfile #!
+SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=false  # Dockerfile #!
+SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=false  # Dockerfile #!
 
-SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME=false         # bypass docker-compose
-SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME=false    # bypass docker-compose
-SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME=false    # bypass docker-compose
+SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME=false         # bypass docker-compose depreciated and causes cloud / k8s issues
+SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME=false    # bypass docker-compose ACI cloud volume issue
+SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME=false    # bypass docker-compose ACI cloud bridged network issus
 
 #EPHEMERAL_RETENTION_TIME=86400  #24h 
 EPHEMERAL_RETENTION_TIME=2592001 #30 dage
-SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=true 
+SET_CLERK_FRONTEND_NGINX_CONF=false
+SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=false 
+
+
 
 #echo "#######################"
 #echo "## feedbak 
 #echo "#######################" 
-
-PROMPT=true  # echo parameters
-DOUBLE_CHECK=true  #cat content files  with enter_inspect
+PROMPT=false  # echo parameters
+DOUBLE_CHECK=true  #cat content files  with echo "#enter_inspect"
 
 #'********** end of parameters **********
 
 #'>>> below the functions that are called by other functions
 # modify at your own peril! because of configuration drift 
-#'# Structured programming:
-#'# Entire program logic modularized in functions.
-#' ------------------------------
- 
-### barf  
-enter_cont() {
-    echo
-    echo
-    echo -n "Press enter to Continue"
-    read
-}
+# main purpose of this script to show configuration for containers spinning in the cloud. 
 
-enter_inspect() {
-clear
-#way to include
-#INSPECT_FILE=$DOCKER_COMPOSE_DIR/docker-compose-travis.yml  #"D:/SIEB_BATCH/BASH/default/batchenv.bsh" 
+#echo "#######################"
+#echo "## happy hacking ..  good luck 
+#echo "#######################" 
+#////////////////////////////////// hack into docker-compose-travis.yml
 
-# if [ x ${INSPECT_FILE} ]
-# then 
-#clear
-#echo "========="
-#echo "enter inspect  ${INSPECT_FILE}"
-#echo "========="
-#echo ""
-#cat   ${INSPECT_FILE}
-# else
-#     echo "File ${INSPECT_FILE} is missing or cannot be executed"     
-    	#exit 1
-# fi  
-
-#enter_cont
-
-
-if [ -f "$INSPECT_FILE" ]; then
- 
-echo "========="
-echo "enter inspect  ${INSPECT_FILE}"
-echo "========="
-echo ""
-cat   ${INSPECT_FILE}
-echo ""
-echo "========="
-echo "eof inspect  ${INSPECT_FILE}"
-echo "========="
-else
-clear
-cd $DOCKER_COMPOSE_DIR
-echo "File ${INSPECT_FILE} is missing or cannot be executed"   
-
-enter_cont
-
-fi
-}
-
-
-create_azure_container_group() {
-echo "running create_azure_container_group" 
-cd $PROJECT_DIR
-az container create --resource-group $AZ_RESOURCE_GROUP --file deploy-aci.yaml
-# https://docs.microsoft.com/en-us/azure/container-instances/container-instances-multi-container-yaml
-# View deployment state
-# az container show --resource-group $AZ_RESOURCE_GROUP  --name myContainerGroup --output table
-}
-
-create_azure_resource_group() {
-echo "running create_azure_resource_group" 
- # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
-#echo sure ? createw $AZ_RESOURCE_GROUP
-#enter_cont
-az group create --name $AZ_RESOURCE_GROUP --location westeurope
-}
-
-delete_azure_resource_group() {
- echo "running delete_azure_resource_group"
- # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
- # echo sure ? delete $AZ_RESOURCE_GROUP
- # enter_cont
-az group delete --name $AZ_RESOURCE_GROUP 
-}
-
-create_azure_deploy_aci_yaml() {
-echo "running create_azure_deploy_aci_yaml"
-#PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
-#DOCKER_VERSION_TAG="3.0"
-#$AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
-cd $PROJECT_DIR
-touch deploy-aci.yaml
-mv deploy-aci.yaml  deploy-aci_`date "+%Y%m%d-%H%M%S"`.yaml
-touch deploy-aci.yaml
-INSPECT_FILE=$PROJECT_DIR/deploy-aci.yaml
-
-echo "" > deploy-aci.yaml
-
-echo "location: westeurope
-name: $AZ_RESOURCE_GROUP
-properties:
-  containers:
-  - name: waardepapieren-mock-nlx
-    properties:
-      image: $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
-      resources:
-        requests:
-          cpu: 1
-          memoryInGb: 0.5
-      ports:
-      - port: 80
-  - name: waardepapieren-service
-    properties:
-      image: $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
-      resources:
-        requests:
-          cpu: 1
-          memoryInGb: 0.5
-      ports:
-      - port: 3232
-  - name: waardepapieren-clerk-frontend
-    properties:
-      image: $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
-      resources:
-        requests:
-          cpu: 1
-          memoryInGb: 0.5
-      ports:
-      - port: 443
-      - port: 8880
-  osType: Linux
-  ipAddress:
-    type: Public
-    # fqdn wordt: discipl_waardepapieren.westeurope.azurecontainer.io
-    dnsNameLabel: "$AZ_DNSNAMELABEL" 
-    ports:
-    - protocol: tcp
-      port: '443' 
-    - protocol: tcp
-      port: '3232' 
-    - protocol: tcp
-      port: '80'    
-    - protocol: tcp
-      port: '8880'      
-tags: null
-type: Microsoft.ContainerInstance/containerGroups" > deploy-aci.yaml
-
-if [ $DOUBLE_CHECK = true ]
-  then enter_inspect
-fi 
-
-
-}
-
-
-docker_push() {
-echo "running docker_push "
-docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
-docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
-docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
-# https://hub.docker.com  boscp08 P...!2....
-
-}
-
-docker_tag() {
-echo "running docker_tag"
-docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
-docker tag waardepapieren_waardepapieren-service $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
-docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
-}
-
-
-docker_compose_min_f_docker-travis_compose_yml_up() {
-echo "running docker_compose_min_f_docker-travis_compose_yml up $CMD_DOCKER_COMPOSE_BUILD "
-
-# Met docker-compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiëren die uit meerdere Docker-containers bestaat. 
-# Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren.  
-
-cd $DOCKER_COMPOSE_DIR
-docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
-
-}
-
-# networking settings 
-
-clerk_frontend_nginx_conf() {
-#CLERK_FRONTEND_NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-echo "running clerk_frontend_nginx_conf"
-enter_cont
-
-cd $CLERK_FRONTEND_NGINX_DIR
-mv nginx.conf  nginx_`date "+%Y%m%d-%H%M%S"`.conf
-touch nginx.conf
-
-echo "events {
-    worker_connections  1024;
-}
-
-http {
-
-    map \$http_upgrade \$connection_upgrade {
-        default upgrade;
-        '' close;
-    }
-
-    # Http server to obtain NLX certificate
-    server {
-        listen 8880;
-
-        location / {
-           root /usr/share/nginx/html;
-           include /etc/nginx/mime.types;
-        }
-    }
-
-    server {
-        listen 443 ssl;
-
-        ssl_certificate /etc/nginx/certs/org.crt;
-        ssl_certificate_key /etc/nginx/certs/org.key;
-
-        location /api/eph/ {
-               proxy_pass https://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232/;    #pdf effect
-           #     proxy_pass https://waardepapieren-service:3232/;
-            #     proxy_pass https://172.19.0.3:3232/;
-        }
-
-        location /api/eph-ws {
-           
-              proxy_pass https://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232;   # pdf effect
-             #  proxy_pass https://waardepapieren-service:3232;
-            #  proxy_pass https://172.19.0.3:3232;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade \$http_upgrade;
-            proxy_set_header Connection "Upgrade";
-        }
-        location / {
-            root /usr/share/nginx/html;
-            include /etc/nginx/mime.types;
-        }
-    }
-}" > nginx.conf
-
-#if [ $PROMPT = "JA" ] 
-# then
-#  cat nginx.conf
-#  enter_cont
-#fi 
-
-} 
-
-waardepapieren_service_config_compose_travis_json () {
-echo "running waardepapieren_service_config_compose_travis_json"
-#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-#WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-#/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service/configuration
-cd $WAARDEPAPIEREN_SERVICE_CONFIG_DIR
-mv waardepapieren-config-compose-travis.json  waardepapieren-config-compose-travis_`date "+%Y%m%d-%H%M%S"`.json
-touch waardepapieren-config-compose-travis.json
-
-echo " {
-   \"EPHEMERAL_ENDPOINT\" : \"https://localhost:3232\",
-   \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://localhost:3232\",
-   \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
-   \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
-  \"NLX_OUTWAY_ENDPOINT\" : \"http://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:80\",
-  \"NLX_CERT\": \"/certs/org.crt\",
-  \"NLX_KEY\": \"/certs/org.key\",
-  \"LOG_LEVEL\": \"info\",
-  \"EPHEMERAL_RETENTION_TIME\": $EPHEMERAL_RETENTION_TIME,
-  \"PRODUCT_NEED\" : \"BRP_UITTREKSEL_NEED\",
-  \"SOURCE_NLX_PATH\" : \"/brp/basisregistratie/natuurlijke_personen/bsn/{BSN}\",
-  \"SOURCE_ARGUMENT\" : \"BSN\",
-  \"PRODUCT_ACCEPT\" : \"BRP_UITTREKSEL_ACCEPT\",
-  \"PRODUCT_NAME\" : \"Gewaarmerkt digitaal afschrift van gegevens uit de basisregistratie personen (BRP)\",
-  \"PRODUCT_DESCRIPTION\" : \"Uittreksel Basis Registratie Persoonsgegevens\",
-  \"PRODUCT_PURPOSE\" : \"Bewijs verblijfadres in woonplaats\",
-  \"SOURCE_DATA_SELECTION\" : [
-    {\"Burgerservicenummer (BSN)\" : \"burgerservicenummer\"},
-    {\"Woonplaats verblijfadres\" : \"verblijfadres.woonplaats\"}
-  ]
-} " > waardepapieren-config-compose-travis.json
-}
-
-clerk_frontend_dockerfile_with_volumes() {
-echo "running clerk_frontend_dockerfile_with_volumes"
-CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-cd $CLERK_FRONTEND_DIR
-mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
-touch Dockerfile
-
-echo "FROM node:10
-RUN mkdir /app
-ADD package.json package-lock.json /app/
-ENV REACT_APP_EPHEMERAL_ENDPOINT=https://$CERT_HOST_IP:443/api/eph
-ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://$CERT_HOST_IP:443/api/eph-ws
-WORKDIR /app
-RUN npm install --unsafe-perm
-ADD public /app/public
-ADD src /app/src
-ARG CERTIFICATE_HOST
-ENV REACT_APP_CERTIFICATE_HOST=$CERTIFICATE_HOST
-RUN npm run build
-
-FROM nginx:1.15.8
-ADD nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=0 /app/build /usr/share/nginx/html"  > Dockerfile
-
-}
-
-clerk_frontend_dockerfile_without_volumes() {
-
-echo "running clerk_frontend_dockerfile_without_volumes"
-#CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-cd $CLERK_FRONTEND_DIR
-mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
-touch Dockerfile
-
-echo "FROM node:10
-RUN mkdir /app
-ADD package.json package-lock.json /app/
-ENV REACT_APP_EPHEMERAL_ENDPOINT=https://$CERT_HOST_IP:443/api/eph
-ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://$CERT_HOST_IP:443/api/eph-ws
-WORKDIR /app
-RUN npm install --unsafe-perm
-ADD public /app/public
-ADD src /app/src
-ARG CERTIFICATE_HOST
-ENV REACT_APP_CERTIFICATE_HOST=http://$CERT_HOST_IP:8880
-RUN npm run build
-
-FROM nginx:1.15.8
-ADD nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=0 /app/build /usr/share/nginx/html
-#  volumes:
-#    - ./clerk-frontend/nginx/certs:/etc/nginx/certs:rw
-RUN mkdir /etc/nginx/certs
-ADD nginx/certs/org.crt /etc/nginx/certs/org.crt
-ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > Dockerfile
-
-echo "clerk-frontend Dockerfile"
-#cat Dockerfile
-#enter_cont
-}
-
-waardepapieren_service_dockerfile_with_volumes() {
-echo "running waardepapieren_service_dockerfile_with_volumes"
-#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-cd $WAARDEPAPIEREN_SERVICE_DIR
-mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
-touch Dockerfile
-
-echo "FROM node:10
-RUN mkdir /app
-ADD .babelrc package.json package-lock.json /app/
-ADD src/* app/src/
-ADD configuration/* app/configuration/
-ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
-WORKDIR /app
-RUN npm install --production
-CMD npm start"  > Dockerfile
-}
-
-waardepapieren_service_dockerfile_without_volumes() {
-echo "running waardepapieren_service_dockerfile_without_volumes"
-#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-sleep 1
-cd $WAARDEPAPIEREN_SERVICE_DIR
-mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
-touch Dockerfile
-
-echo "FROM node:10
-RUN mkdir /app
-ADD .babelrc package.json package-lock.json /app/
-ADD src/* app/src/
-ADD configuration/* app/configuration/
-#- ./waardepapieren-service/system-test/certs:/certs:ro
-RUN mkdir /certs
-ADD system-test/certs/org.crt /certs/org.crt
-ADD system-test/certs/org.key /certs/org.key
-#- ./waardepapieren-service/system-test/ephemeral-certs:/ephemeral-certs:ro
-RUN mkdir /ephemeral-certs
-ADD system-test/ephemeral-certs/org.crt /ephemeral-certs/
-ADD system-test/ephemeral-certs/org.key /ephemeral-certs/
-#- ./waardepapieren-service/configuration/:/app/configuration:ro
-
-WORKDIR /app
-RUN mkdir /configuration
-ADD configuration/waardepapieren-config-compose.json /app/configuration
-ADD configuration/waardepapieren-config-compose-travis.json /app/configuration
-ADD configuration/waardepapieren-config.json /app/configuration
-ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
-
-RUN npm install --production
-CMD npm start"  > Dockerfile
-
-}
-
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
 docker_compose_travis_yml_with_volumes() {
 echo "running docker_compose_travis_yml_with_volumes"
 #DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
-sleep 1
-cd $DOCKER_COMPOSE_DIR
+#cd $DOCKER_COMPOSE_DIR
+#mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
+#touch docker-compose-travis.yml 
 
-mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
-touch docker-compose-travis.yml 
+TT_DIRECTORY=$DOCKER_COMPOSE_DIR
+TT_INSPECT_FILE=docker-compose-travis.yml 
+echo $TT_DIRECTORY.$TT_INSPECT_FILE
+
+enter_cont
+## enter_touch
 
 echo "version: '3'
 services:
@@ -587,15 +205,32 @@ services:
     
     #networks:
     #test:
-    #driver: bridge  "  > docker-compose-travis.yml
+    #driver: bridge  "  > $TT_INSPECT_FILE #docker-compose-travis.yml
+
+if [ $DOUBLE_CHECK = true ]
+  then echo "#enter_inspect"
+fi 
+
+unset TT_DIRECTORY
+unset TT_INSPECT_FILE
 
 }
 
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
 docker_compose_travis_yml_without_volumes() {
 echo "running docker_compose_travis_yml_without_volumes"
-cd $DOCKER_COMPOSE_DIR
-touch docker-compose-travis.yml 
-mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
+#cd $DOCKER_COMPOSE_DIR
+#touch docker-compose-travis.yml 
+#mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
+
+TT_DIRECTORY=$DOCKER_COMPOSE_DIR
+TT_INSPECT_FILE=docker-compose-travis.yml 
+# enter_touch
+
 
 echo "version: '3'
 services:
@@ -631,10 +266,602 @@ services:
   mock-nlx:
     build: mock-nlx/
     ports:
-      - 80:80" > docker-compose-travis.yml
+      - 80:80" > $TT_INSPECT_FILE #docker-compose-travis.yml
+
+if [ $DOUBLE_CHECK = true ]
+  then echo "#enter_inspect"
+fi 
+
+unset TT_DIRECTORY
+unset TT_INSPECT_FILE
 
 }
 
+#////////////////////////////////// hack into clerk-frontend Dockerfile
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+clerk_frontend_dockerfile_with_volumes() {
+echo "running clerk_frontend_dockerfile_with_volumes"
+#CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
+#cd $CLERK_FRONTEND_DIR
+#mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
+#touch Dockerfile
+
+TT_DIRECTORY=$CLERK_FRONTEND_DIR
+TT_INSPECT_FILE=Dockerfile 
+# enter_touch
+
+echo "FROM node:10
+RUN mkdir /app
+ADD package.json package-lock.json /app/
+ENV REACT_APP_EPHEMERAL_ENDPOINT=https://$CERT_HOST_IP:443/api/eph
+ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://$CERT_HOST_IP:443/api/eph-ws
+WORKDIR /app
+RUN npm install --unsafe-perm
+ADD public /app/public
+ADD src /app/src
+ARG CERTIFICATE_HOST
+ENV REACT_APP_CERTIFICATE_HOST=$CERTIFICATE_HOST
+RUN npm run build
+
+FROM nginx:1.15.8
+ADD nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=0 /app/build /usr/share/nginx/html"  > $TT_INSPECT_FILE #Dockerfile
+
+if [ $DOUBLE_CHECK = true ]
+  then echo "#enter_inspect"
+fi 
+
+unset TT_DIRECTORY
+unset TT_INSPECT_FILE
+
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+clerk_frontend_dockerfile_without_volumes() {
+
+echo "running clerk_frontend_dockerfile_without_volumes"
+#CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+#cd $CLERK_FRONTEND_DIR
+#mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
+#touch Dockerfile
+
+TT_DIRECTORY=$CLERK_FRONTEND_DIR
+TT_INSPECT_FILE=Dockerfile 
+# enter_touch
+
+echo "FROM node:10
+RUN mkdir /app
+ADD package.json package-lock.json /app/
+ENV REACT_APP_EPHEMERAL_ENDPOINT=https://$CERT_HOST_IP:443/api/eph
+ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://$CERT_HOST_IP:443/api/eph-ws
+WORKDIR /app
+RUN npm install --unsafe-perm
+ADD public /app/public
+ADD src /app/src
+ARG CERTIFICATE_HOST
+ENV REACT_APP_CERTIFICATE_HOST=http://$CERT_HOST_IP:8880
+RUN npm run build
+
+FROM nginx:1.15.8
+ADD nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=0 /app/build /usr/share/nginx/html
+#  volumes:
+#    - ./clerk-frontend/nginx/certs:/etc/nginx/certs:rw
+RUN mkdir /etc/nginx/certs
+ADD nginx/certs/org.crt /etc/nginx/certs/org.crt
+ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > $TT_INSPECT_FILE # Dockerfile
+
+if [ $DOUBLE_CHECK = true ]
+  then echo "#enter_inspect"
+fi 
+
+unset TT_DIRECTORY
+unset TT_INSPECT_FILE
+
+}
+
+#////////////////////////////////// hack into clerk-frontend build in nginx
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+clerk_frontend_nginx_conf() {
+#CLERK_FRONTEND_NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
+#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
+echo "running clerk_frontend_nginx_conf"
+
+TT_DIRECTORY=$CLERK_FRONTEND_NGINX_DIR
+TT_INSPECT_FILE=nginx.conf
+# enter_touch
+
+echo "events {
+    worker_connections  1024;
+}
+
+http {
+
+    map \$http_upgrade \$connection_upgrade {
+        default upgrade;
+        '' close;
+    }
+
+    # Http server to obtain NLX certificate
+    server {
+        listen 8880;
+
+        location / {
+           root /usr/share/nginx/html;
+           include /etc/nginx/mime.types;
+        }
+    }
+
+    server {
+        listen 443 ssl;
+
+        ssl_certificate /etc/nginx/certs/org.crt;
+        ssl_certificate_key /etc/nginx/certs/org.key;
+
+        location /api/eph/ {
+               proxy_pass https://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232/;    #pdf effect
+           #     proxy_pass https://waardepapieren-service:3232/;
+            #     proxy_pass https://172.19.0.3:3232/;
+        }
+
+        location /api/eph-ws {
+           
+              proxy_pass https://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232;   # pdf effect
+             #  proxy_pass https://waardepapieren-service:3232;
+            #  proxy_pass https://172.19.0.3:3232;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade \$http_upgrade;
+            proxy_set_header Connection "Upgrade";
+        }
+        location / {
+            root /usr/share/nginx/html;
+            include /etc/nginx/mime.types;
+        }
+    }
+}" > $TT_INSPECT_FILE  #nginx.conf
+
+if [ $DOUBLE_CHECK = true ]
+  then echo "#enter_inspect"
+fi 
+
+unset TT_DIRECTORY
+unset TT_INSPECT_FILE
+
+} 
+
+#////////////////////////////////// hack into waardepapieren-servcie Dockerfile
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+waardepapieren_service_dockerfile_with_volumes() {
+echo "running waardepapieren_service_dockerfile_with_volumes"
+#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+#cd $WAARDEPAPIEREN_SERVICE_DIR
+#mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
+#touch Dockerfile
+TT_DIRECTORY=$WAARDEPAPIEREN_SERVICE_DIR
+TT_INSPECT_FILE=Dockerfile
+# enter_touch
+
+
+echo "FROM node:10
+RUN mkdir /app
+ADD .babelrc package.json package-lock.json /app/
+ADD src/* app/src/
+ADD configuration/* app/configuration/
+ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
+WORKDIR /app
+RUN npm install --production
+CMD npm start"  > $TT_INSPECT_FILE #Dockerfile
+
+if [ $DOUBLE_CHECK = true ]
+  then echo "#enter_inspect"
+fi 
+unset TT_DIRECTORY
+unset TT_INSPECT_FILE
+
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+waardepapieren_service_dockerfile_without_volumes() {
+echo "running waardepapieren_service_dockerfile_without_volumes"
+#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+#sleep 1
+#cd $WAARDEPAPIEREN_SERVICE_DIR
+#mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
+#touch Dockerfile
+TT_DIRECTORY=$WAARDEPAPIEREN_SERVICE_DIR
+TT_INSPECT_FILE=Dockerfile
+# enter_touch
+
+
+echo "FROM node:10
+RUN mkdir /app
+ADD .babelrc package.json package-lock.json /app/
+ADD src/* app/src/
+ADD configuration/* app/configuration/
+#- ./waardepapieren-service/system-test/certs:/certs:ro
+RUN mkdir /certs
+ADD system-test/certs/org.crt /certs/org.crt
+ADD system-test/certs/org.key /certs/org.key
+#- ./waardepapieren-service/system-test/ephemeral-certs:/ephemeral-certs:ro
+RUN mkdir /ephemeral-certs
+ADD system-test/ephemeral-certs/org.crt /ephemeral-certs/
+ADD system-test/ephemeral-certs/org.key /ephemeral-certs/
+#- ./waardepapieren-service/configuration/:/app/configuration:ro
+
+WORKDIR /app
+RUN mkdir /configuration
+ADD configuration/waardepapieren-config-compose.json /app/configuration
+ADD configuration/waardepapieren-config-compose-travis.json /app/configuration
+ADD configuration/waardepapieren-config.json /app/configuration
+ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
+
+RUN npm install --production
+CMD npm start"  > Dockerfile
+
+if [ $DOUBLE_CHECK = true ]
+  then echo "#enter_inspect"
+fi 
+unset TT_DIRECTORY
+unset TT_INSPECT_FILE
+
+}
+
+##################################################################
+# Purpose: hack into waardepapieren-servcic config
+# Arguments: 
+# Return: 
+##################################################################
+waardepapieren_service_config_compose_travis_json () {
+echo "running waardepapieren_service_config_compose_travis_json"
+#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+#WAARDEPAPIEREN_SERVICE_CONFIG_DIR=$WAARDEPAPIEREN_SERVICE_DIR/configuration
+#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
+#/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service/configuration
+#cd $WAARDEPAPIEREN_SERVICE_CONFIG_DIR
+#mv waardepapieren-config-compose-travis.json  waardepapieren-config-compose-travis_`date "+%Y%m%d-%H%M%S"`.json
+#touch waardepapieren-config-compose-travis.json
+
+TT_DIRECTORY=$WAARDEPAPIEREN_SERVICE_CONFIG_DIR
+TT_INSPECT_FILE=waardepapieren-config-compose-travis.json
+# enter_touch
+
+echo " {
+   \"EPHEMERAL_ENDPOINT\" : \"https://localhost:3232\",
+   \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://localhost:3232\",
+   \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
+   \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
+  \"NLX_OUTWAY_ENDPOINT\" : \"http://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:80\",
+  \"NLX_CERT\": \"/certs/org.crt\",
+  \"NLX_KEY\": \"/certs/org.key\",
+  \"LOG_LEVEL\": \"info\",
+  \"EPHEMERAL_RETENTION_TIME\": $EPHEMERAL_RETENTION_TIME,
+  \"PRODUCT_NEED\" : \"BRP_UITTREKSEL_NEED\",
+  \"SOURCE_NLX_PATH\" : \"/brp/basisregistratie/natuurlijke_personen/bsn/{BSN}\",
+  \"SOURCE_ARGUMENT\" : \"BSN\",
+  \"PRODUCT_ACCEPT\" : \"BRP_UITTREKSEL_ACCEPT\",
+  \"PRODUCT_NAME\" : \"Gewaarmerkt digitaal afschrift van gegevens uit de basisregistratie personen (BRP)\",
+  \"PRODUCT_DESCRIPTION\" : \"Uittreksel Basis Registratie Persoonsgegevens\",
+  \"PRODUCT_PURPOSE\" : \"Bewijs verblijfadres in woonplaats\",
+  \"SOURCE_DATA_SELECTION\" : [
+    {\"Burgerservicenummer (BSN)\" : \"burgerservicenummer\"},
+    {\"Woonplaats verblijfadres\" : \"verblijfadres.woonplaats\"}
+  ]
+} " > $TT_INSPECT_FILE # waardepapieren-config-compose-travis.json
+
+if [ $DOUBLE_CHECK = true ]
+  then echo "#enter_inspect"
+fi 
+
+unset TT_DIRECTORY
+unset TT_INSPECT_FILE
+
+}
+
+#////////////////////////////////// hack into azure deploy ACI
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+create_azure_deploy_aci_yaml() {
+echo "running create_azure_deploy_aci_yaml"
+#PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
+
+TT_DIRECTORY=$PROJECT_DIR
+TT_INSPECT_FILE=deploy-aci.yaml
+# enter_touch
+
+echo "location: westeurope
+name: $AZ_RESOURCE_GROUP
+properties:
+  containers:
+  - name: waardepapieren-mock-nlx
+    properties:
+      image: $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 80
+  - name: waardepapieren-service
+    properties:
+      image: $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 3232
+  - name: waardepapieren-clerk-frontend
+    properties:
+      image: $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 0.5
+      ports:
+      - port: 443
+      - port: 8880
+  osType: Linux
+  ipAddress:
+    type: Public
+    # fqdn wordt: discipl_waardepapieren.westeurope.azurecontainer.io
+    dnsNameLabel: "$AZ_DNSNAMELABEL" 
+    ports:
+    - protocol: tcp
+      port: '443' 
+    - protocol: tcp
+      port: '3232' 
+    - protocol: tcp
+      port: '80'    
+    - protocol: tcp
+      port: '8880'      
+tags: null
+type: Microsoft.ContainerInstance/containerGroups" > $TT_INSPECT_FILE  #deploy-aci.yaml
+
+if [ $DOUBLE_CHECK = true ]
+  then echo "#enter_inspect"
+fi 
+
+unset TT_DIRECTORY
+unset TT_INSPECT_FILE
+
+
+}
+
+#'# Structured programming:
+#'# Entire program logic modularized in functions.
+#' ------------------------------  
+
+### barf  
+enter_cont() {
+    echo
+    echo
+    echo -n "Press enter to Continue"
+    read
+}
+
+# /////////////////////////////////////////////////////////////////////////////////
+#  Create a Header in the logfile
+# /////////////////////////////////////////////////////////////////////////////////
+create_logfile_header() {
+    JOB_START_DATE_TIME=`date +%Y%m%d_%H_%M`
+    echo $JOB_START_DATE_TIME - BEGIN JOB:                                             >> $LOG_FILE
+    echo ----------------------------------------------------------------------------- >> $LOG_FILE
+    }
+
+# /////////////////////////////////////////////////////////////////////////////////
+#  Create a Footer in the logfile
+# /////////////////////////////////////////////////////////////////////////////////
+create_logfile_footer() {
+    JOB_END_DATE_TIME=`date +%Y%m%d_%H_%M`
+    echo $JOB_END_DATE_TIME - END JOB :                                                >> $LOG_FILE
+    echo ----------------------------------------------------------------------------- >> $LOG_FILE
+    }
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+enter_inspect() {
+clear
+
+if [ -f "$INSPECT_FILE" ]; then
+ 
+echo "========="
+echo "enter inspect  ${INSPECT_FILE}"
+echo "========="
+echo ""
+cat   ${INSPECT_FILE}
+echo ""
+echo "========="
+echo "eof inspect  ${INSPECT_FILE}"
+echo "========="
+else
+clear
+cd $DOCKER_COMPOSE_DIR
+echo "File ${INSPECT_FILE} is missing or cannot be executed"   
+
+enter_cont
+
+fi
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+enter_touch () {
+cd $TT_DIRECTORY 
+#touch deploy-aci.yaml
+#mv deploy-aci.yaml  deploy-aci_`date "+%Y%m%d-%H%M%S"`.yaml
+#touch deploy-aci.yaml
+TT_INSPECT_FILE
+touch $TT_INSPECT_FILE
+mv $TT_INSPECT_FILE  $TT_INSPECT_FILE.`date "+%Y%m%d-%H%M%S"`
+touch $TT_INSPECT_FILE
+
+}
+
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+docker_containers_stop() {
+   echo "-running .. docker_containers_stop"
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+docker_images_remove() {
+  echo "-running .. docker_images_remove("
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+docker_containers_prune() {
+  echo "-running .. docker_containers_prune("
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+install_docker_cli() {
+  echo "-running .. install_docker_cli() "
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+install_azure_cli() {
+  echo "-running .. install_azure_cli"
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+create_azure_container_group() {
+echo "running create_azure_container_group" 
+cd $PROJECT_DIR
+az container create --resource-group $AZ_RESOURCE_GROUP --file deploy-aci.yaml
+# https://docs.microsoft.com/en-us/azure/container-instances/container-instances-multi-container-yaml
+# View deployment state
+# az container show --resource-group $AZ_RESOURCE_GROUP  --name myContainerGroup --output table
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+create_azure_resource_group() {
+echo "running create_azure_resource_group" 
+ # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
+#echo sure ? createw $AZ_RESOURCE_GROUP
+#enter_cont
+az group create --name $AZ_RESOURCE_GROUP --location westeurope
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+delete_azure_resource_group() {
+ echo "running delete_azure_resource_group"
+ # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
+ # echo sure ? delete $AZ_RESOURCE_GROUP
+ # enter_cont
+az group delete --name $AZ_RESOURCE_GROUP 
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+docker_push() {
+echo "running docker_push "
+docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
+docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
+docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
+# https://hub.docker.com  boscp08 P...!2....
+
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+docker_tag() {
+echo "running docker_tag"
+docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
+docker tag waardepapieren_waardepapieren-service $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
+docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+docker_compose_min_f_docker-travis_compose_yml_up() {
+echo "running docker_compose_min_f_docker-travis_compose_yml up $CMD_DOCKER_COMPOSE_BUILD "
+
+# Met docker-compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiëren die uit meerdere Docker-containers bestaat. 
+# Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren.  
+
+cd $DOCKER_COMPOSE_DIR
+docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
+
+}
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
 git_clone() {
  echo "running git_clone"
  echo "rm -rf $PROJECT_DIR/waardepapieren sure?"
@@ -658,7 +885,9 @@ echo "***  Welcome to  docker-compose "
 echo "***"   
 echo "***" 
 echo "***  You are about to start to build new waardepapieren images and containers "
-echo "***  droplet-targethost= https://$CERT_HOST_IP docker-tag = $DOCKER_VERSION_TAG  ACI-resourcegroup=$AZ_RESOURCE_GROUP " 
+echo "***  FQDN = https://$CERT_HOST_IP "
+echo "***  docker-tag = $DOCKER_VERSION_TAG "
+echo "***  AZURE ACI-resourcegroup=$AZ_RESOURCE_GROUP " 
 echo "***" 
 
 enter_cont
@@ -675,7 +904,7 @@ echo "GITHUB_DIR="$GITHUB_DIR        # $HOME_DIR/Dropbox/Github/Waardepapieren-A
 echo "PROJECT_DIR="$PROJECT_DIR         #$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 echo "DOCKER_COMPOSE_DIR="$DOCKER_COMPOSE_DIR        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
 echo "CLERK_FRONTEND_DIR="$CLERK_FRONTEND_DIR        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-#CLERK_FRONTEND_NGINX_DIR="$         #$CLERK_FRONTEND_DIR/nginx
+echo "CLERK_FRONTEND_NGINX_DIR="$CLERK_FRONTEND_NGINX_DIR        #$CLERK_FRONTEND_DIR/nginx
 #CLERK_FRONTEND_CYPRESS_DIR="$         #$CLERK_FRONTEND_DIR/cypress
 echo "WAARDEPAPIEREN_SERVICE_DIR="$WAARDEPAPIEREN_SERVICE_DIR        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="$WAARDEPAPIEREN_SERVICE_CONFIG_DIR        #$WAARDEPAPIEREN_SERVICE_DIR/configuration
@@ -707,7 +936,7 @@ echo "SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_
 echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME        #false
 echo ""
 echo "SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON="$SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON        #true 
-echo "SET_CLERK_FRONTEND_NGINX_CONF="$SET_CLERK_FRONTEND_NGINX_CONF        #rue
+echo "SET_CLERK_FRONTEND_NGINX_CONF="$SET_CLERK_FRONTEND_NGINX_CONF        #true
 enter_cont
 clear
 echo "#######################"
@@ -741,6 +970,8 @@ fi
 if [ $CMD_GIT_CLONE = true ] 
   then git_clone 
 fi 
+
+
 
 if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = true ]
   then docker_compose_travis_yml_with_volumes
