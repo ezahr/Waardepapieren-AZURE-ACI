@@ -64,7 +64,7 @@ AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
 AZ_RESOURCE_GROUP_DELETE=false
 AZ_RESOURCE_GROUP_CREATE=flase
 
-CREATE_AZ_DEPLOY_ACI_YAML=true  #@PROJECT_DIR deploy_aci.yml
+CREATE_AZ_DEPLOY_ACI_YAML=false  #@PROJECT_DIR deploy_aci.yml
 CMD_AZ_CREATE_CONTAINERGROUP=false  #.. jeuh - Running ..
 
 #echo "#######################"
@@ -81,6 +81,7 @@ if  [ `uname` = 'Darwin' ]
     echo "Darwin"
 fi
 
+LOG_DIR=$HOME_DIR/LOG_DIR
 GITHUB_DIR=$HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
 DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
@@ -106,7 +107,8 @@ CMD_DOCKER_COMPOSE=false  #volumes and links depreciated
 CMD_DOCKER_BUILD=false  # build by container PENDING
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 
-SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true       # Dockerfile #!
+
+SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true        # Dockerfile #!
 SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=false  # Dockerfile #!
 SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=false  # Dockerfile #!
 
@@ -126,6 +128,7 @@ SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=false
 #echo "#######################" 
 PROMPT=false  # echo parameters
 DOUBLE_CHECK=true  #cat content files  with echo "#enter_inspect"
+LOG_START_DATE_TIME=`date +%Y%m%d_%H_%M`   
 
 #'********** end of parameters **********
 
@@ -146,16 +149,15 @@ DOUBLE_CHECK=true  #cat content files  with echo "#enter_inspect"
 docker_compose_travis_yml_with_volumes() {
 echo "running docker_compose_travis_yml_with_volumes"
 #DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
-#cd $DOCKER_COMPOSE_DIR
+#cd ${DOCKER_COMPOSE_DIR}
 #mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
 #touch docker-compose-travis.yml 
 
-TT_DIRECTORY=$DOCKER_COMPOSE_DIR
+TT_DIRECTORY=${DOCKER_COMPOSE_DIR}
 TT_INSPECT_FILE=docker-compose-travis.yml 
-echo $TT_DIRECTORY.$TT_INSPECT_FILE
+echo $TT_DIRECTORY.${TT_INSPECT_FILE}
 
-enter_cont
-## enter_touch
+enter_touch
 
 echo "version: '3'
 services:
@@ -184,7 +186,7 @@ services:
     #  test:
       context: clerk-frontend/
       args:
-        - CERTIFICATE_HOST=http://$CERT_HOST_IP:8880
+        - CERTIFICATE_HOST=http://${CERT_HOST_IP}:8880
     links:
       - waardepapieren-service
         ports:
@@ -205,14 +207,14 @@ services:
     
     #networks:
     #test:
-    #driver: bridge  "  > $TT_INSPECT_FILE #docker-compose-travis.yml
+    #driver: bridge  "  > ${TT_INSPECT_FILE} #docker-compose-travis.yml
 
-if [ $DOUBLE_CHECK = true ]
-  then echo "#enter_inspect"
+if [ ${DOUBLE_CHECK}= true ]
+  then enter_inspect
 fi 
 
-unset TT_DIRECTORY
-unset TT_INSPECT_FILE
+TT_DIRECTORY=""
+TT_INSPECT_FILE=""
 
 }
 
@@ -223,14 +225,15 @@ unset TT_INSPECT_FILE
 ##################################################################
 docker_compose_travis_yml_without_volumes() {
 echo "running docker_compose_travis_yml_without_volumes"
-#cd $DOCKER_COMPOSE_DIR
+#cd ${DOCKER_COMPOSE_DIR}
 #touch docker-compose-travis.yml 
 #mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
 
-TT_DIRECTORY=$DOCKER_COMPOSE_DIR
+TT_DIRECTORY=${DOCKER_COMPOSE_DIR}
 TT_INSPECT_FILE=docker-compose-travis.yml 
-# enter_touch
+echo $TT_DIRECTORY.$TT_INSPECT_FILE
 
+enter_touch
 
 echo "version: '3'
 services:
@@ -253,7 +256,7 @@ services:
     build:
       context: clerk-frontend/
       args:
-        - CERTIFICATE_HOST=http://$CERT_HOST_IP:8880
+        - CERTIFICATE_HOST=http://${CERT_HOST_IP}:8880
     links:
       - waardepapieren-service
     ports:
@@ -266,21 +269,19 @@ services:
   mock-nlx:
     build: mock-nlx/
     ports:
-      - 80:80" > $TT_INSPECT_FILE #docker-compose-travis.yml
+      - 80:80" > ${TT_INSPECT_FILE} #docker-compose-travis.yml
 
-if [ $DOUBLE_CHECK = true ]
-  then echo "#enter_inspect"
+if [ ${DOUBLE_CHECK} = true ]
+  then enter_inspect
 fi 
 
-unset TT_DIRECTORY
-unset TT_INSPECT_FILE
+TT_DIRECTORY=""
+TT_INSPECT_FILE=""
 
 }
 
-#////////////////////////////////// hack into clerk-frontend Dockerfile
-
 ##################################################################
-# Purpose: 
+# Purpose: hack into clerk-frontend Dockerfile
 # Arguments: 
 # Return: 
 ##################################################################
@@ -299,8 +300,8 @@ TT_INSPECT_FILE=Dockerfile
 echo "FROM node:10
 RUN mkdir /app
 ADD package.json package-lock.json /app/
-ENV REACT_APP_EPHEMERAL_ENDPOINT=https://$CERT_HOST_IP:443/api/eph
-ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://$CERT_HOST_IP:443/api/eph-ws
+ENV REACT_APP_EPHEMERAL_ENDPOINT=https://${CERT_HOST_IP}:443/api/eph
+ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://${CERT_HOST_IP}:443/api/eph-ws
 WORKDIR /app
 RUN npm install --unsafe-perm
 ADD public /app/public
@@ -311,14 +312,14 @@ RUN npm run build
 
 FROM nginx:1.15.8
 ADD nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=0 /app/build /usr/share/nginx/html"  > $TT_INSPECT_FILE #Dockerfile
+COPY --from=0 /app/build /usr/share/nginx/html"  > ${TT_INSPECT_FILE} #Dockerfile
 
-if [ $DOUBLE_CHECK = true ]
+if [ ${DOUBLE_CHECK}= true ]
   then echo "#enter_inspect"
 fi 
 
-unset TT_DIRECTORY
-unset TT_INSPECT_FILE
+TT_DIRECTORY=""
+TT_INSPECT_FILE=""
 
 }
 
@@ -342,14 +343,14 @@ TT_INSPECT_FILE=Dockerfile
 echo "FROM node:10
 RUN mkdir /app
 ADD package.json package-lock.json /app/
-ENV REACT_APP_EPHEMERAL_ENDPOINT=https://$CERT_HOST_IP:443/api/eph
-ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://$CERT_HOST_IP:443/api/eph-ws
+ENV REACT_APP_EPHEMERAL_ENDPOINT=https://${CERT_HOST_IP}:443/api/eph
+ENV REACT_APP_EPHEMERAL_WEBSOCKET_ENDPOINT=wss://${CERT_HOST_IP}:443/api/eph-ws
 WORKDIR /app
 RUN npm install --unsafe-perm
 ADD public /app/public
 ADD src /app/src
 ARG CERTIFICATE_HOST
-ENV REACT_APP_CERTIFICATE_HOST=http://$CERT_HOST_IP:8880
+ENV REACT_APP_CERTIFICATE_HOST=http://${CERT_HOST_IP}:8880
 RUN npm run build
 
 FROM nginx:1.15.8
@@ -359,14 +360,14 @@ COPY --from=0 /app/build /usr/share/nginx/html
 #    - ./clerk-frontend/nginx/certs:/etc/nginx/certs:rw
 RUN mkdir /etc/nginx/certs
 ADD nginx/certs/org.crt /etc/nginx/certs/org.crt
-ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > $TT_INSPECT_FILE # Dockerfile
+ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > ${TT_INSPECT_FILE} # Dockerfile
 
-if [ $DOUBLE_CHECK = true ]
+if [ ${DOUBLE_CHECK}= true ]
   then echo "#enter_inspect"
 fi 
 
-unset TT_DIRECTORY
-unset TT_INSPECT_FILE
+TT_DIRECTORY=""
+TT_INSPECT_FILE=""
 
 }
 
@@ -414,14 +415,14 @@ http {
         ssl_certificate_key /etc/nginx/certs/org.key;
 
         location /api/eph/ {
-               proxy_pass https://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232/;    #pdf effect
+               proxy_pass https://${CERT_HOST_IP}_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232/;    #pdf effect
            #     proxy_pass https://waardepapieren-service:3232/;
             #     proxy_pass https://172.19.0.3:3232/;
         }
 
         location /api/eph-ws {
            
-              proxy_pass https://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232;   # pdf effect
+              proxy_pass https://${CERT_HOST_IP}_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232;   # pdf effect
              #  proxy_pass https://waardepapieren-service:3232;
             #  proxy_pass https://172.19.0.3:3232;
             proxy_http_version 1.1;
@@ -433,14 +434,14 @@ http {
             include /etc/nginx/mime.types;
         }
     }
-}" > $TT_INSPECT_FILE  #nginx.conf
+}" > ${TT_INSPECT_FILE}  #nginx.conf
 
-if [ $DOUBLE_CHECK = true ]
+if [ ${DOUBLE_CHECK}= true ]
   then echo "#enter_inspect"
 fi 
 
-unset TT_DIRECTORY
-unset TT_INSPECT_FILE
+TT_DIRECTORY=""
+TT_INSPECT_FILE=""
 
 } 
 
@@ -469,13 +470,13 @@ ADD configuration/* app/configuration/
 ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
 WORKDIR /app
 RUN npm install --production
-CMD npm start"  > $TT_INSPECT_FILE #Dockerfile
+CMD npm start"  > ${TT_INSPECT_FILE} #Dockerfile
 
-if [ $DOUBLE_CHECK = true ]
+if [ ${DOUBLE_CHECK}= true ]
   then echo "#enter_inspect"
 fi 
-unset TT_DIRECTORY
-unset TT_INSPECT_FILE
+TT_DIRECTORY=""
+TT_INSPECT_FILE=""
 
 }
 
@@ -521,11 +522,11 @@ ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
 RUN npm install --production
 CMD npm start"  > Dockerfile
 
-if [ $DOUBLE_CHECK = true ]
+if [ ${DOUBLE_CHECK}= true ]
   then echo "#enter_inspect"
 fi 
-unset TT_DIRECTORY
-unset TT_INSPECT_FILE
+TT_DIRECTORY=""
+TT_INSPECT_FILE=""
 
 }
 
@@ -553,7 +554,7 @@ echo " {
    \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://localhost:3232\",
    \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
    \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
-  \"NLX_OUTWAY_ENDPOINT\" : \"http://$CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME:80\",
+  \"NLX_OUTWAY_ENDPOINT\" : \"http://${CERT_HOST_IP}_WAARDEPAPIEREN_SERVICE_HOSTNAME:80\",
   \"NLX_CERT\": \"/certs/org.crt\",
   \"NLX_KEY\": \"/certs/org.key\",
   \"LOG_LEVEL\": \"info\",
@@ -569,14 +570,14 @@ echo " {
     {\"Burgerservicenummer (BSN)\" : \"burgerservicenummer\"},
     {\"Woonplaats verblijfadres\" : \"verblijfadres.woonplaats\"}
   ]
-} " > $TT_INSPECT_FILE # waardepapieren-config-compose-travis.json
+} " > ${TT_INSPECT_FILE} # waardepapieren-config-compose-travis.json
 
-if [ $DOUBLE_CHECK = true ]
+if [ ${DOUBLE_CHECK}= true ]
   then echo "#enter_inspect"
 fi 
 
-unset TT_DIRECTORY
-unset TT_INSPECT_FILE
+TT_DIRECTORY=""
+TT_INSPECT_FILE=""
 
 }
 
@@ -641,14 +642,14 @@ properties:
     - protocol: tcp
       port: '8880'      
 tags: null
-type: Microsoft.ContainerInstance/containerGroups" > $TT_INSPECT_FILE  #deploy-aci.yaml
+type: Microsoft.ContainerInstance/containerGroups" > ${TT_INSPECT_FILE}  #deploy-aci.yaml
 
-if [ $DOUBLE_CHECK = true ]
+if [ ${DOUBLE_CHECK}= true ]
   then echo "#enter_inspect"
 fi 
 
-unset TT_DIRECTORY
-unset TT_INSPECT_FILE
+TT_DIRECTORY=""
+TT_INSPECT_FILE=""
 
 
 }
@@ -691,21 +692,22 @@ create_logfile_footer() {
 enter_inspect() {
 clear
 
-if [ -f "$INSPECT_FILE" ]; then
+if [ -f "${TT_INSPECT_FILE}" ]; then
  
 echo "========="
-echo "enter inspect  ${INSPECT_FILE}"
+echo "enter inspect  ${TT_INSPECT_FILE}"
 echo "========="
 echo ""
-cat   ${INSPECT_FILE}
+cat  ${TT_INSPECT_FILE}
+cp  ${TT_INSPECT_FILE}  $LOG_DIR/${TT_INSPECT_FILE}.$LOG_START_DATE_TIME   #`date "+%Y%m%d-%H%M%S"`
 echo ""
 echo "========="
-echo "eof inspect  ${INSPECT_FILE}"
+echo "eof inspect  ${TT_INSPECT_FILE}"
 echo "========="
 else
 clear
-cd $DOCKER_COMPOSE_DIR
-echo "File ${INSPECT_FILE} is missing or cannot be executed"   
+cd ${DOCKER_COMPOSE_DIR}
+echo "File ${TT_INSPECT_FILE} is missing or cannot be executed"   
 
 enter_cont
 
@@ -718,14 +720,10 @@ fi
 # Return: 
 ##################################################################
 enter_touch () {
-cd $TT_DIRECTORY 
-#touch deploy-aci.yaml
-#mv deploy-aci.yaml  deploy-aci_`date "+%Y%m%d-%H%M%S"`.yaml
-#touch deploy-aci.yaml
-TT_INSPECT_FILE
-touch $TT_INSPECT_FILE
-mv $TT_INSPECT_FILE  $TT_INSPECT_FILE.`date "+%Y%m%d-%H%M%S"`
-touch $TT_INSPECT_FILE
+
+cd ${TT_DIRECTORY}
+touch ${TT_INSPECT_FILE}
+
 
 }
 
@@ -852,7 +850,7 @@ echo "running docker_compose_min_f_docker-travis_compose_yml up $CMD_DOCKER_COMP
 # Met docker-compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiëren die uit meerdere Docker-containers bestaat. 
 # Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren.  
 
-cd $DOCKER_COMPOSE_DIR
+cd ${DOCKER_COMPOSE_DIR}
 docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
 
 }
@@ -885,7 +883,7 @@ echo "***  Welcome to  docker-compose "
 echo "***"   
 echo "***" 
 echo "***  You are about to start to build new waardepapieren images and containers "
-echo "***  FQDN = https://$CERT_HOST_IP "
+echo "***  FQDN = https://${CERT_HOST_IP} "
 echo "***  docker-tag = $DOCKER_VERSION_TAG "
 echo "***  AZURE ACI-resourcegroup=$AZ_RESOURCE_GROUP " 
 echo "***" 
@@ -899,10 +897,12 @@ enter_cont
 
 echo "#######################"
 echo "## DOWNLOAD"  
-echo "#######################" 
+echo "#######################"
+echo "HOME_DIR="$HOME_DIR 
+echo "LOG_DIR="$LOG_DIR   
 echo "GITHUB_DIR="$GITHUB_DIR        # $HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 echo "PROJECT_DIR="$PROJECT_DIR         #$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
-echo "DOCKER_COMPOSE_DIR="$DOCKER_COMPOSE_DIR        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
+echo "DOCKER_COMPOSE_DIR="${DOCKER_COMPOSE_DIR}        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
 echo "CLERK_FRONTEND_DIR="$CLERK_FRONTEND_DIR        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 echo "CLERK_FRONTEND_NGINX_DIR="$CLERK_FRONTEND_NGINX_DIR        #$CLERK_FRONTEND_DIR/nginx
 #CLERK_FRONTEND_CYPRESS_DIR="$         #$CLERK_FRONTEND_DIR/cypress
@@ -967,53 +967,9 @@ enter_cont
 clear
 fi
 
-if [ $CMD_GIT_CLONE = true ] 
-  then git_clone 
-fi 
+#ici
 
 
-
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = true ]
-  then docker_compose_travis_yml_with_volumes
-fi 
-
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = true ]
-  then docker_compose_travis_yml_without_volumes 
-fi 
-
-# docker files
-
-if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = true ]
-  then clerk_frontend_dockerfile_with_volumes
-fi 
-
-if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = true ]
-  then waardepapieren_service_dockerfile_with_volumes 
-fi 
-
-if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = true ]
-  then clerk_frontend_dockerfile_without_volumes
-fi 
-
-if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = true ]
-  then waardepapieren_service_dockerfile_without_volumes
-fi 
-
-if [ $SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON = true ]
-  then waardepapieren_service_config_compose_travis_json      #https://waardepapieren-service:3232 http://mock-nlx:80 docker network... 
-fi 
-
-if [ $SET_CLERK_FRONTEND_NGINX_CONF = true ]
-    then clerk_frontend_nginx_conf      # docker network fix4https://waardepapieren-service
-fi 
-
-if [ $CMD_DOCKER_COMPOSE = true ]
-  then docker_compose_min_f_docker-travis_compose_yml_up # 
-fi 
-
-if [ $CMD_DOCKER_BUILD= true ]
-  then  echo "PENDING"
-fi
 
 #######################
 ## M A I N
@@ -1054,7 +1010,60 @@ if [ $AZ_RESOURCE_GROUP_DELETE = true ]
   delete_azure_resource_group
 fi 
 
+if [ $CMD_GIT_CLONE = true ] 
+  then git_clone 
+fi 
+
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = true ]
+  then docker_compose_travis_yml_with_volumes
+fi 
+
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = true ]
+  then docker_compose_travis_yml_without_volumes 
+fi 
+
+
+# docker files
+
+if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = true ]
+  then clerk_frontend_dockerfile_with_volumes
+fi 
+
+if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = true ]
+  then waardepapieren_service_dockerfile_with_volumes 
+fi 
+
+if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = true ]
+  then clerk_frontend_dockerfile_without_volumes
+fi 
+#---
+
+
+if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = true ]
+  then waardepapieren_service_dockerfile_without_volumes
+fi 
+
+if [ $SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON = true ]
+  then waardepapieren_service_config_compose_travis_json      
+  #https://waardepapieren-service:3232 http://mock-nlx:80 docker network... 
+fi 
+
+if [ $SET_CLERK_FRONTEND_NGINX_CONF = true ]
+    then clerk_frontend_nginx_conf      
+    # docker network fix4https://waardepapieren-service
+fi 
+
+if [ $CMD_DOCKER_COMPOSE = true ]
+  then docker_compose_min_f_docker-travis_compose_yml_up # 
+fi 
+
+if [ $CMD_DOCKER_BUILD = true ]
+  then  echo "PENDING"
+fi
+
+# az 
 if [ $AZ_RESOURCE_GROUP_CREATE = true  ]
+
   then 
   #az login
   echo "***"   
@@ -1076,12 +1085,13 @@ if [ $CMD_AZ_CREATE_CONTAINERGROUP =  true ]
   echo "***"   
   echo "***" 
   echo "***  You are about to deploy waardepapieren images fromdockerhub to ACI AZURE Container Instances "
-  echo "***  droplet-targethost= https://$CERT_HOST_IP  with DOCKER_VERSION_TAG = $DOCKER_VERSION_TAG "
+  echo "***  droplet-targethost= https://${CERT_HOST_IP}  with DOCKER_VERSION_TAG = $DOCKER_VERSION_TAG "
   echo "***  resourcegroup = $AZ_RESOURCE_GROUP  "
   echo "az login succeeded ?" 
   enter_cont
   create_azure_container_group   #blader naar portal.azure.com  bosch.peter@outlook.com 0l....n
 fi 
+
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 #  az account list
@@ -1133,11 +1143,10 @@ fi
 
 # az group list
 
-
 echo
 echo "hope the run will be ok!"
 echo
-sleep  2
+enter_cont
 
 
 echo " cd back into " $GITHUB_DIR
