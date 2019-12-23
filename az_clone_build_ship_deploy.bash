@@ -47,7 +47,7 @@ if [ "$TARGET_HOST" = "azure_container_instance" ]; then
 fi
 
 CERT_HOST_IP=$AZ_DNSNAMELABEL.westeurope."$AZ_TLD"  #FQDN linux
-CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=$AZ_DNSNAMELABEL.westeurope.$AZ_TLD
+CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=$CERT_HOST_IP.westeurope.$AZ_TLD
 
 #echo "#######################"
 #echo "## DOCKER SHIP 
@@ -72,12 +72,12 @@ CMD_AZ_CREATE_CONTAINERGROUP=false  #.. jeuh - Running ..
 #echo "#######################" 
 
 if [ `uname` = 'Linux' ]
-  then  HOME_DIR=/home/boscp08 
+  then  HOME_DIR=/home/`whoami`    #boscp08 
   echo "linux"
 fi  
 
 if  [ `uname` = 'Darwin' ]
-    then  HOME_DIR=/Users/boscp08   
+    then  HOME_DIR=/Users/`whoami` #boscp08   
     echo "Darwin"
 fi
 
@@ -128,7 +128,7 @@ SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=true
 #echo "#######################"
 #echo "## feedbak 
 #echo "#######################" 
-PROMPT=false # echo parameters
+PROMPT=true # echo parameters
 DOUBLE_CHECK=true  #cat content modified files to $LOG_DIR
  
 
@@ -682,13 +682,54 @@ create_logfile_footer() {
     echo ----------------------------------------------------------------------------- >> $LOG_FILE
     }
 
-# /////////////////////////////////////////////////////////////////////////////////
-#  Create a log directory
-# /////////////////////////////////////////////////////////////////////////////////
-create_logdir() {
-     mkdir $LOG_DIR
-    }
+##################################################################
+# Purpose: Procedure to create directories specified
+# Arguments: 
+# Return: To check if a directory exists in a shell script you can use the following:
+##################################################################
+create_logdit() {
+     
+if ! [ -d "$LOG_DIR" ]; then
+  mkdir  ${LOG_DIR}
+fi 
 
+
+
+#create_projectdir() {
+
+#echo ${PROJECT_DIR} | awk -F/ '{print "/"$2"/"$3"/"$4"/"$5"/"$6}'
+#/home/boscp08/Projects/scratch/virtual-insanity
+#if ! [ -d "$LOG_DIR" ]; then
+#  mkdir  ${LOG_DIR}
+#fi
+}
+
+##################################################################
+# Purpose: #echo ${PROJECT_DIR} | awk -F/ '{print "/"$2"/"$3"/"$4"/"$5"/"$6}'
+# Arguments: directory structure  #/home/boscp08/Projects/scratch/virtual-insanity
+# Return: a folder  /home/boscp08/Dropbox/tt/Waardepapieren-AZURE-ACI
+##################################################################
+ make_folder() 
+    {
+     #echo $1
+    
+   if ! [ -d $1 ]; then
+    echo $1 > struct.txt
+    sed '/^$/d;s/ /\//g' struct.txt | xargs mkdir -p 
+    rm struct.txt
+     
+     if [ ${PROMPT} = true ]   
+        then 
+        echo "$1 Directorie(s) have been made"
+        cd $1
+        pwd
+    fi   
+    
+    #else   echo "$1 directory already exists "
+   fi
+
+    }
+ 
 
 ##################################################################
 # Purpose: Procedure to create an empty file
@@ -744,11 +785,26 @@ enter_cont
 
 fi
 
+}
+
+##################################################################
+# Purpose: create directories if neccecary.
+# Arguments: 
+# Return: specified directory structure
+##################################################################
+create_directories() {
+  
+make_folder ${LOG_DIR} #=$HOME_DIR/LOG_DIR
+make_folder $GITHUB_DIR  #=${HOME_DIR}   #/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
+make_folder $PROJECT_DIR   #=${HOME_DIR}  #/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
+make_folder ${DOCKER_COMPOSE_DIR}#=${HOME_DIR} #/Projects/scratch/virtual-insanity/waardepapieren
+make_folder $CLERK_FRONTEND_DIR #=${HOME_DIR} #/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+make_folder $CLERK_FRONTEND_NGINX_DIR #=${CLERK_FRONTEND_DIR}/nginx
+make_folder $WAARDEPAPIEREN_SERVICE_DIR  #=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+make_folder ${WAARDEPAPIEREN_SERVICE_CONFIG_DIR}#=${WAARDEPAPIEREN_SERVICE_DIR}/configuration
 
 
 }
-
-
 
 
 ##################################################################
@@ -823,8 +879,6 @@ az container create --resource-group ${AZ_RESOURCE_GROUP}--file deploy-aci.yaml
 # az container show --resource-group ${AZ_RESOURCE_GROUP} --name myContainerGroup --output table
 }
 
-
-
 ##################################################################
 # Purpose: Procedure to delete azure resource group (a.k.a costcentre )
 # Arguments: 
@@ -894,13 +948,9 @@ git_clone() {
  git clone https://github.com/discipl/waardepapieren.git
 }
 
-
-
 #######################
 ## M A I N
-# program starts here actually building the three containers.
-# ships images to docker hub
-# deploys images to azure.portal.com
+# program starts here actually building the three DEMO Dietz containers
 #######################
 
 echo "***"   
@@ -909,35 +959,48 @@ echo "***"
 echo "***" 
 echo "***  You are about to start to build new waardepapieren images and containers "
 echo "***  FQDN = https://${CERT_HOST_IP} "
-echo "***  docker-tag = $DOCKER_VERSION_TAG "
+echo "***  docker-tag = ${DOCKER_VERSION_TAG}"
 echo "***  AZURE ACI-resourcegroup=${AZ_RESOURCE_GROUP}" 
 echo "***" 
-
-enter_cont
-
-create_logdir
 
 
 if [ ${PROMPT} = true ] 
  then 
 clear
-enter_cont
+PROMPT=""
+while true; do
+    read -p "Do you still wish to see the contents of variables and modified files yn?" yn
+    case $yn in
+          [Yy]* ) PROMPT=true ; break;;
+          [Nn]* ) PROMPT=false ;  break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
+fi
+ 
+if [ ${PROMPT} = true ] 
+ then 
 
 echo "#######################"
 echo "## DOWNLOAD"  
 echo "#######################"
-echo "HOME_DIR="$HOME_DIR 
-echo "LOG_DIR="$LOG_DIR   
-echo "LOG_FILE="$LOG_FILE  
+echo "HOME_DIR="${HOME_DIR} 
+echo "LOG_DIR="${LOG_DIR}  
+echo "LOG_FILE="${LOG_FILE}  
 echo "GITHUB_DIR="$GITHUB_DIR        # $HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
 echo "PROJECT_DIR="${PROJECT_DIR}         #$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
+enter_cont
+clear
 echo "DOCKER_COMPOSE_DIR="${DOCKER_COMPOSE_DIR}        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
 echo "CLERK_FRONTEND_DIR="${CLERK_FRONTEND_DIR}        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 echo "CLERK_FRONTEND_NGINX_DIR="${CLERK_FRONTEND_NGINX_DIR}        #${CLERK_FRONTEND_DIR}/nginx
 #CLERK_FRONTEND_CYPRESS_DIR="$         #${CLERK_FRONTEND_DIR}/cypress
 echo "WAARDEPAPIEREN_SERVICE_DIR="${WAARDEPAPIEREN_SERVICE_DIR}        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="$WAARDEPAPIEREN_SERVICE_CONFIG_DIR        #${WAARDEPAPIEREN_SERVICE_DIR}/configuration
+echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="${WAARDEPAPIEREN_SERVICE_CONFIG_DIR}       #${WAARDEPAPIEREN_SERVICE_DIR}/configuration
 echo ""
+enter_cont
+clear
 echo "#######################"
 echo "## CLONE GITHUB" 
 echo "#######################" 
@@ -945,7 +1008,7 @@ echo "CMD_CONTAINER_STOP="$CMD_CONTAINER_STOP        #false
 echo "CMD_IMAGE_REMOVE="$CMD_IMAGE_REMOVE         #false
 echo "CMD_CONTAINER_PRUNE="$CMD_CONTAINER_PRUNE         #false
 echo ""
-echo "CMD_GIT_CLONE="$CMD_GIT_CLONE        #false  #git clone https://github.com/disciplo/waardepapieren.git
+echo "CMD_GIT_CLONE="${CMD_GIT_CLONE}       #false  #git clone https://github.com/disciplo/waardepapieren.git
 echo ""
 enter_cont
 clear
@@ -973,7 +1036,7 @@ echo "## SHIP DOCKER HUB"
 echo "#######################" 
 echo "DOCKER_TAG="${DOCKER_TAG}        #true
 echo "DOCKER_USER="${DOCKER_USER}      #"boscp08"  #NB repository name must be lowercase
-echo "DOCKER_VERSION_TAG="$DOCKER_VERSION_TAG        #"2.0"
+echo "DOCKER_VERSION_TAG="${DOCKER_VERSION_TAG}       #"2.0"
 echo "DOCKER_PUSH="$DOCKER_PUSH         #true  #hub.docker.com 
 echo ""
 echo "#######################"
@@ -991,18 +1054,92 @@ enter_cont
 #echo "#######################" 
 echo "" 
 echo "" 
-echo "hope the run will be okay. "
-enter_cont
+#echo "hope the run will be okay. "
+#enter_cont
 clear
 fi
 
-#ici
+create_directories
 
+
+#######################
+## cLONING from github repo starts here.
+#######################
+
+if [ ${CMD_GIT_CLONE}= true ] 
+  then git_clone 
+fi 
+
+
+if [ -d "${DOCKER_COMPOSE_DIR}" ]; then
+  # Control will enter here if waardepapieren folder does not exits
+    git_clone 
+
+fi
+
+
+#######################
+## configuration Docker Compose   docker-compose -f docker-compose-travis.yml --build
+#######################
+
+
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = true ]
+  then docker_compose_travis_yml_with_volumes
+fi 
+
+if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = true ]
+  then docker_compose_travis_yml_without_volumes 
+fi 
+
+
+#######################
+## configuration Docker files  docker build ... pending
+#######################
+
+if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = true ]
+  then clerk_frontend_dockerfile_with_volumes
+fi 
+
+if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = true ]
+  then waardepapieren_service_dockerfile_with_volumes 
+fi 
+
+if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = true ]
+  then clerk_frontend_dockerfile_without_volumes
+fi 
+
+if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = true ]
+  then waardepapieren_service_dockerfile_without_volumes
+fi 
+
+if [ $SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON = true ]
+  then waardepapieren_service_config_compose_travis_json      
+  #https://waardepapieren-service:3232 http://mock-nlx:80 docker network... 
+fi 
+
+if [ $SET_CLERK_FRONTEND_NGINX_CONF = true ]
+    then clerk_frontend_nginx_conf      
+    # docker network fix4https://waardepapieren-service
+fi 
+
+#######################
+## M A I N
+#  docker build and run  starts here actually
+#######################
+
+
+if [ $CMD_DOCKER_COMPOSE = true ]
+  then docker_compose_min_f_docker-travis_compose_yml_up # 
+fi 
+
+if [ $CMD_DOCKER_BUILD = true ]
+  then  echo "PENDING"
+fi
 
 
 #######################
 ## M A I N
-#  shipping tot docker repository starts here actually
+#  shipping tot docker repository starts here
 #######################
 
 if [ ${DOCKER_TAG}= true ]
@@ -1018,7 +1155,7 @@ if [ $DOCKER_PUSH = true ]
 
 #######################
 ## M A I N
-#  deploy to portal.azure.com  starts here actually
+#  deploy to portal.azure.com  starts here
 #######################
 
 if [ $CREATE_AZ_DEPLOY_ACI_YAML = true  ]
@@ -1038,57 +1175,6 @@ if [ $AZ_RESOURCE_GROUP_DELETE = true ]
   enter_cont
   delete_azure_resource_group
 fi 
-
-if [ $CMD_GIT_CLONE = true ] 
-  then git_clone 
-fi 
-
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = true ]
-  then docker_compose_travis_yml_with_volumes
-fi 
-
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = true ]
-  then docker_compose_travis_yml_without_volumes 
-fi 
-
-
-# docker files
-
-if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = true ]
-  then clerk_frontend_dockerfile_with_volumes
-fi 
-
-if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = true ]
-  then waardepapieren_service_dockerfile_with_volumes 
-fi 
-
-if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = true ]
-  then clerk_frontend_dockerfile_without_volumes
-fi 
-#---
-
-
-if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = true ]
-  then waardepapieren_service_dockerfile_without_volumes
-fi 
-
-if [ $SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON = true ]
-  then waardepapieren_service_config_compose_travis_json      
-  #https://waardepapieren-service:3232 http://mock-nlx:80 docker network... 
-fi 
-
-if [ $SET_CLERK_FRONTEND_NGINX_CONF = true ]
-    then clerk_frontend_nginx_conf      
-    # docker network fix4https://waardepapieren-service
-fi 
-
-if [ $CMD_DOCKER_COMPOSE = true ]
-  then docker_compose_min_f_docker-travis_compose_yml_up # 
-fi 
-
-if [ $CMD_DOCKER_BUILD = true ]
-  then  echo "PENDING"
-fi
 
 # az 
 if [ $AZ_RESOURCE_GROUP_CREATE = true  ]
@@ -1114,7 +1200,7 @@ if [ $CMD_AZ_CREATE_CONTAINERGROUP =  true ]
   echo "***"   
   echo "***" 
   echo "***  You are about to deploy waardepapieren images fromdockerhub to ACI AZURE Container Instances "
-  echo "***  droplet-targethost= https://${CERT_HOST_IP}  with DOCKER_VERSION_TAG = $DOCKER_VERSION_TAG "
+  echo "***  droplet-targethost= https://${CERT_HOST_IP}  with DOCKER_VERSION_TAG = ${DOCKER_VERSION_TAG}"
   echo "***  resourcegroup = ${AZ_RESOURCE_GROUP} "
   echo "az login succeeded ?" 
   enter_cont
@@ -1177,6 +1263,14 @@ echo "hope the run will be ok!"
 echo
 enter_cont
 
+
+create_logfile_header
+echo "| $LOG_START_DATE_TIME | ${GITHUB_DIR}|"                               >> $LOG_FILE
+echo "| $LOG_START_DATE_TIME | az_clone_build_ship_deploy.bash |"             >> $LOG_FILE
+cat  "<code>"                                                                  >> ${LOG_FILE} 
+cat  ${GITHUB_DIR}/az_clone_build_ship_deploy.bash                           >> $LOG_FILE
+cat  "</code>"                                                                   >> $LOG_FILE
+create_logfile_footer
 
 echo " cd back into " $GITHUB_DIR
 cd $GITHUB_DIR
