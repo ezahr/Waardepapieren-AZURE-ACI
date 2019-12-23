@@ -30,7 +30,7 @@
 #echo "## FQDN
 #echo "#######################" 
 
-AZ_DNSNAMELABEL=waardepapieren
+AZ_DNSNAMELABEL=waardepapieren-demo
 
 #TARGET_HOST=linux_VM
 
@@ -65,7 +65,7 @@ AZ_RESOURCE_GROUP_DELETE=false
 AZ_RESOURCE_GROUP_CREATE=flase
 
 CREATE_AZ_DEPLOY_ACI_YAML=true  #@PROJECT_DIR deploy_aci.yml
-CMD_AZ_CREATE_CONTAINERGROUP=false  #.. jeuh - Running ..
+CMD_AZ_CREATE_CONTAINERGROUP=false  #.. jeuh - - Running ... ..
 
 #echo "#######################"
 #echo "## DOWNLOAD / directories used 
@@ -149,7 +149,7 @@ DOUBLE_CHECK=true  #cat content modified files to $LOG_DIR
 # Return: 
 ##################################################################
 docker_compose_travis_yml_with_volumes() {
-echo "running docker_compose_travis_yml_with_volumes"
+echo "- Running ... docker_compose_travis_yml_with_volumes"
 #DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
 #cd ${DOCKER_COMPOSE_DIR}
 #mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
@@ -226,7 +226,7 @@ TT_INSPECT_FILE=""
 # Return: 
 ##################################################################
 docker_compose_travis_yml_without_volumes() {
-echo "running docker_compose_travis_yml_without_volumes"
+echo "- Running ... docker_compose_travis_yml_without_volumes"
 #cd ${DOCKER_COMPOSE_DIR}
 #touch docker-compose-travis.yml 
 #mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
@@ -288,7 +288,7 @@ TT_INSPECT_FILE=""
 # Return: 
 ##################################################################
 clerk_frontend_dockerfile_with_volumes() {
-echo "running clerk_frontend_dockerfile_with_volumes"
+echo "- Running ... clerk_frontend_dockerfile_with_volumes"
 #CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
 #cd ${CLERK_FRONTEND_DIR}
@@ -332,7 +332,7 @@ TT_INSPECT_FILE=""
 ##################################################################
 clerk_frontend_dockerfile_without_volumes() {
 
-echo "running clerk_frontend_dockerfile_without_volumes"
+echo "- Running ... clerk_frontend_dockerfile_without_volumes"
 #CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
 #cd ${CLERK_FRONTEND_DIR}
 #mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
@@ -381,7 +381,7 @@ TT_INSPECT_FILE=""
 clerk_frontend_nginx_conf() {
 #CLERK_FRONTEND_NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-echo "running clerk_frontend_nginx_conf"
+echo "- Running ... clerk_frontend_nginx_conf"
 
 TT_DIRECTORY=${CLERK_FRONTEND_NGINX_DIR}
 TT_INSPECT_FILE=nginx.conf
@@ -415,14 +415,14 @@ http {
         ssl_certificate_key /etc/nginx/certs/org.key;
 
         location /api/eph/ {
-               proxy_pass https://${CERT_HOST_IP}_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232/;    #pdf effect
+               proxy_pass https://${CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME}:3232/;    #pdf effect
            #     proxy_pass https://waardepapieren-service:3232/;
             #     proxy_pass https://172.19.0.3:3232/;
         }
 
         location /api/eph-ws {
            
-              proxy_pass https://${CERT_HOST_IP}_WAARDEPAPIEREN_SERVICE_HOSTNAME:3232;   # pdf effect
+              proxy_pass https://${CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME}:3232;   # pdf effect
              #  proxy_pass https://waardepapieren-service:3232;
             #  proxy_pass https://172.19.0.3:3232;
             proxy_http_version 1.1;
@@ -452,7 +452,7 @@ TT_INSPECT_FILE=""
 # Return: 
 ##################################################################
 waardepapieren_service_dockerfile_with_volumes() {
-echo "running waardepapieren_service_dockerfile_with_volumes"
+echo "- Running ... waardepapieren_service_dockerfile_with_volumes"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 #cd ${WAARDEPAPIEREN_SERVICE_DIR}
 #mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
@@ -486,7 +486,7 @@ TT_INSPECT_FILE=""
 # Return: 
 ##################################################################
 waardepapieren_service_dockerfile_without_volumes() {
-echo "running waardepapieren_service_dockerfile_without_volumes"
+echo "- Running ... waardepapieren_service_dockerfile_without_volumes"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 #sleep 1
 #cd ${WAARDEPAPIEREN_SERVICE_DIR}
@@ -535,7 +535,7 @@ TT_INSPECT_FILE=""
 # Return: 
 ##################################################################
 waardepapieren_service_config_compose_travis_json () {
-echo "running waardepapieren_service_config_compose_travis_json"
+echo "- Running ... waardepapieren_service_config_compose_travis_json"
 #WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
 #WAARDEPAPIEREN_SERVICE_CONFIG_DIR=${WAARDEPAPIEREN_SERVICE_DIR}/configuration
 #CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
@@ -586,7 +586,7 @@ TT_INSPECT_FILE=""
 # Return: 
 ##################################################################
 create_azure_deploy_aci_yaml() {
-echo "running create_azure_deploy_aci_yaml"
+echo "- Running ... create_azure_deploy_aci_yaml"
 #PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
 
 TT_DIRECTORY=${PROJECT_DIR}
@@ -687,13 +687,11 @@ create_logfile_footer() {
 # Arguments: 
 # Return: To check if a directory exists in a shell script you can use the following:
 ##################################################################
-create_logdit() {
+create_logdir() {
      
 if ! [ -d "$LOG_DIR" ]; then
   mkdir  ${LOG_DIR}
 fi 
-
-
 
 #create_projectdir() {
 
@@ -796,24 +794,24 @@ create_directories() {
   
 make_folder ${LOG_DIR} #=$HOME_DIR/LOG_DIR
 make_folder $GITHUB_DIR  #=${HOME_DIR}   #/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
-make_folder $PROJECT_DIR   #=${HOME_DIR}  #/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
-make_folder ${DOCKER_COMPOSE_DIR}#=${HOME_DIR} #/Projects/scratch/virtual-insanity/waardepapieren
-make_folder $CLERK_FRONTEND_DIR #=${HOME_DIR} #/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-make_folder $CLERK_FRONTEND_NGINX_DIR #=${CLERK_FRONTEND_DIR}/nginx
-make_folder $WAARDEPAPIEREN_SERVICE_DIR  #=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-make_folder ${WAARDEPAPIEREN_SERVICE_CONFIG_DIR}#=${WAARDEPAPIEREN_SERVICE_DIR}/configuration
+make_folder ${PROJECT_DIR}   #=${HOME_DIR}  #/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
+#make_folder ${DOCKER_COMPOSE_DIR}#=${HOME_DIR} #/Projects/scratch/virtual-insanity/waardepapieren
+#make_folder $CLERK_FRONTEND_DIR #=${HOME_DIR} #/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
+#make_folder $CLERK_FRONTEND_NGINX_DIR #=${CLERK_FRONTEND_DIR}/nginx
+#make_folder $WAARDEPAPIEREN_SERVICE_DIR  #=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
+#make_folder ${WAARDEPAPIEREN_SERVICE_CONFIG_DIR}#=${WAARDEPAPIEREN_SERVICE_DIR}/configuration
 
 
 }
 
 
 ##################################################################
-# Purpose: Procedure to stop running docker containers
+# Purpose: Procedure to stop - Running ... docker containers
 # Arguments: 
 # Return: 
 ##################################################################
 docker_containers_stop() {
-   echo "-running .. docker_containers_stop"
+   echo "-- Running ... .. docker_containers_stop"
 }
 
 ##################################################################
@@ -822,7 +820,7 @@ docker_containers_stop() {
 # Return: 
 ##################################################################
 docker_images_remove() {
-  echo "-running .. docker_images_remove("
+  echo "-- Running ... .. docker_images_remove("
 }
 
 ##################################################################
@@ -831,7 +829,7 @@ docker_images_remove() {
 # Return: 
 ##################################################################
 docker_containers_prune() {
-  echo "-running .. docker_containers_prune("
+  echo "-- Running ... .. docker_containers_prune("
 }
 
 ##################################################################
@@ -840,7 +838,7 @@ docker_containers_prune() {
 # Return: 
 ##################################################################
 install_docker_cli() {
-  echo "-running .. install_docker_cli() "
+  echo "-- Running ... .. install_docker_cli() "
 }
 
 ##################################################################
@@ -849,7 +847,7 @@ install_docker_cli() {
 # Return: 
 ##################################################################
 install_azure_cli() {
-  echo "-running .. install_azure_cli"
+  echo "-- Running ... .. install_azure_cli"
 }
 
 ##################################################################
@@ -858,7 +856,7 @@ install_azure_cli() {
 # Return: 
 ##################################################################
 create_azure_resource_group() {
-echo "running create_azure_resource_group" 
+echo "- Running ... create_azure_resource_group" 
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
 #echo sure ? createw $AZ_RESOURCE_GROUP
 #enter_cont
@@ -871,7 +869,7 @@ az group create --name ${AZ_RESOURCE_GROUP}--location westeurope
 # Return: 
 ##################################################################
 create_azure_container_group() {
-echo "running create_azure_container_group" 
+echo "- Running ... create_azure_container_group" 
 cd ${PROJECT_DIR}
 az container create --resource-group ${AZ_RESOURCE_GROUP}--file deploy-aci.yaml
 # https://docs.microsoft.com/en-us/azure/container-instances/container-instances-multi-container-yaml
@@ -885,7 +883,7 @@ az container create --resource-group ${AZ_RESOURCE_GROUP}--file deploy-aci.yaml
 # Return: 
 ##################################################################
 delete_azure_resource_group() {
- echo "running delete_azure_resource_group"
+ echo "- Running ... delete_azure_resource_group"
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
  # echo sure ? delete $AZ_RESOURCE_GROUP
  # enter_cont
@@ -898,7 +896,7 @@ az group delete --name ${AZ_RESOURCE_GROUP}
 # Return: 
 ##################################################################
 docker_push() {
-echo "running docker_push "
+echo "- Running ... docker_push "
 docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
 docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
 docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
@@ -912,7 +910,7 @@ docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
 # Return: 
 ##################################################################
 docker_tag() {
-echo "running docker_tag"
+echo "- Running ... docker_tag"
 docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
 docker tag waardepapieren_waardepapieren-service $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
 docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
@@ -924,7 +922,7 @@ docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_
 # Return: 
 ##################################################################
 docker_compose_min_f_docker-travis_compose_yml_up() {
-echo "running docker_compose_min_f_docker-travis_compose_yml up $CMD_DOCKER_COMPOSE_BUILD "
+echo "- Running ... docker_compose_min_f_docker-travis_compose_yml up $CMD_DOCKER_COMPOSE_BUILD "
 
 # Met docker-compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiëren die uit meerdere Docker-containers bestaat. 
 # Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren.  
@@ -940,7 +938,7 @@ docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
 # Return: 
 ##################################################################
 git_clone() {
- echo "running git_clone"
+ echo "- Running ... git_clone"
  echo "rm -rf ${PROJECT_DIR}/waardepapieren sure?"
  enter_cont
  cd ${PROJECT_DIR}
@@ -1046,7 +1044,7 @@ echo "AZ_RESOURCE_GROUP="${AZ_RESOURCE_GROUP}       #"Discipl_Wigo4it_DockerGrou
 echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE         #true
 echo "AZ_RESOURCE_GROUP_CREATE="$AZ_RESOURCE_GROUP_CREATE        #true
 echo "CREATE_AZ_DEPLOY_ACI_YAML="$CREATE_AZ_DEPLOY_ACI_YAML        #true  #@PROJECT_DIR deploy_aci.yml
-echo "CMD_AZ_CREATE_CONTAINERGROUP="$CMD_AZ_CREATE_CONTAINERGROUP        #true  #.. jeuh - Running ..
+echo "CMD_AZ_CREATE_CONTAINERGROUP="$CMD_AZ_CREATE_CONTAINERGROUP        #true  #.. jeuh - - Running ... ..
 enter_cont
 
 #echo "#######################"
@@ -1066,14 +1064,14 @@ create_directories
 ## cLONING from github repo starts here.
 #######################
 
-if [ ${CMD_GIT_CLONE}= true ] 
+if [ ${CMD_GIT_CLONE} = true ] 
   then git_clone 
 fi 
 
 
-if [ -d "${DOCKER_COMPOSE_DIR}" ]; then
-  # Control will enter here if waardepapieren folder does not exits
-    git_clone 
+if ! [ -d "${DOCKER_COMPOSE_DIR}" ]; 
+  # Control will enter here if waardepapieren folder does not exits 
+    then git_clone 
 
 fi
 
