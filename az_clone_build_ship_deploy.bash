@@ -25,13 +25,43 @@
 #2  modify functions docker config build files (be carefull)
 #3 run script . az_clone_build_ship_deploy.bash
 
+
+# Running
+#
+# The easiest way to run is using docker-compose:
+#
+# With docker compose you use a simple text file to define an application that consists of multiple Docker containers.
+# You then run your application with a single command that does everything to implement your defined environment.
+
+# This will start 3 applications:
+#
+#    clerk-frontend
+#    waardepapieren-service, with embedded ephemeral-server
+#    nlx-mock, which is an nlx-outway that provides access to a mock BRP service
+#
+
+#  Run docker-compose up#
+#
+#  Alternatively, you can use an offline mock, which replicates the NLX environment.
+#
+#  Run docker-compose -f docker-compose-travis.yml up
+#  The clerk frontend will be available at https://localhost:443 on your local pc. 
+#  Below the cookbook to deploy your containers in the azure cloud  (a.k.a ACI Azure Container Instance)
+
+
 #'********** parameters **********
 
 #echo "#######################"
 #echo "## FQDN
 #echo "#######################" 
 
-AZ_DNSNAMELABEL=waardepapieren-demo
+# This is done as follows:
+#
+#    Set the environment variable CERT_HOST_IP is with an IP (or domain) that the validator app can use to reach the clerk-frontend container.  
+#   Ensure that the validator app runs on the same (wifi) network as the clerk frontend.
+
+
+AZ_DNSNAMELABEL=waardepapieren-demo   # start of your FQDN in azure.
 
 #TARGET_HOST=linux_VM
 
@@ -53,19 +83,19 @@ CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=$AZ_DNSNAMELABEL.westeurope.$AZ_TLD
 #echo "#######################"
 #echo "## DOCKER SHIP 
 #echo "#######################" 
-DOCKER_TAG=true
+DOCKER_TAG=false
 DOCKER_USER="boscp08"  #NB repository name must be lowercase
 DOCKER_VERSION_TAG="2.0"
-DOCKER_PUSH=false  #hub.docker.com   NB with docker commit you loose ENV
+DOCKER_PUSH=true  #hub.docker.com   NB with docker commit you loose ENV
 
 #echo "#######################"
 #echo "## AZURE DEPLOY
 #echo "#######################" 
 AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
 AZ_RESOURCE_GROUP_DELETE=false
-AZ_RESOURCE_GROUP_CREATE=flase
+AZ_RESOURCE_GROUP_CREATE=false
 
-CREATE_AZ_DEPLOY_ACI_YAML=true  #@PROJECT_DIR deploy_aci.yml
+CREATE_AZ_DEPLOY_ACI_YAML=false  #@PROJECT_DIR deploy_aci.yml
 CMD_AZ_CREATE_CONTAINERGROUP=false  #.. jeuh - - Running ... ..
 
 #echo "#######################"
@@ -139,10 +169,6 @@ DOUBLE_CHECK=false  #cat content modified files to $LOG_DIR
 # modify at your own peril! because of configuration drift 
 # main purpose of this script to show configuration for containers spinning in the cloud. 
 
-#echo "#######################"
-#echo "## happy hacking ..  good luck 
-#echo "#######################" 
-#////////////////////////////////// hack into docker-compose-travis.yml
 
 ##################################################################
 # Purpose: modify docker-compose-travis.yml 
@@ -843,7 +869,7 @@ docker_containers_stop() {
 ##################################################################
 # Purpose:  remove alle containers and images d
 # Arguments: 
-# Return: 
+# Return:   
 ##################################################################
 docker_images_remove() {
   echo "-- Running ... .. docker_images_remove("
@@ -945,13 +971,41 @@ az group delete --name ${AZ_RESOURCE_GROUP}
 # Return: 
 ##################################################################
 docker_push() {
-clear
+
+echo "Docker login"
+docker login
+create_logfile_header
 echo "- Running ... docker_push "
-docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG    #  >> $LOG_FILE
-docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG           #  >> $LOG_FILE   
-docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG          #  >> $LOG_FILE
-# https://hub.docker.com  boscp08 P...!2...
-enter_cont
+echo "docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG " >> $LOG_FILE
+echo "docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG " 
+echo "https://hub.docker.com/repository/docker/boscp08/wwaardepapieren-clerk-frontend"    >>$LOG_FILE
+docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG         >> $LOG_FILE
+create_logfile_footer
+
+create_logfile_header
+echo "docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG "     >> $LOG_FILE   
+echo "docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG "     
+echo "https://hub.docker.com/repository/docker/boscp08/waardepapieren-service"  >> $LOG_FILE
+docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG             >> $LOG_FILE   
+create_logfile_footer
+
+create_logfile_header
+echo "docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG"       >> $LOG_FILE
+echo "docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG"      
+echo "https://hub.docker.com/repository/docker/boscp08/wwaardepapieren-mock-nlx"    >>$LOG_FILE
+docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG             >> $LOG_FILE
+create_logfile_footer
+
+if [ ${PROMPT} = true ] 
+ then 
+echo "shipping to docker hub is done LOG_FILE= $LOG_FILE  "
+echo "or goto  https://hub.docker.com  docker-user=$DOCKER_USER with version=$DOCKER_VERSION_TAG  "
+echo "https://hub.docker.com/repository/docker/$DOCKER_USER//wwaardepapieren-clerk-frontend"   
+echo "https://hub.docker.com/repository/docker/$DOCKER_USER//waardepapieren-service"  
+echo "https://hub.docker.com/repository/docker/$DOCKER_USER//wwaardepapieren-mock-nlx"    
+# blader naar https://hub.docker.com  boscp08 P...!2...
+#enter_cont
+fi
 
 }
 
@@ -962,24 +1016,36 @@ enter_cont
 ##################################################################
 docker_tag() {
 clear  
+#docker images
+#enter_cont
+
+create_logfile_header
 echo "- Running ... docker_tag"
-docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG  #>> $LOG_FILE
-docker tag waardepapieren_waardepapieren-service $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG # >> $LOG_FILE
-docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG              #  >> $LOG_FILE 
+echo "- Running ... docker_tag"  >> $LOG_FILE
+docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG  
+docker tag waardepapieren_waardepapieren-service $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG 
+docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG          
+
+docker images | grep  $DOCKER_VERSION_TAG   >> $LOG_FILE
+
+create_logfile_footer
+docker images | grep  $DOCKER_VERSION_TAG   
 enter_cont
+
+
 }
 
 
 ##################################################################
 # Purpose:  Procedure to build the waardepapieren images and run containers.  
-# Arguments: 
+# Arguments: docker-compose -f docker-compose-travis.yml up
 # Return: 
 ##################################################################
 docker_compose_min_f_docker-travis_compose_yml_up() {
-echo "- Running ... docker_compose_min_f_docker-travis_compose_yml up $CMD_DOCKER_COMPOSE_BUILD "
 
-# Met docker-compose gebruikt u een eenvoudig tekstbestand om een toepassing te definiëren die uit meerdere Docker-containers bestaat. 
-# Vervolgens draait u uw toepassing op met een enkele opdracht die er alles aan doet om uw gedefinieerde omgeving te implementeren.  
+echo "- building with ... docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD "
+echo ""
+
 
 cd ${DOCKER_COMPOSE_DIR}
 docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
@@ -1013,15 +1079,16 @@ git_clone() {
  git clone https://github.com/discipl/waardepapieren.git
 }
 
+#/////////////////////////////////////////////////////////////////////////////////////////////
 #######################
 ## M A I N
-# program starts here actually building the three DEMO Dietz containers
+# program starts here actually 
 #######################
 
 echo "***"   
-echo "***  Welcome to  docker-compose "
+echo "***  Welcome to  docker-compose  "
 echo "***"   
-echo "***" 
+echo "***" download clone build run ship and deploy to AZURE CLOUD 
 echo "***  You are about to start to build new waardepapieren images and containers "
 echo "***  FQDN = https://${CERT_HOST_IP} "
 echo "***  docker-tag = ${DOCKER_VERSION_TAG}"
@@ -1102,7 +1169,7 @@ echo "#######################"
 echo "DOCKER_TAG="${DOCKER_TAG}        #true
 echo "DOCKER_USER="${DOCKER_USER}      #"boscp08"  #NB repository name must be lowercase
 echo "DOCKER_VERSION_TAG="${DOCKER_VERSION_TAG}       #"2.0"
-echo "DOCKER_PUSH="$DOCKER_PUSH         #true  #hub.docker.com 
+echo "DOCKER_PUSH="${DOCKER_PUSH}         #true  #hub.docker.com 
 echo ""
 echo "#######################"
 echo "## DEPLOY AZURE"
@@ -1197,9 +1264,8 @@ if [ $CMD_DOCKER_COMPOSE = true ]
   then docker_compose_min_f_docker-travis_compose_yml_up # 
 fi 
 
-if [ $CMD_DOCKER_BUILD = true ]
-  then  echo "PENDING"
-fi
+#if [ $CMD_DOCKER_BUILD = true ]
+#  then  echo "PENDING"  nice to have docker-compose will do the work 
 
 
 #######################
@@ -1207,13 +1273,13 @@ fi
 #  shipping tot docker repository starts here
 #######################
 
-if [ ${DOCKER_TAG}= true ]
+if [ ${DOCKER_TAG} = true ]
   then docker_tag
 fi 
 
-if [ $DOCKER_PUSH = true ]
+if [ ${DOCKER_PUSH} = true ]
   then 
-  docker login  #Authenticating with existing credentials...
+  #docker login  #Authenticating with existing credentials...
   docker_push  #check hub.docker.com
  fi 
 
@@ -1257,7 +1323,7 @@ if [ $AZ_RESOURCE_GROUP_CREATE = true  ]
   create_azure_resource_group
 fi 
 
-if [ $CMD_AZ_CREATE_CONTAINERGROUP =  true ]
+if [ $CMD_AZ_CREATE_CONTAINERGROUP = true ]
   then 
   #az logon
   echo "***"   
@@ -1323,13 +1389,21 @@ fi
 
 # az group list
 #create_logfile_footer
-#write_az_clone_build_ship_deploy_bash
+ 
+
 create_logfile_footer
 
 echo
 echo "hope the run will be ok!"
 echo
 enter_cont
+
+
+if [ ${PROMPT} = true ] 
+ then 
+ write_az_clone_build_ship_deploy_bash
+ cat $LOG_FILE | more
+ fi 
 
 echo " cd back into " $GITHUB_DIR
 cd $GITHUB_DIR
