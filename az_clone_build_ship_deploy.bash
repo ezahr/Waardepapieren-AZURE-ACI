@@ -86,17 +86,17 @@ CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=$AZ_DNSNAMELABEL.westeurope.$AZ_TLD
 DOCKER_TAG=false
 DOCKER_USER="boscp08"  #NB repository name must be lowercase
 DOCKER_VERSION_TAG="2.0"
-DOCKER_PUSH=true  #hub.docker.com   NB with docker commit you loose ENV
+DOCKER_PUSH=false #hub.docker.com   NB with docker commit you loose ENV
 
 #echo "#######################"
 #echo "## AZURE DEPLOY
 #echo "#######################" 
 AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
-AZ_RESOURCE_GROUP_DELETE=false
-AZ_RESOURCE_GROUP_CREATE=false
+AZ_RESOURCE_GROUP_DELETE=true
+AZ_RESOURCE_GROUP_CREATE=true
 
-CREATE_AZ_DEPLOY_ACI_YAML=false  #@PROJECT_DIR deploy_aci.yml
-CMD_AZ_CREATE_CONTAINERGROUP=false  #.. jeuh - - Running ... ..
+CREATE_AZ_DEPLOY_ACI_YAML=true #@PROJECT_DIR deploy_aci.yml
+CMD_AZ_CREATE_CONTAINERGROUP=true  #.. jeuh - - Running ... ..
 
 #echo "#######################"
 #echo "## DOWNLOAD / directories used 
@@ -935,7 +935,7 @@ echo "- Running ... create_azure_resource_group"
  # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
 #echo sure ? createw $AZ_RESOURCE_GROUP
 #enter_cont
-az group create --name ${AZ_RESOURCE_GROUP}--location westeurope
+az group create --name ${AZ_RESOURCE_GROUP} --location westeurope
 }
 
 ##################################################################
@@ -946,7 +946,8 @@ az group create --name ${AZ_RESOURCE_GROUP}--location westeurope
 create_azure_container_group() {
 echo "- Running ... create_azure_container_group" 
 cd ${PROJECT_DIR}
-az container create --resource-group ${AZ_RESOURCE_GROUP}--file deploy-aci.yaml
+
+az container create --resource-group ${AZ_RESOURCE_GROUP} --file deploy-aci.yaml
 # https://docs.microsoft.com/en-us/azure/container-instances/container-instances-multi-container-yaml
 # View deployment state
 # az container show --resource-group ${AZ_RESOURCE_GROUP} --name myContainerGroup --output table
@@ -1297,7 +1298,7 @@ if [ $AZ_RESOURCE_GROUP_DELETE = true ]
   then 
   #az login\
   echo "***"   
-  echo "***  Welcome to  dockerhub2azure "
+  echo "***  Welcome to  deploy 2 AZURE"
   echo "***"   
   echo "***" 
   echo "***  You are about to delete resource group ${AZ_RESOURCE_GROUP}"
