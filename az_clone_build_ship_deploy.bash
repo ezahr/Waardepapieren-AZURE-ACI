@@ -47,7 +47,7 @@ if [ "$TARGET_HOST" = "azure_container_instance" ]; then
 fi
 
 CERT_HOST_IP=$AZ_DNSNAMELABEL.westeurope."$AZ_TLD"  #FQDN linux
-CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=$CERT_HOST_IP.westeurope.$AZ_TLD
+CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME==$AZ_DNSNAMELABEL.westeurope.$AZ_TLD
 
 #echo "#######################"
 #echo "## DOCKER SHIP 
