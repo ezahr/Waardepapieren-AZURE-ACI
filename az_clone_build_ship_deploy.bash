@@ -5,6 +5,7 @@
 #    Description :- This script builds "waardepapieren" containers and ships images to hub.docker.com and beyond to ACI
 #    Modified           Date           Description
 #    --------           --------       -------------------------------------------------
+#    Peter Bosch       21.12.2019      macOs configuration
 #    Peter Bosch       20.12.2019      processing technical dept
 #    Peter Bosch       05.12.2019      Initial version.
 #
