@@ -805,32 +805,61 @@ make_folder ${PROJECT_DIR}   #=${HOME_DIR}  #/Projects/scratch/virtual-insanity 
 
 }
 
-
 ##################################################################
 # Purpose: Procedure to stop - Running ... docker containers
 # Arguments: 
 # Return: 
 ##################################################################
+git_init() {
+   echo "-- Running ... git init"
+
+#boscp08@boscp08-HP-Compaq-8510p:~/Dropbox/Github$ git init
+#Initialized empty Git repository in /home/boscp08/Dropbox/Github/.git/
+#  sudo apt install git 
+git init
+git config --global credential.helper store
+
+git config --global user.name "peter-bosch"
+git config --global user.name "ezahr"
+git config --global user.password "P...r\!yyyy"
+
+#git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git
+#cd into 
+
+}
+
+
+##################################################################
+# Purpose: remove alle containers 
+# Arguments: 
+# Return: 
+##################################################################
 docker_containers_stop() {
    echo "-- Running ... .. docker_containers_stop"
+  docker stop  $(docker ps -a -q)
+  
 }
 
 ##################################################################
-# Purpose: Procedure to remove docker images
+# Purpose:  remove alle containers and images d
 # Arguments: 
 # Return: 
 ##################################################################
 docker_images_remove() {
   echo "-- Running ... .. docker_images_remove("
+
+docker rm $(docker ps -a -q) && docker rmi $(docker images -q)
+
 }
 
 ##################################################################
-# Purpose: Procedure to remove stopped containers (waste of storage)
+# Purpose:  remove all stopped containers (just waist of storage} 
 # Arguments: 
 # Return: 
 ##################################################################
 docker_containers_prune() {
   echo "-- Running ... .. docker_containers_prune("
+  docker container prune
 }
 
 ##################################################################
@@ -840,6 +869,15 @@ docker_containers_prune() {
 ##################################################################
 install_docker_cli() {
   echo "-- Running ... .. install_docker_cli() "
+
+
+#description	command
+#1	install docker download	sudo install -y docker docker-common docker-client docker-compose
+#2	enable docker daemon	systemctl enable docker
+#3	and start docker daemon	systemctl start docker
+#4	verify that docker daemon is active by running your first container	docker run hello-world
+#but now as a 'normal' user
+#g roupadd docker usermod -aG docker boscp08 systemctl restart docker docker run hello-world
 }
 
 ##################################################################
@@ -849,6 +887,16 @@ install_docker_cli() {
 ##################################################################
 install_azure_cli() {
   echo "-- Running ... .. install_azure_cli"
+udo apt-get update
+  sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
+
+#Down load en installeer de micro soft-handtekening sleutel:
+#bash
+
+curl -sL https://packages.microsoft.com/keys/microsoft.asc | 
+    gpg --dearmor | 
+    sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
+
 }
 
 ##################################################################
@@ -932,6 +980,8 @@ cd ${DOCKER_COMPOSE_DIR}
 docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
 
 }
+
+
 
 ##################################################################
 # Purpose: Procedure to clone de github repo on your pc
