@@ -53,10 +53,10 @@ CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=$AZ_DNSNAMELABEL.westeurope.$AZ_TLD
 #echo "#######################"
 #echo "## DOCKER SHIP 
 #echo "#######################" 
-DOCKER_TAG=false
+DOCKER_TAG=true
 DOCKER_USER="boscp08"  #NB repository name must be lowercase
 DOCKER_VERSION_TAG="2.0"
-DOCKER_PUSH=false  #hub.docker.com 
+DOCKER_PUSH=false  #hub.docker.com   NB with docker commit you loose ENV
 
 #echo "#######################"
 #echo "## AZURE DEPLOY
@@ -107,13 +107,13 @@ CMD_GIT_CLONE=false
 #echo "## BUILD
 #echo "#######################" 
 CMD_DOCKER_COMPOSE=false  #volumes and links depreciated
-CMD_DOCKER_BUILD=false  # build by container PENDING
+# CMD_DOCKER_BUILD=false  # build by container PENDING  well docker compose works like docker build now. Jeuh
 CMD_DOCKER_COMPOSE_BUILD=" --build"
 
 
-SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true        # Dockerfile #!
-SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=true  # Dockerfile #!
-SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=true  # Dockerfile #!
+SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true       # mimic native Dockerfile build  #! no volumes , no links (bridged docker network)
+SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=true  # mimic native Dockerfile build  #! no volumes , no links (bridged docker network)
+SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=true  # mimic native Dockerfile build  #! no volumes , no links (bridged docker network)
 
 SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME=false         # bypass docker-compose depreciated and causes cloud / k8s issues
 SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME=false    # bypass docker-compose ACI cloud volume issue
@@ -130,7 +130,7 @@ SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=true
 #echo "## feedbak 
 #echo "#######################" 
 PROMPT=true # echo parameters
-DOUBLE_CHECK=true  #cat content modified files to $LOG_DIR
+DOUBLE_CHECK=false  #cat content modified files to $LOG_DIR
  
 
 #'********** end of parameters **********
@@ -754,7 +754,7 @@ clear
 if [ -f "${TT_INSPECT_FILE}" ]; then
  
 create_logfile_header
-echo "| $LOG_START_DATE_TIME | ${TT_DIRECTORY} |"                                >> $LOG_FILE
+echo "| $LOG_START_DATE_TIME | ${TT_DIRECTORY} |"                                  >> $LOG_FILE
 echo "| $LOG_START_DATE_TIME | ${TT_INSPECT_FILE}|"                                >> $LOG_FILE
 echo "<code>"                                                                      >> $LOG_FILE
 cat  ${TT_INSPECT_FILE}                                                            >> $LOG_FILE
@@ -945,11 +945,13 @@ az group delete --name ${AZ_RESOURCE_GROUP}
 # Return: 
 ##################################################################
 docker_push() {
+clear
 echo "- Running ... docker_push "
-docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
-docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
-docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
-# https://hub.docker.com  boscp08 P...!2....
+docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG    #  >> $LOG_FILE
+docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG           #  >> $LOG_FILE   
+docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG          #  >> $LOG_FILE
+# https://hub.docker.com  boscp08 P...!2...
+enter_cont
 
 }
 
@@ -959,11 +961,14 @@ docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
 # Return: 
 ##################################################################
 docker_tag() {
+clear  
 echo "- Running ... docker_tag"
-docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
-docker tag waardepapieren_waardepapieren-service $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
-docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
+docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG  #>> $LOG_FILE
+docker tag waardepapieren_waardepapieren-service $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG # >> $LOG_FILE
+docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG              #  >> $LOG_FILE 
+enter_cont
 }
+
 
 ##################################################################
 # Purpose:  Procedure to build the waardepapieren images and run containers.  
@@ -981,7 +986,18 @@ docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
 
 }
 
-
+##################################################################
+# Purpose: Procedure to save the program to the LOG_FILE
+# Arguments: 
+# Return: dokuwiki
+##################################################################
+write_az_clone_build_ship_deploy_bash() {
+echo "| $LOG_START_DATE_TIME | ${GITHUB_DIR}|"                               >> $LOG_FILE
+echo "| $LOG_START_DATE_TIME | az_clone_build_ship_deploy.bash |"            >> $LOG_FILE
+echo  "<code>"                                                                >> ${LOG_FILE} 
+cat  ${GITHUB_DIR}/az_clone_build_ship_deploy.bash                           >> $LOG_FILE
+echo "</code>"                                                               >> $LOG_FILE
+}
 
 ##################################################################
 # Purpose: Procedure to clone de github repo on your pc
@@ -1306,20 +1322,14 @@ fi
 #https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli?view=azure-cli-latest
 
 # az group list
+#create_logfile_footer
+#write_az_clone_build_ship_deploy_bash
+create_logfile_footer
 
 echo
 echo "hope the run will be ok!"
 echo
 enter_cont
-
-
-create_logfile_header
-echo "| $LOG_START_DATE_TIME | ${GITHUB_DIR}|"                               >> $LOG_FILE
-echo "| $LOG_START_DATE_TIME | az_clone_build_ship_deploy.bash |"             >> $LOG_FILE
-cat  "<code>"                                                                  >> ${LOG_FILE} 
-cat  ${GITHUB_DIR}/az_clone_build_ship_deploy.bash                           >> $LOG_FILE
-cat  "</code>"                                                                   >> $LOG_FILE
-create_logfile_footer
 
 echo " cd back into " $GITHUB_DIR
 cd $GITHUB_DIR
