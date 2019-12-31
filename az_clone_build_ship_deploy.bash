@@ -1,69 +1,109 @@
 #! /bin/bash
 # //////////////////////////////////////////////////////////////////////////////////////////
-#    File Type   :- BASH Script (needs docker-CLI and AZURE-CLI installed)
+#   File Type   :- BASH Script (needs GIT-CLI,  docker-CLI and AZURE-CLI installed)
 #  
-#    Description :- This script builds "waardepapieren" containers and ships images to hub.docker.com and beyond to ACI
-#    Modified           Date           Description
-#    --------           --------       -------------------------------------------------
-#    Peter Bosch       21.12.2019      macOs configuration
-#    Peter Bosch       20.12.2019      processing technical dept
-#    Peter Bosch       05.12.2019      Initial version.
+#   Description :- This script builds "waardepapieren" containers and ships images to hub.docker.com and beyond to ACI
+#   Modified           Date           Description
+#   Peter Bosch       20.12.2019      processing technical dept
+#   Peter Bosch       05.12.2019      Initial version.
 #
 # //////////////////////////////////////////////////////////////////////////////////////////
-#   File:            :az_clone_build_ship_deploy.bash
-#   version          :20191204 v0
-#   File Type        :Bash 
-#   Purpose          :download - Clone - Build - Ship - Deploy https://github.com/dsicipl/waardepapieren.git     
-#   Title:           :
-#   Category         :Discipl DEV2PROD 
-#   Identificatie    :https://github.com/ezahr/Waardepapieren-AZURE-ACI 
-#   big thanks to pim Otte ,stef van Leeuwen Wigo4it vincent van der laar.  
-# //////////////////////////////////////////////////////////////////////////////////////////
+#  File:            :az_aci_clone_build_ship_deploy.bash
+#  version          :20191204 v0
+#  File Type        :Bash is a command processor that typically runs in a text window 
+#                    Bash can also read and execute commands from a file, called a shell script.
+#  Purpose          :download - Clone - Build - Ship - Deploy  @datafluisteraar
+#  Title:           :cloutuh  
+#  Category         :CI CD
+#  Identificatie    :https://github.com/BoschPeter/AZ_ACI_waardepapieren-demo_westeurope_azurecontainer_io
+#  main purpose of this script to show configuration for containers spinning in the cloud. 
+#  https://waardepapieren-demo.discipl.org/    BSN=663678651
+#  example Pim Otte
+#  10dec 2:35 PM @Bas Als het goed is werkt https://waardepapieren-demo.discipl.org/
+#  Ik had wel hier problemen met de ICTU firewall die het blokkeerde, ik moest met mijn telefoon op 4g om het werkend te krijgen
+#  https://waardepapieren-demo.westeurope.cloudapp.azure.com  VM
+#  https://waardepapieren-demo.westeurope.azurecontainer.io ACI
+#  https://waardepapieren-demo.westeurope.azurecontainer.io ACI
 
-#'********** instructions **********
-#1. enter your parameters  
-#2  modify functions docker config build files (be carefull)
-#3 run script . az_clone_build_ship_deploy.bash
+# ===== INSTRUCTIONS ======
+# 1. enter your variable ...
+# 2. run a menu driven shell. 
+# 3. run this script as follows 
+#     chmod +x az_clone_build_ship_deploy.bash  
+#     ./az_clone_build_ship_deploy.bash
 
-
+# forked from https://github.com/discipl/waardepapieren.git read.ME
 # Running
 #
-# The easiest way to run is using docker-compose:
+# The easiest way to run is using docker-compose:  ...but needs a (virtual) machine to run on. (no K8s no ACI)
 #
 # With docker compose you use a simple text file to define an application that consists of multiple Docker containers.
 # You then run your application with a single command that does everything to implement your defined environment.
-
 # This will start 3 applications:
 #
-#    clerk-frontend
-#    waardepapieren-service, with embedded ephemeral-server
-#    nlx-mock, which is an nlx-outway that provides access to a mock BRP service
+# clerk-frontend
+# waardepapieren-service, with embedded ephemeral-server
+# nlx-mock, which is an nlx-outway that provides access to a mock BRP service
 #
-
-#  Run docker-compose up#
+# Run docker-compose up#  Run docker-compose down  a.k.a restart.  stop /start
 #
-#  Alternatively, you can use an offline mock, which replicates the NLX environment.
+# Alternatively, you can use an offline mock, which replicates the NLX environment.
 #
-#  Run docker-compose -f docker-compose-travis.yml up
-#  The clerk frontend will be available at https://localhost:443 on your local pc. 
-#  Below the cookbook to deploy your containers in the azure cloud  (a.k.a ACI Azure Container Instance)
-
-
-#'********** parameters **********
-
-#echo "#######################"
-#echo "## FQDN
-#echo "#######################" 
+# Run docker-compose -f docker-compose-travis.yml up
+# The clerk frontend will be available at https://localhost:443 on your local pc. 
+# Below the cookbook to deploy your containers as a so called ACI Azure Container Instance. 
+# simular to k8s pod ?
 
 # This is done as follows:
-#
-#    Set the environment variable CERT_HOST_IP is with an IP (or domain) that the validator app can use to reach the clerk-frontend container.  
-#   Ensure that the validator app runs on the same (wifi) network as the clerk frontend.
+# Set the environment variable CERT_HOST_IP is with an IP (or domain) that the validator app can use to reach the clerk-frontend container.  
+# Ensure that the validator expo app runs on the same (wifi) network as the clerk frontend. (BSN=663678651)
 
+# here we go
+# ----------------------------------
+# Step : Define variables
+# ----------------------------------
 
-AZ_DNSNAMELABEL=waardepapieren-demo   # start of your FQDN in azure.
+if [ `uname` = 'Linux' ]
+  then  HOME_DIR=/home/`whoami`   
+  echo "linux"
+fi  
 
-#TARGET_HOST=linux_VM
+if  [ `uname` = 'Darwin' ]
+    then  HOME_DIR=/Users/`whoami`    
+   echo "MacOs"
+fi
+
+if  [ `uname` = 'MING64_NT-10.0-18362' ]
+    then  HOME_DIR=/c/Users/`whoami`    
+   echo "Windows10  ... "
+fi
+
+#tt
+GIT_PWD=Peter\!2020
+DOCKER_PWD=Peter\!2020
+AZURE_PWD=0lifanten
+
+PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity    
+GIT_USER=BoschPeter
+GIT_REPO=AZ_ACI_waardepapieren-demo_westeurope_azurecontainer_io  #see befores
+GITHUB_DIR=$PROJECT_DIR/${GIT_REPO}   
+DOCKER_USER="boscp08"  #NB repository name must be lowercase  Peter!2020
+COMPOSE_BUILD_FLAG=" --build"
+# You build a docker on your laptop and then you are the same as in production. That is why you should use containers btw docker is not fast
+# Naming your containers
+
+MOCK_NLX_IMAGE=waardepapieren_mock-nlx
+SERVICE_IMAGE=waardepapieren_waardepapieren-service
+CLERK_FRONTEND_IMAGE=waardepapieren_clerk-frontend
+DOCKERHUB_MOCK_NLX_IMAGE=waardepapieren-mock-nlx
+DOCKERHUB_SERVICE_IMAGE=waardepapieren-waardepapieren-service
+DOCKERHUB_CLERK_FRONTEND_IMAGE=waardepapieren-clerk-frontend
+#with 
+DOCKER_VERSION_TAG="4.0"
+# Application is the same everywhere on the DTAP street. DTAP is the most important. Pets & Cattle!
+AZURE_USER=bosch.peter@outlook.com  
+AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"  #waardepapierenVM
+AZ_DNSNAMELABEL=discipl  
 
 TARGET_HOST=azure_container_instance
 
@@ -76,117 +116,61 @@ if [ "$TARGET_HOST" = "azure_container_instance" ]; then
        echo expression evaluated as azure_container_instance
        AZ_TLD=azurecontainer.io
 fi
+pt
+# REACT_APP_CERTIFICATE_HOST=https://discipl.westeurope.azurecontainer.io
+# EPHEMERAL_ENDPOINT" : "https://discipl.westeurope.cloudapp.azure.com:3232",
+# EPHEMERAL_WEBSOCKET_ENDPOINT" : "wss://discipl.westeurope.cloudapp.azure.com:3232"
 
-CERT_HOST_IP=$AZ_DNSNAMELABEL.westeurope."$AZ_TLD"  #FQDN linux
-CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME=$AZ_DNSNAMELABEL.westeurope.$AZ_TLD
-
-#echo "#######################"
-#echo "## DOCKER SHIP 
-#echo "#######################" 
-DOCKER_TAG=false
-DOCKER_USER="boscp08"  #NB repository name must be lowercase
-DOCKER_VERSION_TAG="2.0"
-DOCKER_PUSH=false #hub.docker.com   NB with docker commit you loose ENV
-
-#echo "#######################"
-#echo "## AZURE DEPLOY
-#echo "#######################" 
-AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup2"
-AZ_RESOURCE_GROUP_DELETE=true
-AZ_RESOURCE_GROUP_CREATE=true
-
-CREATE_AZ_DEPLOY_ACI_YAML=true #@PROJECT_DIR deploy_aci.yml
-CMD_AZ_CREATE_CONTAINERGROUP=true  #.. jeuh - - Running ... ..
-
-#echo "#######################"
-#echo "## DOWNLOAD / directories used 
-#echo "#######################" 
-
-if [ `uname` = 'Linux' ]
-  then  HOME_DIR=/home/`whoami`    #boscp08 
-  echo "linux"
-fi  
-
-if  [ `uname` = 'Darwin' ]
-    then  HOME_DIR=/Users/`whoami` #boscp08   
-    echo "Darwin"
-fi
-
-LOG_START_DATE_TIME=`date +%Y%m%d_%H_%M`  
-LOG_DIR=$HOME_DIR/LOG_DIR
-LOG_FILE=$LOG_DIR/LOG_$LOG_START_DATE_TIME.log
-GITHUB_DIR=$HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
-PROJECT_DIR=$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
-DOCKER_COMPOSE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
-CLERK_FRONTEND_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-CLERK_FRONTEND_NGINX_DIR=${CLERK_FRONTEND_DIR}/nginx
-#CLERK_FRONTEND_CYPRESS_DIR=${CLERK_FRONTEND_DIR}/cypress
-WAARDEPAPIEREN_SERVICE_DIR=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-WAARDEPAPIEREN_SERVICE_CONFIG_DIR=${WAARDEPAPIEREN_SERVICE_DIR}/configuration
-
-#echo "#######################"
-#echo "## CLONE
-#echo "#######################" 
-
-CMD_CONTAINER_STOP=false
-CMD_IMAGE_REMOVE=false
-CMD_CONTAINER_PRUNE=false
-CMD_GIT_CLONE=false
-
-#echo "#######################"
-#echo "## BUILD
-#echo "#######################" 
-CMD_DOCKER_COMPOSE=false  #volumes and links depreciated
-# CMD_DOCKER_BUILD=false  # build by container PENDING  well docker compose works like docker build now. Jeuh
-CMD_DOCKER_COMPOSE_BUILD=" --build"
-
-
-SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME=true       # mimic native Dockerfile build  #! no volumes , no links (bridged docker network)
-SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME=true  # mimic native Dockerfile build  #! no volumes , no links (bridged docker network)
-SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME=true  # mimic native Dockerfile build  #! no volumes , no links (bridged docker network)
-
-SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME=false         # bypass docker-compose depreciated and causes cloud / k8s issues
-SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME=false    # bypass docker-compose ACI cloud volume issue
-SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME=false    # bypass docker-compose ACI cloud bridged network issus
 
 #EPHEMERAL_RETENTION_TIME=86400  #24h 
-EPHEMERAL_RETENTION_TIME=2592001 #30 dage
-SET_CLERK_FRONTEND_NGINX_CONF=true
-SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON=true
+EPHEMERAL_RETENTION_TIME=2592001 #30 dagen
 
+CERT_HOST_IP=$AZ_DNSNAMELABEL.westeurope."$AZ_TLD"  #FQDN linux
+CERT_HOST_IP_WP_SERVICE_HOSTNAME=$AZ_DNSNAMELABEL.westeurope.$AZ_TLD
 
+#tt overrule
+#CERT_HOST_IP=localhost  #FQDN linux
+#CERT_HOST_IP_WP_SERVICE_HOSTNAME=localhost
 
-#echo "#######################"
-#echo "## feedbak 
-#echo "#######################" 
+# define your feedback her
 PROMPT=true # echo parameters
-DOUBLE_CHECK=false  #cat content modified files to $LOG_DIR
- 
-
+DOUBLE_CHECK=true  #cat content modified files to ${LOG_DIR}
+MENU=true
+WRITE_CODE=true
 #'********** end of parameters **********
+#'Below the functions that are called by other functions
+# modify at your own peril! because of configuration drift   100% generation
 
-#'>>> below the functions that are called by other functions
-# modify at your own peril! because of configuration drift 
-# main purpose of this script to show configuration for containers spinning in the cloud. 
+LOG_START_DATE_TIME=`date +%Y%m%d_%H_%M`  
+LOG_DIR=${GITHUB_DIR}/LOG_DIR
+LOG_FILE=${LOG_DIR}/LOG_${LOG_START_DATE_TIME}.log
 
+the_world_is_flat=true
+# ...do something interesting...
+if  ! [ "$the_world_is_flat" = true ] ; then
+    echo 'Be careful not to fall off!'
+fi
+
+#TIMEZONE="ENV TZ=Europe/Amsterdam"
+APT_GET_UPDATE=RUN=apt-get update
+APT_GET_INSTALL_NET_TOOLS=RUN apt-get install net-tools
+APT_GET_INSTALL_IPUTILS_PING=RUN apt-get install iputils-ping
+
+
+# ----------------------------------
+# Step 2 : setters
+# ----------------------------------
 
 ##################################################################
-# Purpose: modify docker-compose-travis.yml 
+# Purpose: set docker-compose-travis.yml 
 # Arguments: 
 # Return: 
 ##################################################################
-docker_compose_travis_yml_with_volumes() {
-echo "- Running ... docker_compose_travis_yml_with_volumes"
-#DOCKER_COMPOSE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren
-#cd ${DOCKER_COMPOSE_DIR}
-#mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
-#touch docker-compose-travis.yml 
-
-TT_DIRECTORY=${DOCKER_COMPOSE_DIR}
+set_docker_compose_travis_yml_with_volumes() {
+echo "-- Running:${FUNCNAME[0]} $@"
+TT_DIRECTORY=${GITHUB_DIR}
 TT_INSPECT_FILE=docker-compose-travis.yml 
-echo $TT_DIRECTORY.${TT_INSPECT_FILE}
-
-enter_touch
+enter_touch ${FUNCNAME[0]} $@
 
 echo "version: '3'
 services:
@@ -236,33 +220,22 @@ services:
     
     #networks:
     #test:
-    #driver: bridge  "  > ${TT_INSPECT_FILE} #docker-compose-travis.yml
+    #driver: bridge" >  ${TT_INSPECT_FILE} 
 
-if [ ${DOUBLE_CHECK} =  true ]
-  then enter_inspect
-fi 
-
-TT_DIRECTORY=""
-TT_INSPECT_FILE=""
-
+check_check_doublecheck  ${FUNCNAME[0]} $@
 }
 
 ##################################################################
-# Purpose: modify docker-compose-travis.yml 
+# Purpose: set docker-compose-travis.yml
 # Arguments: 
 # Return: 
 ##################################################################
-docker_compose_travis_yml_without_volumes() {
-echo "- Running ... docker_compose_travis_yml_without_volumes"
-#cd ${DOCKER_COMPOSE_DIR}
-#touch docker-compose-travis.yml 
-#mv docker-compose-travis.yml  docker-compose-travis_`date "+%Y%m%d-%H%M%S"`.yml
+set_docker_compose_travis_yml_without_volumes() {
+echo "Running: ${FUNCNAME[0]} $@ "
 
-TT_DIRECTORY=${DOCKER_COMPOSE_DIR}
+TT_DIRECTORY=${GITHUB_DIR}
 TT_INSPECT_FILE=docker-compose-travis.yml 
-echo $TT_DIRECTORY.$TT_INSPECT_FILE
-
-enter_touch
+enter_touch ${FUNCNAME[0]} $@
 
 echo "version: '3'
 services:
@@ -298,33 +271,21 @@ services:
   mock-nlx:
     build: mock-nlx/
     ports:
-      - 80:80" > ${TT_INSPECT_FILE} #docker-compose-travis.yml
+      - 80:80" > ${TT_INSPECT_FILE} 
 
-if [ ${DOUBLE_CHECK} = true ]
-  then enter_inspect
-fi 
-
-TT_DIRECTORY=""
-TT_INSPECT_FILE=""
-
+check_check_doublecheck  ${FUNCNAME[0]} $@
 }
 
 ##################################################################
-# Purpose: hack into clerk-frontend Dockerfile
+# Purpose: set clerk-frontend Dockerfile
 # Arguments: 
 # Return: 
 ##################################################################
-clerk_frontend_dockerfile_with_volumes() {
-echo "- Running ... clerk_frontend_dockerfile_with_volumes"
-#CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-#cd ${CLERK_FRONTEND_DIR}
-#mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
-#touch Dockerfile
-
-TT_DIRECTORY=${CLERK_FRONTEND_DIR}
+set_clerk_frontend_dockerfile_with_volumes() {
+echo "Running: ${FUNCNAME[0]} $@"
+TT_DIRECTORY=${GITHUB_DIR}/clerk-frontend
 TT_INSPECT_FILE=Dockerfile 
-enter_touch
+enter_touch ${FUNCNAME[0]} $@
 
 echo "FROM node:10
 RUN mkdir /app
@@ -337,38 +298,48 @@ ADD public /app/public
 ADD src /app/src
 ARG CERTIFICATE_HOST
 ENV REACT_APP_CERTIFICATE_HOST=${CERTIFICATE_HOST}
+ENV TZ=Europe/Amsterdam
 RUN npm run build
 
 FROM nginx:1.15.8
 ADD nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=0 /app/build /usr/share/nginx/html"  > ${TT_INSPECT_FILE} #Dockerfile
 
-if [ ${DOUBLE_CHECK} =  true ]
-  then enter_inspect
-fi 
-
-TT_DIRECTORY=""
-TT_INSPECT_FILE=""
-
+check_check_doublecheck  ${FUNCNAME[0]} $@
 }
 
 ##################################################################
-# Purpose: 
+# Purpose: modify mock-nlx.Dockerfile
 # Arguments: 
 # Return: 
 ##################################################################
-clerk_frontend_dockerfile_without_volumes() {
+set_mock_nlx_dockerfile() {  
+echo "Running: ${FUNCNAME[0]} $@"
+TT_DIRECTORY=${GITHUB_DIR}/mock-nlx
+TT_INSPECT_FILE=Dockerfile
+enter_touch ${FUNCNAME[0]} $@
+#enter_cont
 
-echo "- Running ... clerk_frontend_dockerfile_without_volumes"
-#CLERK_FRONTEND_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-#cd ${CLERK_FRONTEND_DIR}
-#mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
-#touch Dockerfile
+echo "FROM node:10
+RUN mkdir /app
+ADD index.js package.json package-lock.json /app/
+WORKDIR /app
+$TIMEZONE
+RUN npm install --production" > ${TT_INSPECT_FILE} 
 
-TT_DIRECTORY=${CLERK_FRONTEND_DIR}
+check_check_doublecheck  ${FUNCNAME[0]} $@
+}
+
+##################################################################
+# Purpose: modify clerk-frontend.Dockerfile
+# Arguments: 
+# Return: 
+##################################################################
+set_clerk_frontend_dockerfile_without_volumes() {
+echo "Running: ${FUNCNAME[0]} $@ "
+TT_DIRECTORY=${GITHUB_DIR}/clerk-frontend
 TT_INSPECT_FILE=Dockerfile 
-enter_touch
-
+enter_touch ${FUNCNAME[0]} $@
 echo "FROM node:10
 RUN mkdir /app
 ADD package.json package-lock.json /app/
@@ -380,6 +351,7 @@ ADD public /app/public
 ADD src /app/src
 ARG CERTIFICATE_HOST
 ENV REACT_APP_CERTIFICATE_HOST=http://${CERT_HOST_IP}:8880
+ENV TZ=Europe/Amsterdam
 RUN npm run build
 
 FROM nginx:1.15.8
@@ -388,16 +360,14 @@ COPY --from=0 /app/build /usr/share/nginx/html
 #  volumes:
 #    - ./clerk-frontend/nginx/certs:/etc/nginx/certs:rw
 RUN mkdir /etc/nginx/certs
+RUN apt-get update 
+RUN apt-get install -y iputils-ping
+RUN apt-get install -y net-tools
+
 ADD nginx/certs/org.crt /etc/nginx/certs/org.crt
-ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > ${TT_INSPECT_FILE} # Dockerfile
+ADD nginx/certs/org.key /etc/nginx/certs/org.key"  > ${TT_INSPECT_FILE} 
 
-if [ ${DOUBLE_CHECK} = true ]
-  then enter_inspect
-fi 
-
-TT_DIRECTORY=""
-TT_INSPECT_FILE=""
-
+check_check_doublecheck  ${FUNCNAME[0]} $@
 }
 
 ##################################################################
@@ -405,15 +375,11 @@ TT_INSPECT_FILE=""
 # Arguments: 
 # Return: 
 ##################################################################
-clerk_frontend_nginx_conf() {
-#CLERK_FRONTEND_NGINX_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend/nginx
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-echo "- Running ... clerk_frontend_nginx_conf"
-
-TT_DIRECTORY=${CLERK_FRONTEND_NGINX_DIR}
+set_clerk_frontend_nginx_conf() {
+echo "Running: ${FUNCNAME[0]} $@"
+TT_DIRECTORY=${GITHUB_DIR}/clerk-frontend/nginx
 TT_INSPECT_FILE=nginx.conf
-enter_touch
-
+enter_touch ${FUNCNAME[0]} $@
 echo "events {
     worker_connections  1024;
 }
@@ -442,14 +408,14 @@ http {
         ssl_certificate_key /etc/nginx/certs/org.key;
 
         location /api/eph/ {
-               proxy_pass https://${CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME}:3232/;    #pdf effect
+               proxy_pass https://${CERT_HOST_IP_WP_SERVICE_HOSTNAME}:3232/;    #pdf effect
            #     proxy_pass https://waardepapieren-service:3232/;
             #     proxy_pass https://172.19.0.3:3232/;
         }
 
         location /api/eph-ws {
            
-              proxy_pass https://${CERT_HOST_IP_WAARDEPAPIEREN_SERVICE_HOSTNAME}:3232;   # pdf effect
+              proxy_pass https://${CERT_HOST_IP_WP_SERVICE_HOSTNAME}:3232;   # pdf effect
              #  proxy_pass https://waardepapieren-service:3232;
             #  proxy_pass https://172.19.0.3:3232;
             proxy_http_version 1.1;
@@ -461,50 +427,35 @@ http {
             include /etc/nginx/mime.types;
         }
     }
-}" > ${TT_INSPECT_FILE}  #nginx.conf
+}" > ${TT_INSPECT_FILE} 
 
-if [ ${DOUBLE_CHECK} =  true ]
-  then enter_inspect
-fi 
-
-TT_DIRECTORY=""
-TT_INSPECT_FILE=""
+check_check_doublecheck  ${FUNCNAME[0]} $@ 
 
 } 
-
 
 ##################################################################
 # Purpose: hack into waardepapieren-servcie Dockerfile
 # Arguments: 
 # Return: 
 ##################################################################
-waardepapieren_service_dockerfile_with_volumes() {
-echo "- Running ... waardepapieren_service_dockerfile_with_volumes"
-#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-#cd ${WAARDEPAPIEREN_SERVICE_DIR}
-#mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
-#touch Dockerfile
-TT_DIRECTORY=${WAARDEPAPIEREN_SERVICE_DIR}
+set_waardepapieren_service_dockerfile_with_volumes() {
+echo "Running: ${FUNCNAME[0]} $@"
+TT_DIRECTORY=${GITHUB_DIR}/waardepapieren-service
 TT_INSPECT_FILE=Dockerfile
-enter_touch
+enter_touch ${FUNCNAME[0]} $@
 
-
-echo "FROM node:10
+echo "FROM node:10enter
 RUN mkdir /app
 ADD .babelrc package.json package-lock.json /app/
 ADD src/* app/src/
 ADD configuration/* app/configuration/
 ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
+ENV TZ=Europe/Amsterdam
 WORKDIR /app
 RUN npm install --production
-CMD npm start"  > ${TT_INSPECT_FILE} #Dockerfile
+CMD npm start"   > ${TT_INSPECT_FILE} 
 
-if [ ${DOUBLE_CHECK} =  true ]
-  then enter_inspect
-fi 
-TT_DIRECTORY=""
-TT_INSPECT_FILE=""
-
+check_check_doublecheck  ${FUNCNAME[0]} $@
 }
 
 ##################################################################
@@ -512,16 +463,11 @@ TT_INSPECT_FILE=""
 # Arguments: 
 # Return: 
 ##################################################################
-waardepapieren_service_dockerfile_without_volumes() {
-echo "- Running ... waardepapieren_service_dockerfile_without_volumes"
-#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-#sleep 1
-#cd ${WAARDEPAPIEREN_SERVICE_DIR}
-#mv Dockerfile  Dockerfile_`date "+%Y%m%d-%H%M%S"`.yml
-#touch Dockerfile
-TT_DIRECTORY=${WAARDEPAPIEREN_SERVICE_DIR}
+set_waardepapieren_service_dockerfile_without_volumes() {
+echo "Running: ${FUNCNAME[0]} $@"
+TT_DIRECTORY=${GITHUB_DIR}/waardepapieren-service
 TT_INSPECT_FILE=Dockerfile
-enter_touch
+enter_touch ${FUNCNAME[0]} $@
 
 echo "FROM node:10
 RUN mkdir /app
@@ -544,40 +490,71 @@ ADD configuration/waardepapieren-config-compose.json /app/configuration
 ADD configuration/waardepapieren-config-compose-travis.json /app/configuration
 ADD configuration/waardepapieren-config.json /app/configuration
 ENV WAARDEPAPIEREN_CONFIG /app/configuration/waardepapieren-config.json
+ENV TZ=Europe/Amsterdam
+RUN apt-get update 
+RUN apt-get install -y iputils-ping
+RUN apt-get install -y net-tools
 
 RUN npm install --production
-CMD npm start"  > ${TT_INSPECT_FILE} #Dockerfile
-
-if [ ${DOUBLE_CHECK} =  true ]
-  then enter_inspect
-fi 
-TT_DIRECTORY=""
-TT_INSPECT_FILE=""
-
+CMD npm start"  > ${TT_INSPECT_FILE} 
+check_check_doublecheck  ${FUNCNAME[0]} $@
 }
 
-##################################################################
-# Purpose: hack into waardepapieren-service config
+#----------------------------------------------
+#--------------------------------------------
+
+
+#################################################################
+# Purpose: hack 
 # Arguments: 
 # Return: 
 ##################################################################
-waardepapieren_service_config_compose_travis_json () {
-echo "- Running ... waardepapieren_service_config_compose_travis_json"
-#WAARDEPAPIEREN_SERVICE_DIR=/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-#WAARDEPAPIEREN_SERVICE_CONFIG_DIR=${WAARDEPAPIEREN_SERVICE_DIR}/configuration
-#CERT_HOST_IP=waardepapieren.westeurope.azurecontainer.io 
-#/Users/boscp08/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service/configuration
-#cd $WAARDEPAPIEREN_SERVICE_CONFIG_DIR
-#mv waardepapieren-config-compose-travis.json  waardepapieren-config-compose-travis_`date "+%Y%m%d-%H%M%S"`.json
-#touch waardepapieren-config-compose-travis.json
-
-TT_DIRECTORY=$WAARDEPAPIEREN_SERVICE_CONFIG_DIR
-TT_INSPECT_FILE=waardepapieren-config-compose-travis.json
-enter_touch
+set_waardepapieren_service_config_compose_travis_json() {
+echo "Running: ${FUNCNAME[0]} $@"
+TT_DIRECTORY=${GITHUB_DIR}/waardepapieren-service/configuration
+TT_INSPECT_FILE=waardepapieren-config-compose_travis.json
+enter_touch ${FUNCNAME[0]} $@
 
 echo " {
-   \"EPHEMERAL_ENDPOINT\" : \"https://localhost:3232\",
-   \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://localhost:3232\",
+   \"EPHEMERAL_ENDPOINT\" : \"https://${CERT_HOST_IP}:3232\",
+   \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://${CERT_HOST_IP}:3232\",
+   \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
+   \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
+  \"NLX_OUTWAY_ENDPOINT\" : \"http://${CERT_HOST_IP}:80\",
+  \"NLX_CERT\": \"/certs/org.crt\",
+  \"NLX_KEY\": \"/certs/org.key\",
+  \"LOG_LEVEL\": \"info\",
+  \"EPHEMERAL_RETENTION_TIME\": ${EPHEMERAL_RETENTION_TIME},
+  \"PRODUCT_NEED\" : \"BRP_UITTREKSEL_NEED\",
+  \"SOURCE_NLX_PATH\" : \"/brp/basisregistratie/natuurlijke_personen/bsn/{BSN}\",
+  \"SOURCE_ARGUMENT\" : \"BSN\",
+  \"PRODUCT_ACCEPT\" : \"BRP_UITTREKSEL_ACCEPT\",
+  \"PRODUCT_NAME\" : \"Gewaarmerkt digitaal afschrift van gegevens uit de basisregistratie personen (BRP)\",
+  \"PRODUCT_DESCRIPTION\" : \"Uittreksel Basis Registratie Persoonsgegevens\",
+  \"PRODUCT_PURPOSE\" : \"Bewijs verblijfadres in woonplaats\",
+  \"SOURCE_DATA_SELECTION\" : [
+    {\"Burgerservicenummer (BSN)\" : \"burgerservicenummer\"},
+    {\"Woonplaats verblijfadres\" : \"verblijfadres.woonplaats\"}
+  ]
+} " > ${TT_INSPECT_FILE} 
+
+check_check_doublecheck  ${FUNCNAME[0]} $@
+}
+
+##################################################################
+# Purpose: hack 
+# Arguments: 
+# Return: 
+##################################################################
+set_waardepapieren_service_config_compose_json() {
+echo "Running: ${FUNCNAME[0]} $@"
+TT_DIRECTORY=${GITHUB_DIR}/waardepapieren-service/configuration
+TT_INSPECT_FILE=waardepapieren-config-compose.json
+enter_touch ${FUNCNAME[0]} $@
+
+echo " {
+   \"EPHEMERAL_ENDPOINT\" : \"https://${CERT_HOST_IP}:3232\",
+   \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://${CERT_HOST_IP}:3232\",
    \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
    \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
   \"NLX_OUTWAY_ENDPOINT\" : \"http://${CERT_HOST_IP}:80\",
@@ -598,14 +575,46 @@ echo " {
   ]
 } " > ${TT_INSPECT_FILE} # waardepapieren-config-compose-travis.json
 
-if [ ${DOUBLE_CHECK} =  true ]
-  then enter_inspect
-fi 
-
-TT_DIRECTORY=""
-TT_INSPECT_FILE=""
-
+check_check_doublecheck  ${FUNCNAME[0]} $@
 }
+
+##################################################################
+# Purpose: 
+# Arguments: 
+# Return: 
+##################################################################
+set_waardepapieren_service_config_json() {
+echo "Running: ${FUNCNAME[0]} $@"
+TT_DIRECTORY=${GITHUB_DIR}/waardepapieren-service/configuration
+TT_INSPECT_FILE=waardepapieren-config.json
+enter_touch ${FUNCNAME[0]} $@
+
+echo " {
+   \"EPHEMERAL_ENDPOINT\" : \"https://${CERT_HOST_IP}:3232\",
+   \"EPHEMERAL_WEBSOCKET_ENDPOINT\" : \"wss://${CERT_HOST_IP}:3232\",
+   \"EPHEMERAL_CERT\": \"/ephemeral-certs/org.crt\",
+   \"EPHEMERAL_KEY\": \"/ephemeral-certs/org.key\",
+  \"NLX_OUTWAY_ENDPOINT\" : \"http://${CERT_HOST_IP}:80\",
+  \"NLX_CERT\": \"/certs/org.crt\",
+  \"NLX_KEY\": \"/certs/org.key\",
+  \"LOG_LEVEL\": \"info\",
+  \"EPHEMERAL_RETENTION_TIME\": ${EPHEMERAL_RETENTION_TIME},
+  \"PRODUCT_NEED\" : \"BRP_UITTREKSEL_NEED\",
+  \"SOURCE_NLX_PATH\" : \"/brp/basisregistratie/natuurlijke_personen/bsn/{BSN}\",
+  \"SOURCE_ARGUMENT\" : \"BSN\",
+  \"PRODUCT_ACCEPT\" : \"BRP_UITTREKSEL_ACCEPT\",
+  \"PRODUCT_NAME\" : \"Gewaarmerkt digitaal afschrift van gegevens uit de basisregistratie personen (BRP)\",
+  \"PRODUCT_DESCRIPTION\" : \"Uittreksel Basis Registratie Persoonsgegevens\",
+  \"PRODUCT_PURPOSE\" : \"Bewijs verblijfadres in woonplaats\",
+  \"SOURCE_DATA_SELECTION\" : [
+    {\"Burgerservicenummer (BSN)\" : \"burgerservicenummer\"},
+    {\"Woonplaats verblijfadres\" : \"verblijfadres.woonplaats\"}
+  ]
+} " > ${TT_INSPECT_FILE} 
+
+check_check_doublecheck  ${FUNCNAME[0]} $@
+}
+
 
 ##################################################################
 # Purpose: hack into azure deploy ACI
@@ -613,38 +622,37 @@ TT_INSPECT_FILE=""
 # Return: 
 ##################################################################
 create_azure_deploy_aci_yaml() {
-echo "- Running ... create_azure_deploy_aci_yaml"
-#PROJECT_DIR=/Users/boscp08/Projects/scratch/virtual-insanity
-
-TT_DIRECTORY=${PROJECT_DIR}
+echo "Running:${FUNCNAME[0]} $@"
+TT_DIRECTORY=${GITHUB_DIR}
 TT_INSPECT_FILE=deploy-aci.yaml
-enter_touch
+enter_touch ${FUNCNAME[0]} $@
 
 echo "location: westeurope
 name: $AZ_RESOURCE_GROUP
 properties:
   containers:
-  - name: waardepapieren-mock-nlx
+  - name: ${MOCK_NLX_IMAGE}
     properties:
-      image: $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG
+      image: ${DOCKER_USER}/${DOCKERHUB_MOCK_NLX_IMAGE}:${DOCKER_VERSION_TAG}
       resources:
         requests:
           cpu: 1
           memoryInGb: 0.5
       ports:
       - port: 80
-  - name: waardepapieren-service
+  - name: ${SERVICE_IMAGE}
     properties:
-      image: $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG
+      image: ${DOCKER_USER}/${DOCKERHUB_SERVICE_IMAGE}:${DOCKER_VERSION_TAG}
       resources:
         requests:
           cpu: 1
           memoryInGb: 0.5
       ports:
       - port: 3232
-  - name: waardepapieren-clerk-frontend
+      - port: 3233
+  - name: ${CLERK_FRONTEND_IMAGE}
     properties:
-      image: $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
+      image: ${DOCKER_USER}/${DOCKERHUB_CLERK_FRONTEND_IMAGE}:${DOCKER_VERSION_TAG}
       resources:
         requests:
           cpu: 1
@@ -663,25 +671,27 @@ properties:
     - protocol: tcp
       port: '3232' 
     - protocol: tcp
+      port: '3233' 
+    - protocol: tcp
       port: '80'    
     - protocol: tcp
       port: '8880'      
 tags: null
-type: Microsoft.ContainerInstance/containerGroups" > ${TT_INSPECT_FILE}  #deploy-aci.yaml
+type: Microsoft.ContainerInstance/containerGroups" > ${TT_INSPECT_FILE} 
 
-if [ ${DOUBLE_CHECK} =  true ]
-  then enter_inspect
-fi 
-
-TT_DIRECTORY=""
-TT_INSPECT_FILE=""
-
-
+check_check_doublecheck  ${FUNCNAME[0]} $@
 }
-
+# -----------------------------------
+# Main logic  below
+# ------------------------------------
 #'# Structured programming:
-#'# Entire program logic modularized in functions.
-#' ------------------------------  
+#'# Entire program logic modularized in User defined function
+
+the_world_is_flat=true
+# ...do something interesting...
+if ! [ "$the_world_is_flat" = true ] ; then
+    echo 'Be careful not to fall off!'
+fi
 
 ### barf  
 enter_cont() {
@@ -696,8 +706,10 @@ enter_cont() {
 # /////////////////////////////////////////////////////////////////////////////////
 create_logfile_header() {
     JOB_START_DATE_TIME=`date +%Y%m%d_%H_%M`
-    echo $JOB_START_DATE_TIME - BEGIN JOB:                                             >> $LOG_FILE
-    echo ----------------------------------------------------------------------------- >> $LOG_FILE
+    echo $JOB_START_DATE_TIME - BEGIN JOB:                                             >> ${LOG_FILE}
+    echo ----------------------------------------------------------------------------- >> ${LOG_FILE}
+    echo $1 $2                                                                         >> ${LOG_FILE}
+    echo ----------------------------------------------------------------------------- >> ${LOG_FILE}
     }
 
 # /////////////////////////////////////////////////////////////////////////////////
@@ -705,8 +717,10 @@ create_logfile_header() {
 # /////////////////////////////////////////////////////////////////////////////////
 create_logfile_footer() {
     JOB_END_DATE_TIME=`date +%Y%m%d_%H_%M`
-    echo $JOB_END_DATE_TIME - END JOB :                                                >> $LOG_FILE
-    echo ----------------------------------------------------------------------------- >> $LOG_FILE
+    echo $JOB_END_DATE_TIME - END JOB :                                                >> ${LOG_FILE}
+    echo ----------------------------------------------------------------------------- >> ${LOG_FILE}
+    echo $1 $2                                                                         >> ${LOG_FILE}
+    echo ----------------------------------------------------------------------------- >> ${LOG_FILE}
     }
 
 ##################################################################
@@ -715,20 +729,12 @@ create_logfile_footer() {
 # Return: To check if a directory exists in a shell script you can use the following:
 ##################################################################
 create_logdir() {
-     
-if ! [ -d "$LOG_DIR" ]; then
+if ! [ -d "${LOG_DIR}" ]; then
+  cd $PROJECT_DIR
+  sduo chmod -R 777  ${GITHUB_DIR}
   mkdir  ${LOG_DIR}
 fi 
-
-#create_projectdir() {
-
-#echo ${PROJECT_DIR} | awk -F/ '{print "/"$2"/"$3"/"$4"/"$5"/"$6}'
-#/home/boscp08/Projects/scratch/virtual-insanity
-#if ! [ -d "$LOG_DIR" ]; then
-#  mkdir  ${LOG_DIR}
-#fi
 }
-
 ##################################################################
 # Purpose: #echo ${PROJECT_DIR} | awk -F/ '{print "/"$2"/"$3"/"$4"/"$5"/"$6}'
 # Arguments: directory structure  #/home/boscp08/Projects/scratch/virtual-insanity
@@ -752,43 +758,54 @@ fi
     
     #else   echo "$1 directory already exists "
    fi
-
-    }
- 
+   }
 
 ##################################################################
 # Purpose: Procedure to create an empty file
 # Arguments: 
 # Return: 
 ##################################################################
-enter_touch () {
-
+enter_touch() {
 cd ${TT_DIRECTORY}
 touch ${TT_INSPECT_FILE}
-
-
 }
 
 ##################################################################
-# Purpose: 
+# Purpose:   procedure 
+# Arguments: 
+# Return: 
+##################################################################
+check_check_doublecheck() {
+if [ ${DOUBLE_CHECK} =  true ]
+#echo "check check double check"
+#enter_cont
+
+then enter_inspect $1
+fi 
+TT_DIRECTORY=""
+TT_INSPECT_FILE=""
+}
+
+##################################################################
+# Purpose:   show content of Dockerfile/ configfiles. 
 # Arguments: 
 # Return: 
 ##################################################################
 enter_inspect() {
 clear
 
-if [ -f "${TT_INSPECT_FILE}" ]; then
+if [ -f "${TT_INSPECT_FILE}" ]; 
+then
  
-create_logfile_header
-echo "| $LOG_START_DATE_TIME | ${TT_DIRECTORY} |"                                  >> $LOG_FILE
-echo "| $LOG_START_DATE_TIME | ${TT_INSPECT_FILE}|"                                >> $LOG_FILE
-echo "<code>"                                                                      >> $LOG_FILE
-cat  ${TT_INSPECT_FILE}                                                            >> $LOG_FILE
-echo "</code>"                                                                     >> $LOG_FILE
+echo "| ${LOG_START_DATE_TIME} | ${TT_INSPECT_FILE}|"                                >> ${LOG_FILE} 
+echo "| ${LOG_START_DATE_TIME} | ${TT_DIRECTORY} |"                                  >> ${LOG_FILE}
+echo "<code>"                                                                        >> ${LOG_FILE}
+cat  ${TT_INSPECT_FILE}                                                              >> ${LOG_FILE}
+#echo "<\/code>"                                                                     >> ${LOG_FILE}
 create_logfile_footer
 
 else 
-cd ${DOCKER_COMPOSE_DIR}
+cd ${GITHUB_DIR}
 clear
 echo "File ${TT_INSPECT_FILE} is missing or cannot be executed"   
 enter_cont
@@ -797,16 +814,33 @@ fi
 if [ ${PROMPT} = true ] 
 then 
 clear
-echo "========="
-echo "enter inspect  ${TT_INSPECT_FILE}"
-echo "========="
-echo ""
-cat  ${TT_INSPECT_FILE}
+
 echo ""
 echo "========="
-echo "eof inspect  ${TT_INSPECT_FILE}"
+pathname=${TT_DIRECTORY}
+echo "enter inspect : ${TT_INSPECT_FILE} " 
+echo "folder        = $(basename $pathname) "
+echo "directory     = $pathname "
+echo "repo          = $GITHUB_DIR "
+echo "function      = $1 "
 echo "========="
+echo ""
+cd ${TT_DIRECTORY}
+cat ${TT_INSPECT_FILE} 
+echo ""
+echo "========="
+pathname=${TT_DIRECTORY}
+echo "enter inspect : ${TT_INSPECT_FILE} " 
+echo "folder        = $(basename $pathname) "
+echo "directory     = $pathname "
+echo "repo          = $GITHUB_DIR "
+echo "function      = $1 "
+echo "========="
+
 enter_cont
+
+cd $GITHUB_DIR
+
 
 fi
 
@@ -818,74 +852,35 @@ fi
 # Return: specified directory structure
 ##################################################################
 create_directories() {
-  
-make_folder ${LOG_DIR} #=$HOME_DIR/LOG_DIR
-make_folder $GITHUB_DIR  #=${HOME_DIR}   #/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
-make_folder ${PROJECT_DIR}   #=${HOME_DIR}  #/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
-#make_folder ${DOCKER_COMPOSE_DIR}#=${HOME_DIR} #/Projects/scratch/virtual-insanity/waardepapieren
-#make_folder $CLERK_FRONTEND_DIR #=${HOME_DIR} #/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-#make_folder $CLERK_FRONTEND_NGINX_DIR #=${CLERK_FRONTEND_DIR}/nginx
-#make_folder $WAARDEPAPIEREN_SERVICE_DIR  #=$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-#make_folder ${WAARDEPAPIEREN_SERVICE_CONFIG_DIR}#=${WAARDEPAPIEREN_SERVICE_DIR}/configuration
-
-
+make_folder ${PROJECT_DIR}     
 }
 
 ##################################################################
-# Purpose: Procedure to stop - Running ... docker containers
+# Purpose: DOWNLOAD-FUNCTIONS
+##################################################################
+
+##################################################################
+# Purpose: show version
 # Arguments: 
 # Return: 
 ##################################################################
-git_init() {
-   echo "-- Running ... git init"
+show_version() {
+create_logfile_header ${FUNCNAME[0]} $@
+echo "Running:${FUNCNAME[0]} $@"
+ echo "git --version"
+ git --version
 
-#boscp08@boscp08-HP-Compaq-8510p:~/Dropbox/Github$ git init
-#Initialized empty Git repository in /home/boscp08/Dropbox/Github/.git/
-#  sudo apt install git 
-git init
-git config --global credential.helper store
-
-git config --global user.name "peter-bosch"
-git config --global user.name "ezahr"
-git config --global user.password "P...r\!yyyy"
-
-#git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git
-#cd into 
-
-}
-
-
-##################################################################
-# Purpose: remove alle containers 
-# Arguments: 
-# Return: 
-##################################################################
-docker_containers_stop() {
-   echo "-- Running ... .. docker_containers_stop"
-  docker stop  $(docker ps -a -q)
-  
-}
-
-##################################################################
-# Purpose:  remove alle containers and images d
-# Arguments: 
-# Return:   
-##################################################################
-docker_images_remove() {
-  echo "-- Running ... .. docker_images_remove("
-
-docker rm $(docker ps -a -q) && docker rmi $(docker images -q)
-
-}
-
-##################################################################
-# Purpose:  remove all stopped containers (just waist of storage} 
-# Arguments: 
-# Return: 
-##################################################################
-docker_containers_prune() {
-  echo "-- Running ... .. docker_containers_prune("
-  docker container prune
+ echo "docker -v  "
+ docker -v
+ 
+ echo "docker-compose -v "
+ docker-compose -v 
+ 
+ echo "az -v"
+ az -v
+ 
+ enter_cont
+ 
 }
 
 ##################################################################
@@ -894,8 +889,7 @@ docker_containers_prune() {
 # Return: 
 ##################################################################
 install_docker_cli() {
-  echo "-- Running ... .. install_docker_cli() "
-
+echo "-Running: ${FUNCNAME[0]} $@ "
 
 #description	command
 #1	install docker download	sudo install -y docker docker-common docker-client docker-compose
@@ -904,6 +898,7 @@ install_docker_cli() {
 #4	verify that docker daemon is active by running your first container	docker run hello-world
 #but now as a 'normal' user
 #g roupadd docker usermod -aG docker boscp08 systemctl restart docker docker run hello-world
+#systemctl restart docker
 }
 
 ##################################################################
@@ -912,45 +907,283 @@ install_docker_cli() {
 # Return: 
 ##################################################################
 install_azure_cli() {
-  echo "-- Running ... .. install_azure_cli"
-udo apt-get update
+echo "-Running: ${FUNCNAME[0]} $@"
+sudo apt-get update
   sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
 
 #Down load en installeer de micro soft-handtekening sleutel:
 #bash
-
+#linux
 curl -sL https://packages.microsoft.com/keys/microsoft.asc | 
     gpg --dearmor | 
     sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
 
+#windows
 }
 
 ##################################################################
-# Purpose: Procedure to create azure resource group
+# Purpose: CLONE-FUNCTIONS   
+##################################################################
+
+##################################################################
+# Purpose: Procedure to stop Running: docker containers
+# Arguments: 
+# Return: 
+##################################################################
+git_init() {
+echo "Running:${FUNCNAME[0]} $@"
+
+#boscp08@boscp08-HP-Compaq-8510p:~/Dropbox/Github$ git init
+#Initialized empty Git repository in /home/boscp08/Dropbox/Github/.git/
+#  sudo apt install git 
+# https://www.howtoforge.com/tutorial/install-git-and-github-on-ubuntu/
+git init
+
+#git config --global credential.helper store
+#git config user.name "BoschPeter"
+
+git config --global user.email "bosch.peter@icloud.com"
+git config --global user.name "BoschPeter"
+git config --global user.password "Peter\!2020"
+
+# git config --global user.name "ezahr"
+#git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git
+#cd into 
+
+}
+
+#################################################
+# Purpose: Procedure concurrent version system
+# Arguments: 
+# Return: 
+##################################################################
+
+git_init() {
+echo "Running:${FUNCNAME[0]} $@"
+cd $GITHUB_DIR
+git init
+#Initialized empty Git repository in /home/boscp08/Dropbox/Github/.git/
+git config --global credential.helper store
+git config --global user.email "bosch.peter@icloud.com"
+#git config --global user.name "BoschPeter"
+git config --global user.name "Ezahr"
+git config --global user.password "Peter\!2020"  #mind macos keyring
+git config --list
+git config --get remote.origin.Uittreksel
+git config credential.username --global "Ezahr"
+git config credential.password --global "Peter\!2020"
+
+}
+
+##################################################################
+# Purpose: Procedure to clone de github repo on your pc
+# Arguments: 
+# Return: 
+##################################################################
+
+git_clone() {
+ echo "Running:${FUNCNAME[0]} $@"
+ create_logfile_header ${FUNCNAME[0]} $@
+ echo "rm -rf ${PROJECT_DIR}/$1 sure?"
+ enter_cont
+ cd ${PROJECT_DIR}
+ rm -rf ${GIT_REPO}
+ #git clone https://github.com/discipl/waardepapieren.git
+ #git clone https://github.com/AZ_VM_waardepapieren-demo_westeurope_cloudapp_azure_com.git
+ #git clone https://github.com/BoschPeter/AZ_ACI_waardepapieren-demo_westeurope_azurecontainer_io.git
+ git clone https://github.com/${GIT_REPO}.git  
+ 
+ create_logfile_footer
+}
+
+##################################################################
+# Purpose: DOCKER_BUILD-FUNCTIONS
+##################################################################
+
+##################################################################
+# Purpose:  docker system prune -a
+# Arguments: 
+# Return:   remove all docker objects  starting from scratch... 
+##################################################################
+docker_system_prune() {
+echo "Running:${FUNCNAME[0]} $@"
+docker system prune -a   
+}
+
+##################################################################
+# Purpose: remove alle containers 
+# Arguments: 
+# Return: 
+##################################################################
+docker_containers_stop() {
+echo "-Running:${FUNCNAME[0]} $@"
+docker stop  $(docker ps -a -q)
+}
+
+##################################################################
+# Purpose:  remove alle containers and images d
+# Arguments: 
+# Return:   
+##################################################################
+docker_images_remove() {
+echo "Running:${FUNCNAME[0]} $@"
+docker rm $(docker ps -a -q) && docker rmi $(docker images -q)
+}
+
+##################################################################
+# Purpose:  remove all stopped containers (just waist of storage} 
+# Arguments: 
+# Return: 
+##################################################################
+docker_containers_prune() {
+echo "Running:${FUNCNAME[0]} $@"
+docker container prune -a   
+}
+
+##################################################################
+# Purpose:  Procedure to build the waardepapieren images and run containers.  
+# Arguments: docker-compose -f docker-compose-travis.yml up   (docker-compose=thirdparty tool)
+# Return: 3 containers  
+##################################################################
+docker_compose_min_f_docker-travis_compose_yml_up() {
+echo "Running:${FUNCNAME[0]} $@"
+cd ${DOCKER_COMPOSE_DIR}
+docker-compose -f docker-compose-travis.yml up $COMPOSE_BUILD_FLAG
+
+}
+#################################################################
+# Purpose:  Procedure to build the mock-nlx image
+# Arguments: docker_build_image mock-nlx boscp08 waardepapieren_mock_nlx 1.0 
+# Arguments: docker_build_image mock-nlx ${DOCKER_USER} ${MOCK_NLX_IMAGE} ${DOCKER_VERSION_TAG} 
+# Return: image
+##################################################################
+
+docker_build_image() {
+echo "Running:${FUNCNAME[0]} $@"
+create_logfile_header ${FUNCNAME[0]} $@
+arg1=$1 #mock-nlx
+arg1=$2 #${DOCKER_USER}
+arg2=$3 #${MOCK_NLX_IMAGE}
+arg3=$4 #${DOCKER_VERSION_TAG}
+cd ${GITHUB_DIR}/$1
+docker build -t $2/$3 .  #mind the dot!
+cd ${GITHUB_DIR}  #cd -
+}
+
+#################################################################
+# Purpose:  Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+# Arguments: docker_tag boscp08  waardepapieren_mock-nlx 4.0 
+# Return: image
+##################################################################
+docker_tag_image() {
+echo "Running:${FUNCNAME[0]} $@"
+create_logfile_header ${FUNCNAME[0]} $@
+#docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG
+#docker tag ${DOCKER_USER}/$MOCK_NLX_IMAGE:latest ${DOCKER_USER}/${DOCKERHUB_MOCK_NLX_IMAGE}:${DOCKER_VERSION_TAG}
+arg1=$1 #${DOCKER_USER}
+arg2=$2 #${MOCK_NLX_IMAGE}
+arg3=$3 #${DOCKERHUB_MOCK_NLX_IMAGE}
+arg4=$4 #${DOCKER_VERSION_TAG}
+docker tag $1/$2:latest $1/$3:$4
+}  
+
+
+##################################################################
+# Purpose:  Build an image from a Dockerfile
+# Arguments: docker build -t boscp08/waardepapieren-service .   NB [.] periode means from this directory 
+# Return: 
+##################################################################
+docker_build_waardepapieren_service()  {
+echo "Running:${FUNCNAME[0]} $@"
+create_logfile_header ${FUNCNAME[0]} $@
+cd ${GITHUB_DIR}/waardepapieren-service
+docker build -t ${DOCKER_USER}/waardepapieren-service .  #NB [.] periode means from this directory 
+}
+
+##################################################################
+# Purpose:  Procedure to build the waardepapieren images and run containers.  
+# Arguments: docker build -t boscp08/     NB . periode means from this directory 
+# Return: 
+##################################################################
+docker_build_clerk_frontend() {
+echo "Running:${FUNCNAME[0]} $@"
+create_logfile_header ${FUNCNAME[0]} $@
+cd ${GITHUB_DIR}/clerk-frontend
+docker build -t ${DOCKER_USER}/clerk-frontend .  #NB [.] periode means from this directory 
+}
+
+##################################################################
+# Purpose:  Procedure to build the waardepapieren images and run containers.  
+# Arguments: docker build -t boscp08/waardepapieren_mock-nlx     NB . periode means from this directory 
+# Return: 
+##################################################################
+docker_build_waardepapieren() {
+echo "Running:${FUNCNAME[0]} $@"
+create_logfile_header ${FUNCNAME[0]} $@
+docker_build_image mock-nlx  ${DOCKER_USER} ${MOCK_NLX_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_build_image waardepapieren-service ${DOCKER_USER} ${SERVICE_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_build_image clerk-frontend ${DOCKER_USER} ${CLERK_FRONTEND_IMAGE} ${DOCKER_VERSION_TAG}  
+}
+
+##################################################################
+# Purpose:  Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+# Arguments: docker tag -t boscp08/waardepapieren_clerk-frontend    
+# Return: 
+##################################################################
+docker_tag_waardepapieren() {
+echo "Running:${FUNCNAME[0]} $@"
+create_logfile_header ${FUNCNAME[0]} $@
+docker_tag_image  ${DOCKER_USER} ${MOCK_NLX_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_tag_image  ${DOCKER_USER} ${SERVICE_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_tag_image  ${DOCKER_USER} ${CLERK_FRONTEND_IMAGE} ${DOCKER_VERSION_TAG}  
+docker images | grep  ${DOCKER_VERSION_TAG}   
+enter_cont
+}
+
+##################################################################
+# Purpose:  Push an image or a repository to a registry
+# Arguments: docker push -t boscp08/waardepapieren_service   
+# Return: Ship to docker registry docker.hub.com
+##################################################################
+docker_push_waardepapieren() {
+echo "Running:${FUNCNAME[0]} $@"
+create_logfile_header ${FUNCNAME[0]} $@
+docker_push_image  ${DOCKER_USER} ${MOCK_NLX_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_push_image  ${DOCKER_USER} ${SERVICE_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_push_image  ${DOCKER_USER} ${CLERK_FRONTEND_IMAGE} ${DOCKER_VERSION_TAG} 
+create_logfile_footer
+}
+
+##################################################################
+# Purpose:  Push an image or a repository to a registry
+# Arguments: docker push -t boscp08/waardepapieren_service   
+# Return: Ship to docker registry docker.hub.com
+##################################################################
+docker_commit_waardepapieren() {
+echo "Running:${FUNCNAME[0]} $@"
+create_logfile_header ${FUNCNAME[0]} $@
+docker commit ${MOCK_NLX_IMAGE} ${DOCKER_USER}/${DOCKERHUB_MOCK_NLX_IMAGE}:${DOCKER_VERSION_TAG}  
+docker commit ${SERVICE_IMAGE} ${DOCKER_USER}/${DOCKERHUB_SERVICE_IMAGE}:${DOCKER_VERSION_TAG} 
+docker commit ${CLERK_FRONTEND_IMAGE} ${DOCKER_USER}/${DOCKER_HUB_CLERK_FRONTEND_IMAGE}:${DOCKER_VERSION_TAG}          
+create_logfile_footer
+}
+
+##################################################################
+# DEPLOY-FUNCTIONS 2AZURE FROM DOCKER-HUB   
+##################################################################
+
+##################################################################
+# Purpose: Procedure to create azure resource group aka costcenter/root
 # Arguments: 
 # Return: 
 ##################################################################
 create_azure_resource_group() {
-echo "- Running ... create_azure_resource_group" 
- # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
-#echo sure ? createw $AZ_RESOURCE_GROUP
-#enter_cont
-az group create --name ${AZ_RESOURCE_GROUP} --location westeurope
-}
-
-##################################################################
-# Purpose: Procedure to create the azure containergroup
-# Arguments: 
-# Return: 
-##################################################################
-create_azure_container_group() {
-echo "- Running ... create_azure_container_group" 
-cd ${PROJECT_DIR}
-
-az container create --resource-group ${AZ_RESOURCE_GROUP} --file deploy-aci.yaml
-# https://docs.microsoft.com/en-us/azure/container-instances/container-instances-multi-container-yaml
-# View deployment state
-# az container show --resource-group ${AZ_RESOURCE_GROUP} --name myContainerGroup --output table
+echo "-- Running:${FUNCNAME[0]} $@"
+create_logfile_header ${FUNCNAME[0]} $@
+az login -u $AZURE_USER  -p $AZURE_PWD
+#az group create --name $AZ_RESOURCE_GROUP --location westeurope
+az group create --name $1 --location westeurope
+enter_cont
 }
 
 ##################################################################
@@ -959,150 +1192,189 @@ az container create --resource-group ${AZ_RESOURCE_GROUP} --file deploy-aci.yaml
 # Return: 
 ##################################################################
 delete_azure_resource_group() {
- echo "- Running ... delete_azure_resource_group"
- # $AZ_RESOURCE_GROUP="Discipl_Wigo4it_DockerGroup4"
- # echo sure ? delete $AZ_RESOURCE_GROUP
- # enter_cont
-az group delete --name ${AZ_RESOURCE_GROUP}
-}
-
-##################################################################
-# Purpose: Procedure to ship docker container images to docker hub
-# Arguments: 
-# Return: 
-##################################################################
-docker_push() {
-
-echo "Docker login"
-docker login
-create_logfile_header
-echo "- Running ... docker_push "
-echo "docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG " >> $LOG_FILE
-echo "docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG " 
-echo "https://hub.docker.com/repository/docker/boscp08/wwaardepapieren-clerk-frontend"    >>$LOG_FILE
-docker push $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG         >> $LOG_FILE
-create_logfile_footer
-
-create_logfile_header
-echo "docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG "     >> $LOG_FILE   
-echo "docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG "     
-echo "https://hub.docker.com/repository/docker/boscp08/waardepapieren-service"  >> $LOG_FILE
-docker push $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG             >> $LOG_FILE   
-create_logfile_footer
-
-create_logfile_header
-echo "docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG"       >> $LOG_FILE
-echo "docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG"      
-echo "https://hub.docker.com/repository/docker/boscp08/wwaardepapieren-mock-nlx"    >>$LOG_FILE
-docker push $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG             >> $LOG_FILE
-create_logfile_footer
-
-if [ ${PROMPT} = true ] 
- then 
-echo "shipping to docker hub is done LOG_FILE= $LOG_FILE  "
-echo "or goto  https://hub.docker.com  docker-user=$DOCKER_USER with version=$DOCKER_VERSION_TAG  "
-echo "https://hub.docker.com/repository/docker/$DOCKER_USER//wwaardepapieren-clerk-frontend"   
-echo "https://hub.docker.com/repository/docker/$DOCKER_USER//waardepapieren-service"  
-echo "https://hub.docker.com/repository/docker/$DOCKER_USER//wwaardepapieren-mock-nlx"    
-# blader naar https://hub.docker.com  boscp08 P...!2...
-#enter_cont
-fi
-
-}
-
-##################################################################
-# Purpose: Procedure to tag docker images (Version)
-# Arguments: 
-# Return: 
-##################################################################
-docker_tag() {
-clear  
-#docker images
-#enter_cont
-
-create_logfile_header
-echo "- Running ... docker_tag"
-echo "- Running ... docker_tag"  >> $LOG_FILE
-docker tag waardepapieren_clerk-frontend $DOCKER_USER/waardepapieren-clerk-frontend:$DOCKER_VERSION_TAG  
-docker tag waardepapieren_waardepapieren-service $DOCKER_USER/waardepapieren-service:$DOCKER_VERSION_TAG 
-docker tag waardepapieren_mock-nlx $DOCKER_USER/waardepapieren-mock-nlx:$DOCKER_VERSION_TAG          
-
-docker images | grep  $DOCKER_VERSION_TAG   >> $LOG_FILE
-
-create_logfile_footer
-docker images | grep  $DOCKER_VERSION_TAG   
+echo "-- Running:${FUNCNAME[0]} $@ "
+create_logfile_header ${FUNCNAME[0]} $@
+az login -u $AZURE_USER  -p $AZURE_PWD
+#az group delete --name $AZ_RESOURCE_GROUP
+az group delete --name $1
 enter_cont
+}
 
+##################################################################
+# Purpose: Procedure to create the azure containergroup
+# Arguments: 
+# Return: 
+##################################################################
+create_azure_container_group() {
+echo "-- Running:${FUNCNAME[0]} $@"
+az login -u $AZURE_USER  -p $AZURE_PWD
+cd ${GITHUB_DIR}
+#az container create --resource-group $AZ_RESOURCE_GROUP --file deploy-aci.yaml
+az container create --resource-group $1 --file deploy-aci.yaml
 
+enter_cont
+# https://docs.microsoft.com/en-us/azure/container-instances/container-instances-multi-container-yaml
+# View deployment state
+# az container show --resource-group ${AZ_RESOURCE_GROUP} --name myContainerGroup --output table
+}
+
+##################################################################
+# Purpose: az_container_show
+# Arguments: 
+# Return: CI CD 
+##################################################################
+az_container_show() {
+echo "-- Running:${FUNCNAME[0]} $@"  
+#az container show --resource-group ${AZ_RESOURCE_GROUP} --name $2 --output table
+az container show --resource-group $1--name $2 --output table
+}
+
+##################################################################
+# Purpose: Procedure to create the azure containergroup
+# Arguments: 
+# Return: CI CD 
+##################################################################
+restart_azure_container_group() {
+echo "Running: create_azure_container_group" 
+cd ${PROJECT_DIR}
+#az container restart --resource-group ${AZ_RESOURCE_GROUP}
+az container restart --resource-group $1
+}
+
+##################################################################
+# Purpose: Procedure to clone build run ship and deploy 
+# Arguments: 
+# Return: the whole_sjebang
+##################################################################
+the_whole_sjebang() {
+create_logfile_header
+
+write_az_clone_build_ship_deploy_bash   
+#docker_system_prune -a
+set_docker_compose_travis_yml_without_volumes
+set_clerk_frontend_dockerfile_without_volumes
+set_waardepapieren_service_dockerfile_without_volumes
+set_mock_nlx_dockerfile
+
+docker_build_image mock-nlx  ${DOCKER_USER} ${MOCK_NLX_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_build_image waardepapieren-service ${DOCKER_USER} ${SERVICE_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_build_image clerk-frontend ${DOCKER_USER} ${CLERK_FRONTEND_IMAGE} ${DOCKER_VERSION_TAG}  
+
+docker_tag_image  ${DOCKER_USER} ${MOCK_NLX_IMAGE} ${DOCKERHUB_MOCK_NLX_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_tag_image  ${DOCKER_USER} ${SERVICE_IMAGE} ${DOCKERHUB_SERVICE_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_tag_image  ${DOCKER_USER} ${CLERK_FRONTEND_IMAGE} ${DOCKERHUB_CLERK_FRONTEND_IMAGE} ${DOCKER_VERSION_TAG}  
+
+docker login -u $DOCKER_USER -p $DOCKER_PWD  # temporarily
+docker_push_image  ${DOCKER_USER} ${DOCKERHUB_MOCK_NLX_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_push_image  ${DOCKER_USER} ${DOCKERHUB_SERVICE_IMAGE} ${DOCKER_VERSION_TAG}  
+docker_push_image  ${DOCKER_USER} ${DOCKERHUB_CLERK_FRONTEND_IMAGE} ${DOCKER_VERSION_TAG}  
+
+az login -u $AZURE_USER -p $AZURE_PWD  # temporarilyß
+delete_azure_resource_group  $AZ_RESOURCE_GROUP
+create_azure_resource_group  $AZ_RESOURCE_GROUP
+create_azure_container_group $AZ_RESOURCE_GROUP
+create_logfile_footer
+#   14) restart_azure_container_group ;;
 }
 
 
 ##################################################################
-# Purpose:  Procedure to build the waardepapieren images and run containers.  
-# Arguments: docker-compose -f docker-compose-travis.yml up
-# Return: 
-##################################################################
-docker_compose_min_f_docker-travis_compose_yml_up() {
+# Purpose: Firefox Start Browser From The Command Line
+# Arguments: 
+# Return: website  
+###############################################################
 
-echo "- building with ... docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD "
-echo ""
+bookmark_open() {
 
+#URL=https://github.com/BoschPeter/$GIT_REPO
 
-cd ${DOCKER_COMPOSE_DIR}
-docker-compose -f docker-compose-travis.yml up $CMD_DOCKER_COMPOSE_BUILD
+if [ `uname` = 'Linux' ]
+  then  /usr/bin/firefox  $1
+  #echo "linux"
+fi  
 
+if  [ `uname` = 'Darwin' ]
+    then  open -a Firefox $1
+   #echo "MacOs"
+fi
 }
 
 ##################################################################
 # Purpose: Procedure to save the program to the LOG_FILE
 # Arguments: 
-# Return: dokuwiki
+# Return: dokuwiki 
 ##################################################################
 write_az_clone_build_ship_deploy_bash() {
-echo "| $LOG_START_DATE_TIME | ${GITHUB_DIR}|"                               >> $LOG_FILE
-echo "| $LOG_START_DATE_TIME | az_clone_build_ship_deploy.bash |"            >> $LOG_FILE
-echo  "<code>"                                                                >> ${LOG_FILE} 
-cat  ${GITHUB_DIR}/az_clone_build_ship_deploy.bash                           >> $LOG_FILE
-echo "</code>"                                                               >> $LOG_FILE
-}
 
-##################################################################
-# Purpose: Procedure to clone de github repo on your pc
-# Arguments: 
-# Return: 
-##################################################################
-git_clone() {
- echo "- Running ... git_clone"
- echo "rm -rf ${PROJECT_DIR}/waardepapieren sure?"
- enter_cont
- cd ${PROJECT_DIR}
- rm -rf waardepapieren
- git clone https://github.com/discipl/waardepapieren.git
-}
+echo "====== az_clone_build_ship_deploy.bash ======"                         >> ${LOG_FILE}
+echo "| ${LOG_START_DATE_TIME} | ${GITHUB_DIR}|"                             >> ${LOG_FILE}
+echo "| ${LOG_START_DATE_TIME} | az_clone_build_ship_deploy.bash |"          >> ${LOG_FILE}
+echo  "<code>"                                                               >> ${LOG_FILE} 
+cat  ${GITHUB_DIR}/az_aci_clone_build_ship_deploy.bash                       >> ${LOG_FILE}
+echo "</code>"                                                               >> ${LOG_FILE}
+echo "====== menu.bash  ======"                                              >> ${LOG_FILE}
+echo "| ${LOG_START_DATE_TIME} | ${GITHUB_DIR}|"                             >> ${LOG_FILE}
+echo "| ${LOG_START_DATE_TIME} | menu.bash |"                                >> ${LOG_FILE}
+echo  "<code>"                                                               >> ${LOG_FILE} 
+cat  ${GITHUB_DIR}/menu.bash                                                 >> ${LOG_FILE}
+#echo "</code>"                                                               >> ${LOG_FILE}
 
-#/////////////////////////////////////////////////////////////////////////////////////////////
+}
 #######################
 ## M A I N
-# program starts here actually 
+# program starts here actually
 #######################
 
 echo "***"   
-echo "***  Welcome to  docker-compose  "
+echo "***  Welcome to  docker build   "
 echo "***"   
-echo "***" download clone build run ship and deploy to AZURE CLOUD 
-echo "***  You are about to start to build new waardepapieren images and containers "
+echo "*** You are about to start to build new waardepapieren images and containers "
 echo "***  FQDN = https://${CERT_HOST_IP} "
 echo "***  docker-tag = ${DOCKER_VERSION_TAG}"
 echo "***  AZURE ACI-resourcegroup=${AZ_RESOURCE_GROUP}" 
 echo "***" 
+create_logdir
+create_directories
+create_logfile_header
+echo "#######################"                                                >> ${LOG_FILE}
+echo "## variables"                                                           >> ${LOG_FILE}
+echo "#######################"                                                >> ${LOG_FILE}
+echo "PROJECT_DIR=$PROJECT_DIR"                                               >> ${LOG_FILE}
+echo "GIT_USER=$GIT_USER"                                                     >> ${LOG_FILE}
+echo "GIT_REPO=$GIT_REPO"                                                     >> ${LOG_FILE}
+echo "GITHUB_DIR=$GITHUB_DIR"                                                 >> ${LOG_FILE}
+echo "DOCKER_USER=$DOCKER_USER"                                               >> ${LOG_FILE}
+echo "COMPOSE_BUILD_FLAG=$COMPOSE_BUILD_FLAG"                                 >> ${LOG_FILE}
+echo "MOCK_NLX_IMAGE=$MOCK_NLX_IMAGE"                                         >> ${LOG_FILE}
+echo "SERVICE_IMAGE=$SERVICE_IMAGE"                                           >> ${LOG_FILE}
+echo "CLERK_FRONTEND_IMAGE=$CLERK_FRONTEND_IMAGE"                             >> ${LOG_FILE}
+echo "DOCKERHUB_MOCK_NLX_IMAGE=$DOCKERHUB_MOCK_NLX_IMAGE"                     >> ${LOG_FILE}
+echo "DOCKERHUB_SERVICE_IMAGE=$DOCKERHUB_SERVICE_IMAGE"                       >> ${LOG_FILE}
+echo "DOCKERHUB_CLERK_FRONTEND_IMAGE=$DOCKERHUB_CLERK_FRONTEND_IMAGE"         >> ${LOG_FILE}
+echo "DOCKER_VERSION_TAG=$DOCKER_VERSION_TAG"                                 >> ${LOG_FILE}
+echo "AZ_RESOURCE_GROUP=$AZ_RESOURCE_GROUP"                                   >> ${LOG_FILE}
+echo "AZ_DNSNAMELABEL=$AZ_DNSNAMELABEL"                                       >> ${LOG_FILE}
+echo "TARGET_HOST=$TARGET_HOST"                                               >> ${LOG_FILE}
+echo "AZ_TLD=$AZ_TLD"                                                         >> ${LOG_FILE}
+echo "TIMEZONE=$TIMEZONE"                                                     >> ${LOG_FILE}
+echo "CERT_HOST_IP=$CERT_HOST_IP"                                             >> ${LOG_FILE}
+echo "CERT_HOST_IP_WP_SERVICE_HOSTNAME=$CERT_HOST_IP_WP_SERVICE_HOSTNAME"     >> ${LOG_FILE}
+echo "#######################"                                                >> ${LOG_FILE}
+echo "## variables"                                                           >> ${LOG_FILE}
+echo "#######################"                                                >> ${LOG_FILE}
 
 
+##################################################################
+# Purpose: Display all variables
+# Arguments: 
+# Return: variables
+##################################################################
 if [ ${PROMPT} = true ] 
  then 
-clear
+#clear
 PROMPT=""
 while true; do
-    read -p "Do you still wish to see the contents of variables and modified files yn?" yn
+    read -p "Display all variables  (y or n)?" yn
     case $yn in
           [Yy]* ) PROMPT=true ; break;;
           [Nn]* ) PROMPT=false ;  break;;
@@ -1111,234 +1383,235 @@ while true; do
 done
 
 fi
- 
+
 if [ ${PROMPT} = true ] 
+then 
+echo "#######################"
+echo "## variables"
+echo "#######################"
+echo "PROJECT_DIR=$PROJECT_DIR"                                               #=$HOME_DIR/Projects/scratch/virtual-insanity    
+echo "GIT_USER=$GIT_USER"                                                     #=BoschPeter
+echo "GIT_REPO=$GIT_REPO"                                                     #=AZ_ACI_waardepapieren-demo_westeurope_azurecontainer_io  #see befores
+echo "GITHUB_DIR=$GITHUB_DIR"                                                 #=$PROJECT_DIR/${GIT_REPO}   #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
+echo "DOCKER_USER=$DOCKER_USER"                                               #="boscp08"  #NB repository name must be lowercase  
+echo "COMPOSE_BUILD_FLAG=$COMPOSE_BUILD_FLAG"                                 #=" --build"
+echo "MOCK_NLX_IMAGE=$MOCK_NLX_IMAGE"                                         #=waardepapieren_mock-nlx
+echo "SERVICE_IMAGE=$SERVICE_IMAGE"                                           #=waardepapieren_waardepapieren-service
+echo "CLERK_FRONTEND_IMAGE=$CLERK_FRONTEND_IMAGE"                             #=waardepapieren_clerk-frontend
+echo "DOCKERHUB_MOCK_NLX_IMAGE=$DOCKERHUB_MOCK_NLX_IMAGE"                     #=waardepapieren-mock-nlx
+echo "DOCKERHUB_SERVICE_IMAGE=$DOCKERHUB_SERVICE_IMAGE"                       #=waardepapieren-waardepapieren-service
+echo "DOCKERHUB_CLERK_FRONTEND_IMAGE=$DOCKERHUB_CLERK_FRONTEND_IMAGE"         #=waardepapieren-clerk-frontend
+echo "DOCKER_VERSION_TAG=$DOCKER_VERSION_TAG"                                 #="4.0"
+echo "AZURE_USER=$AZURE_USER"                                                 #=bosch.peter@outlook.com  
+echo "AZ_RESOURCE_GROUP=$AZ_RESOURCE_GROUP"                                   #="Discipl_Wigo4it_DockerGroup4"  #waardepapierenVM
+echo "AZ_DNSNAMELABEL=$AZ_DNSNAMELABEL"                                       #=discipl  
+echo "TARGET_HOST=$TARGET_HOST"                                               #=azure_container_instance
+echo "AZ_TLD=$AZ_TLD"                                                         #=cloudapp.azure.com
+echo "TIMEZONE=$TIMEZONE"                                                     #=""
+echo "EPHEMERAL_RETENTION_TIME=$EPHEMERAL_RETENTION_TIME"                     #=2592001 #30 dagen
+echo "CERT_HOST_IP=$CERT_HOST_IP"                                             #=$AZ_DNSNAMELABEL.westeurope."$AZ_TLD"  #FQDN linux
+echo "CERT_HOST_IP_WP_SERVICE_HOSTNAME=$CERT_HOST_IP_WP_SERVICE_HOSTNAME"     #=$AZ_DNSNAMELABEL.westeurope.$AZ_TLD
+echo "DOUBLE_CHECK=$DOUBLE_CHECK"                                             #=true  #cat content modified files to ${LOG_DIR}
+echo "MENU=$MENU"                                                             #=true
+enter_cont
+clear
+
+fi
+
+
+##################################################################
+# Purpose: Display MAIN-MENU
+# Arguments: 
+# Return: variables
+##################################################################
+
+if [ ${MENU} = true ] 
  then 
-
-echo "#######################"
-echo "## DOWNLOAD"  
-echo "#######################"
-echo "HOME_DIR="${HOME_DIR} 
-echo "LOG_DIR="${LOG_DIR}  
-echo "LOG_FILE="${LOG_FILE}  
-echo "GITHUB_DIR="$GITHUB_DIR        # $HOME_DIR/Dropbox/Github/Waardepapieren-AZURE-ACI  #git clone https://github.com/ezahr/Waardepapieren-AZURE-ACI.git 
-echo "PROJECT_DIR="${PROJECT_DIR}         #$HOME_DIR/Projects/scratch/virtual-insanity       #git clone https://github.com/disciplo/waardepapieren.git
-enter_cont
 clear
-echo "DOCKER_COMPOSE_DIR="${DOCKER_COMPOSE_DIR}        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren
-echo "CLERK_FRONTEND_DIR="${CLERK_FRONTEND_DIR}        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/clerk-frontend
-echo "CLERK_FRONTEND_NGINX_DIR="${CLERK_FRONTEND_NGINX_DIR}        #${CLERK_FRONTEND_DIR}/nginx
-#CLERK_FRONTEND_CYPRESS_DIR="$         #${CLERK_FRONTEND_DIR}/cypress
-echo "WAARDEPAPIEREN_SERVICE_DIR="${WAARDEPAPIEREN_SERVICE_DIR}        #$HOME_DIR/Projects/scratch/virtual-insanity/waardepapieren/waardepapieren-service
-echo "WAARDEPAPIEREN_SERVICE_CONFIG_DIR="${WAARDEPAPIEREN_SERVICE_CONFIG_DIR}       #${WAARDEPAPIEREN_SERVICE_DIR}/configuration
-echo ""
-enter_cont
-clear
-echo "#######################"
-echo "## CLONE GITHUB" 
-echo "#######################" 
-echo "CMD_CONTAINER_STOP="$CMD_CONTAINER_STOP        #false
-echo "CMD_IMAGE_REMOVE="$CMD_IMAGE_REMOVE         #false
-echo "CMD_CONTAINER_PRUNE="$CMD_CONTAINER_PRUNE         #false
-echo ""
-echo "CMD_GIT_CLONE="${CMD_GIT_CLONE}       #false  #git clone https://github.com/disciplo/waardepapieren.git
-echo ""
-enter_cont
-clear
-echo "#######################"
-echo "## BUILD "
-echo "#######################" 
-echo "CMD_DOCKER_COMPOSE="$CMD_DOCKER_COMPOSE        #true  #volumes and links depreciated
-echo "CMD_DOCKER_BUILD="$CMD_DOCKER_BUILD         #false  # build by container
-echo "CMD_DOCKER_COMPOSE_BUILD="$CMD_DOCKER_COMPOSE_BUILD        #" --build"
-echo ""
-echo "SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME         #true       
-echo "SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME         #true
-echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME         #true
-echo ""
-echo "SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME="$SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME        #false
-echo "SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME="$SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME        #false
-echo "SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME="$SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME        #false
-echo ""
-echo "SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON="$SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON        #true 
-echo "SET_CLERK_FRONTEND_NGINX_CONF="$SET_CLERK_FRONTEND_NGINX_CONF        #true
-enter_cont
-clear
-echo "#######################"
-echo "## SHIP DOCKER HUB"
-echo "#######################" 
-echo "DOCKER_TAG="${DOCKER_TAG}        #true
-echo "DOCKER_USER="${DOCKER_USER}      #"boscp08"  #NB repository name must be lowercase
-echo "DOCKER_VERSION_TAG="${DOCKER_VERSION_TAG}       #"2.0"
-echo "DOCKER_PUSH="${DOCKER_PUSH}         #true  #hub.docker.com 
-echo ""
-echo "#######################"
-echo "## DEPLOY AZURE"
-echo "#######################" 
-echo "AZ_RESOURCE_GROUP="${AZ_RESOURCE_GROUP}       #"Discipl_Wigo4it_DockerGroup2"
-echo "AZ_RESOURCE_GROUP_DELETE="$AZ_RESOURCE_GROUP_DELETE         #true
-echo "AZ_RESOURCE_GROUP_CREATE="$AZ_RESOURCE_GROUP_CREATE        #true
-echo "CREATE_AZ_DEPLOY_ACI_YAML="$CREATE_AZ_DEPLOY_ACI_YAML        #true  #@PROJECT_DIR deploy_aci.yml
-echo "CMD_AZ_CREATE_CONTAINERGROUP="$CMD_AZ_CREATE_CONTAINERGROUP        #true  #.. jeuh - - Running ... ..
-enter_cont
-
-#echo "#######################"
-#echo "## end of feedbak 
-#echo "#######################" 
-echo "" 
-echo "" 
-#echo "hope the run will be okay. "
-#enter_cont
-clear
-fi
-
-create_directories
-
-
-#######################
-## cLONING from github repo starts here.
-#######################
-
-if [ ${CMD_GIT_CLONE} = true ] 
-  then git_clone 
-fi 
-
-
-if ! [ -d "${DOCKER_COMPOSE_DIR}" ]; 
-  # Control will enter here if waardepapieren folder does not exits 
-    then git_clone 
-
+while true; do
+    read -p "goto MAIN-MENU (y or n)" yn
+    case $yn in
+          [Yy]* ) MENU=true ; break;;
+          [Nn]* ) MENU=false ;  break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
 fi
 
 
-#######################
-## configuration Docker Compose   docker-compose -f docker-compose-travis.yml --build
-#######################
+if [ $MENU = true ]
+then
+# A menu driven shell script 
+#echo "A menu is nothing but a list of commands presented to a user by a shell script"
+
+# ----------------------------------
+# Step: User defined function
+# ----------------------------------
+pause(){
+  read -p "Press [Enter] key to continue..." fackEnterKey
+} 
+# function to display menus
+show_menus() {
+	clear
+	echo "~~~~~~~~~~~~~~~~~~~~~"	
+	echo " M A I N - M E N U"
+	echo "~~~~~~~~~~~~~~~~~~~~~"
+    echo "# ----------------------------------"
+    echo "Step 1: prune "
+    echo "# ----------------------------------"
+    echo "#10. Reset (docker system prune-a)"
+    echo "# ----------------------------------"
+    echo "Step 2:   Dockerfile setters"
+    echo "# ----------------------------------"
+    echo "20. set_docker_compose_travis_yml_without_volumes"
+    echo "21. set_clerk_frontend_dockerfile_without_volumes" 
+    echo "22. set_waardepapieren_service_dockerfile_without_volumes"
+    echo "23. set_mock_nlx_dockerfile"    
+    echo "# ----------------------------------"
+    echo "#Step 3 : Networking setters" 
+    echo "# ----------------------------------" 
+    echo "30. set_clerk_frontend_nginx_conf"
+    echo "31. set_waardepapieren_service_config_compose_travis_json"
+    echo "32. set_waardepapieren_service_config_compose_json"
+    echo "33. set_waardepapieren_service_config_json"
+    echo "# ----------------------------------" 
+    echo "#step 4: docker-compose  docker build "
+    echo "# ----------------------------------"
+    echo "40. docker_compose -f docker-compose-travis.yml up $COMPOSE_BUILD_FLAG" 
+    echo "41. docker_build_image $MOCK_NLX_IMAGE"
+    echo "42. docker_build_image $SERVICE_IMAGE "
+    echo "43. docker_build_image $CLERK_FRONTEND_IMAGE "
+    echo "44. docker_tag_images $DOCKER_VERSION_TAG"
+    echo "45. docker_push_images $DOCKER_VERSION_TAG"
+    echo "# ----------------------------------"
+    echo "#step 5: azure  "
+    echo "# ----------------------------------"
+    echo "50. delete_azure_resource_group $AZ_RESOURCE_GROUP "
+    echo "51. create_azure_resource_group $AZ_RESOURCE_GROUP"
+    echo "52. create_azure_container_group $AZ_RESOURCE_GROUP"
+    echo "53. restart_azure_container_group $AZ_RESOURCE_GROUP  a.ka. (re) pull docker hub"
+    echo "# ----------------------------------"
+    echo "#step 6 check check triple check  clone build ship deploy "
+    echo "# ----------------------------------" 
+    echo "60. https://github.com/BoschPeter/$GIT_REPO "   
+    echo "61. https://hub.docker.com/?ref=login' boscp08 Peter!...."   #Ship
+  	echo "62. https://portal.azure.com/#home' "
+    echo "63. https://$CERT_HOST_IP:443  " #hope the clerk frontend will be stable "
+    echo "# ----------------------------------"
+  	echo "# step 9  miscelaneous "
+    echo "# ----------------------------------"
+    echo "90. az login -u $AZURE_USER  " 
+    echo "91. docker login -u $DOCKER_USER " 
+    echo "92. the whole sjebang"
+    echo "93. backup scripts"
+    echo "99. Exit"
+}
+# read input from the keyboard and take a action
+# invoke the one() when the user select 1 from the menu option.
+# invoke the two() when the user select 2 from the menu option.
+# Exit when user the user select 100 form the menu option.
+
+read_options(){
+	local choice
+	read -p "Enter choice [ 1 - 99] " choice
+	case $choice in
+        10) docker_system_prune                                     ;;  
+        20) set_docker_compose_travis_yml_without_volumes           ;;  
+        21) set_clerk_frontend_dockerfile_without_volumes           ;;
+        22) set_waardepapieren_service_dockerfile_without_volumes   ;; 
+        23) set_mock_nlx_dockerfile                                 ;; 
+        30) set_clerk_frontend_nginx_conf                           ;;
+        31) set_waardepapieren_service_config_compose_travis_json   ;;  
+        32) set_waardepapieren_service_config_compose_json          ;;
+        33) set_waardepapieren_service_config_json                  ;;                           
+        40) docker_compose_min_f_docker                             ;; 
+        41) docker_build_image mock_nlx                             ;;  
+        42) docker_build_image waardepapieren-service               ;; 
+        33) docker_build_image clerk-frontend                       ;; 
+        50) delete_azure_resource_group                             ;;
+        51) create_azure_resource_group                             ;; 
+        52) create_azure_resource_group                             ;; 
+        53) restart_azure_container_group                           ;; 
+        60) bookmark_open https://github.com/BoschPeter/$GIT_REPO   ;;
+        61) bookmark_open https://hub.docker.com/?ref=login         ;; 
+        62) bookmark_open https://portal.azure.com/\#home           ;; 
+        63) bookmark_open https://$CERT_HOST_IP:443                 ;; 
+        #64) bookmark_open https://portal.azure.com/#@boschpeteroutlook.onmicrosoft.com/resource/subscriptions/cfcb03ea-255b-42f8-beca-2d4ac30779bb/resourceGroups/${AZ_RESOURCE_GROUP}/providers/Microsoft.ContainerInstance/containerGroups/$AZ_RESOURCE_GROUP/containers'  ;;
+        90) azure_login                                             ;; 
+        91) docker_login                                            ;; 
+        92) the_whole_sjebang                                       ;; 
+        93) write_az_clone_build_ship_deploy_bash                   ;; 
+        99) Exit                                                    ;;
+		*) echo -e "${RED}Error...${STD}" && sleep 1
+	esac
+}
+
+# ----------------------------------------------
+# Step #3: Trap CTRL+C, CTRL+Z and quit singles
+# ----------------------------------------------
+#trap '' SIGINT SIGQUIT SIGTSTP
+
+# -----------------------------------
+# Step #4: Main logic - infinite loop
+# ------------------------------------
+while true
+do
+	show_menus
+	read_options
+done
+
+fi
+
+##################################################################
+# Purpose: write code
+# Arguments: 
+# Return: variables
+##################################################################
+
+if [ ${WRITE_CODE} = true ] 
+ then 
+clear
+while true; do
+    read -p "write code  in the log (y or n)?" yn
+    case $yn in
+          [Yy]* ) WRITE_CODE=true ; break;;
+          [Nn]* ) WRITE_CODE=false ;  break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+fi
+
+if [ ${WRITE_CODE} = true ] 
+ then 
+ cd ${GITHUB_DIR}
+ write_az_clone_build_ship_deploy_bash
+ cat ${LOG_FILE} | more
+echo "" 
+echo "" 
+clear
+fi
+
+create_logfile_footer
+echo
+echo "hope the run will be ok!"
+echo
+
+echo " cd back into " ${GITHUB_DIR}
+cd ${GITHUB_DIR}
+clear
 
 
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITH_VOLUME = true ]
-  then docker_compose_travis_yml_with_volumes
-fi 
-
-if [ $SET_DOCKERCOMPOSE_TRAVIS_WITHOUT_VOLUME = true ]
-  then docker_compose_travis_yml_without_volumes 
-fi 
+# eof
 
 
-#######################
-## configuration Docker files  docker build ... pending
-#######################
+##################################################################
+# Purpose: azure_login
+# Arguments: 
+# Return: variables
+##################################################################
+azure_login() {
 
-if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITH_VOLUME = true ]
-  then clerk_frontend_dockerfile_with_volumes
-fi 
-
-if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITH_VOLUME = true ]
-  then waardepapieren_service_dockerfile_with_volumes 
-fi 
-
-if [ $SET_DOCKERFILE_CLERK_FRONTEND_WITHOUT_VOLUME = true ]
-  then clerk_frontend_dockerfile_without_volumes
-fi 
-
-if [ $SET_DOCKERFILE_WAARDEPAPIEREN_WITHOUT_VOLUME = true ]
-  then waardepapieren_service_dockerfile_without_volumes
-fi 
-
-if [ $SET_WAARDEPAPIEREN_SERVICE_CONFIG_COMPOSE_TRAVIS_JSON = true ]
-  then waardepapieren_service_config_compose_travis_json      
-  #https://waardepapieren-service:3232 http://mock-nlx:80 docker network... 
-fi 
-
-if [ $SET_CLERK_FRONTEND_NGINX_CONF = true ]
-    then clerk_frontend_nginx_conf      
-    # docker network fix4https://waardepapieren-service
-fi 
-
-#######################
-## M A I N
-#  docker build and run  starts here actually
-#######################
-
-
-if [ $CMD_DOCKER_COMPOSE = true ]
-  then docker_compose_min_f_docker-travis_compose_yml_up # 
-fi 
-
-#if [ $CMD_DOCKER_BUILD = true ]
-#  then  echo "PENDING"  nice to have docker-compose will do the work 
-
-
-#######################
-## M A I N
-#  shipping tot docker repository starts here
-#######################
-
-if [ ${DOCKER_TAG} = true ]
-  then docker_tag
-fi 
-
-if [ ${DOCKER_PUSH} = true ]
-  then 
-  #docker login  #Authenticating with existing credentials...
-  docker_push  #check hub.docker.com
- fi 
-
-
-#######################
-## M A I N
-#  deploy to portal.azure.com  starts here
-#######################
-
-if [ $CREATE_AZ_DEPLOY_ACI_YAML = true  ]
-  then create_azure_deploy_aci_yaml
-fi 
-
-if [ $AZ_RESOURCE_GROUP_DELETE = true ]
-  then 
-  #az login\
-  echo "***"   
-  echo "***  Welcome to  deploy 2 AZURE"
-  echo "***"   
-  echo "***" 
-  echo "***  You are about to delete resource group ${AZ_RESOURCE_GROUP}"
-  echo "***" 
-  echo "az login succeeded ?" 
-  enter_cont
-  delete_azure_resource_group
-fi 
-
-# az 
-if [ $AZ_RESOURCE_GROUP_CREATE = true  ]
-
-  then 
-  #az login
-  echo "***"   
-  echo "***  Welcome to  dockerhub2azure "
-  echo "***"   
-  echo "***" 
-  echo "***  You are about to create resource group $AZ_RESOURCE_GROUP"
-  echo "***" 
-  echo "az login succeeded ?" 
-  enter_cont
-  create_azure_resource_group
-fi 
-
-if [ $CMD_AZ_CREATE_CONTAINERGROUP = true ]
-  then 
-  #az logon
-  echo "***"   
-  echo "***  Welcome to  dockerhub2azure "
-  echo "***"   
-  echo "***" 
-  echo "***  You are about to deploy waardepapieren images fromdockerhub to ACI AZURE Container Instances "
-  echo "***  droplet-targethost= https://${CERT_HOST_IP}  with DOCKER_VERSION_TAG = ${DOCKER_VERSION_TAG}"
-  echo "***  resourcegroup = ${AZ_RESOURCE_GROUP} "
-  echo "az login succeeded ?" 
-  enter_cont
-  create_azure_container_group   #blader naar portal.azure.com  bosch.peter@outlook.com 0l....n
-fi 
-
+az login -u bosch.peter@outlook.com -p 0lifanten 
 
 # //////////////////////////////////////////////////////////////////////////////////////////
 #  az account list
@@ -1388,27 +1661,57 @@ fi
 #https://docs.microsoft.com/en-us/azure/virtual-machines/azure-cli-arm-commands
 #https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli?view=azure-cli-latest
 
-# az group list
-#create_logfile_footer
- 
-
-create_logfile_footer
-
-echo
-echo "hope the run will be ok!"
-echo
-enter_cont
+}
 
 
-if [ ${PROMPT} = true ] 
- then 
- write_az_clone_build_ship_deploy_bash
- cat $LOG_FILE | more
- fi 
+##################################################################
+# Purpose: docker_login
+# Arguments: 
+# Return: variables
+##################################################################
+docker_login () {
+docker login -u $DOCKER_USER  -p $DOCKER_PWD 
+# docker container 
+#  attach      Attach local standard input, output, and error streams to a running container
+#  commit      Create a new image from a container's changes
+#  cp          Copy files/folders between a container and the local filesystem
+#  create      Create a new container
+#  diff        Inspect changes to files or directories on a container's filesystem
+#  exec        Run a command in a running container
+#  export      Export a container's filesystem as a tar archive
+#  inspect     Display detailed information on one or more containers
+#  kill        Kill one or more running containers
+#  logs        Fetch the logs of a container
+#  ls          List containers
+#  pause       Pause all processes within one or more containers
+#  port        List port mappings or a specific mapping for the container
+#  prune       Remove all stopped containers
+#  rename      Rename a container
+#  restart     Restart one or more containers
+#  rm          Remove one or more containers
+#  run         Run a command in a new container
+#  start       Start one or more stopped containers
+#  stats       Display a live stream of container(s) resource usage statistics
+#  stop        Stop one or more running containers
+#  top         Display the running processes of a container
+#  unpause     Unpause all processes within one or more containers
+#  update      Update configuration of one or more containers
+#  wait        Block until one or more containers stop, then print their exit codes
 
-echo " cd back into " $GITHUB_DIR
-cd $GITHUB_DIR
-clear
+#Usage:	docker image COMMAND
+#Manage images
 
-
-# eof
+#Commands:
+#  build       Build an image from a Dockerfile
+#  history     Show the history of an image
+#  import      Import the contents from a tarball to create a filesystem image
+#  inspect     Display detailed information on one or more images
+#  load        Load an image from a tar archive or STDIN
+#  ls          List images
+#  prune       Remove unused images
+#  pull        Pull an image or a repository from a registry
+#  push        Push an image or a repository to a registry
+#  rm          Remove one or more images
+#  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAG
+#  save        Save one or more images to a tar archive (streamed to STDOUT by default)\
+}
