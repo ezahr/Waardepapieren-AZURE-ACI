@@ -1,0 +1,249 @@
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+#force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+	color_prompt=yes
+    else
+	color_prompt=
+    fi
+fi
+
+if [ "$color_prompt" = yes ]; then
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+unset color_prompt force_color_prompt
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+##### 
+
+PROMPT_DIRTRIM=1
+
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+#export KUBECONFIG=$HOME/.kube/admin-config
+#boscp08@boscp08-dingo:~/.../docker$ kubectl-oidc_login
+#export KUBECONFIG=$HOME/.kube/config
+#export KUBECONFIG=$HOME/.kube/lpc-ot2-kube.config 
+export HARBOR_PASSWORD="QuoVadis_2020"
+export HARBOR_USERNAME="pbosch"
+export REGISTRY_SERVER="harbor-ot.l12m.nl"
+#export DOCKER_HOST="tcp://localhost:2375"
+export HARBOR_ROBOT_PASSWORD=wsfaq1sa1tpcod0cx9un5v57ru90b98m
+export DOCKER_PASSWORD="Peter!2020"
+
+# kubectl config view
+# ssh-copy-id -i ~/.ssh/id_rsa.pub pi@piBuster
+# ipscan -f:range 192.168.2.1 192.168.2.99
+# kubectl exec -it mysql-7f4d97465d-xfxtd -n wildwest -- mysql -u root --password=ThisIsCool webapp -e 'select * from users'
+# kubectl exec -it $(kubectl get pod -n wildwest -o name | cut -d/ -f2- | grep mysql) -n wildwest bash
+
+alias setot2='KUBECONFIG=~/.kube/lpc-ot2-kube.config'
+alias setk8s='KUBECONFIG=~/.kube/k8s-kube.config'
+alias setk8='KUBECONFIG=~/.kube/k8-kube.config'
+#setot2
+setk8s
+# 10.127.6.36   api.lpc-ot2.k8s.easi
+# kubectl config set-cluster lpc-ot2 --insecure-skip-tls-verify=true
+# kubectl config set-context --current --namespace=hack-ontwikkel
+# LPC opstapserver ssh pbosch@10.127.76.169
+# https://ezahr-hello-world.hack-ontwikkel.lpc-ot2.l12m.nl/
+# https://kuard.lpc-ot2.l12m.nl/
+# echo $HARBOR_ROBOT_PASSWORD  |  docker login -u pbosch --password-stdin harbor-ot.l12m.nl
+# Login Succeeded
+# docker push harbor-ot.l12m.nl/waardepapieren-demo/mock-nlx:lpc
+
+alias loginLPC='kubectl-oidc_login'       # googlec authenticator
+# export KUBECONFIG=$HOME/.kube/lpc-ot2-kube.config
+# kubectl config set-context --current --namespace=hack-ontwikkel
+# kubectl config set-cluster lpc-ot2 --insecure-skip-tls-verify=true
+# kubectl cluster-info -n hack-ontwikkel
+# kubectl config view
+# kubectl get pods
+# kubectl exec -it mysql-7f4d97465d-xfxtd -n wildwest -- mysql -u root --password=ThisIsCool webapp -e 'select * from users'
+# kubectl exec -it $(kubectl get pod -n wildwest -o name | cut -d/ -f2- | grep mysql) -n wildwest bash
+
+# kubectl exec -it $(kubectl get po   -o name | awk -F "/" '{print $2}' | grep clerk)  -- printenv
+# kubectl exec -it $(kubectl get po   -o name | awk -F "/" '{print $2}' | grep clerk)  sh
+# kubectl logs  $(kubectl get po -o name | awk -F "/" '{print $2}' | grep clerk-frontend) 
+
+# gitlab pbosch KGFa95wuAHi8RmK_eHDX
+
+#Keycloak 	https://keycloak.l12m.nl
+#GitLab CI/CD 	https://gitlab.l12m.nl
+#Harbor Image Registry 	https://harbor-ot.l12m.nl   export HARBOR_ROBOT_PASSWORD=dc332r76ce3xribcud9wohek4u6tdife 
+#vincents 	https://kuard.hack-ontwikkel.lpc-ot2.l12m.nl/
+
+#unset DOCKER_HOST
+#unset DOCKER_TLS_VERIFY
+#unset DOCKER_TLS_PATH
+source <(kubectl completion bash)
+alias ipscan='ipscan -f:range 192.168.2.1 192.168.2.254 -s -q'
+alias pih='ssh pi@192.168.2.20'
+alias  getxyz='sudo mount -t cifs -o user=pi //192.168.2.91/pi /mnt/local_share'
+alias k='kubectl'
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+alias envy='ssh boscp08@192.168.2.60'
+alias compaq='ssh boscp08@192.168.2.61'
+alias pi3='ssh pi@192.168.2.53'
+alias pi4='ssh ubuntu@192.168.2.54'
+alias pi5='ssh pi@192.168.2.55'
+alias pi6='ssh pi@192.168.2.56'
+alias u1='ssh ubuntu@192.168.2.8'
+alias u2='ssh ubuntu@192.168.2.9'
+alias u3='ssh ubuntu@192.168.2.10'
+
+alias timeshift='sudo timeshift --list'
+alias k='kubectl'
+alias n='kubectl  get nodes -o wide'
+alias p='kubectl get pods -o wide --all-namespaces'
+alias d='kubectl get deployments -o wide --all-namespaces'
+alias s='kubectl get services -o wide --all-namespaces'
+alias i='kubectl get ingress -o wide --all-namespaces'
+# sudo killall remmina
+alias envy='ssh boscp08@192.168.2.60'
+alias compaq='ssh boscp08@192.168.2.61'
+alias oc="ssh ubuntu@158.101.192.41"
+# vmware player 5M43Q-40K4M-H8JEC-0R0UK-A54JJ 
+# gitlab token  	wEe3w1LoEVazfEqzv5bD
+# git config --list --show-origin
+# pdftotext -layout input.pdf output.txt
+
+alias vmware='ssh boscp08@192.168.2.8'   #desktp vmware
+alias pi3='ssh ubuntu@192.168.2.9'    #raspberry   
+alias gitlab='ssh pi@192.168.2.56'   # raspberry gitlab
+alias pi6='ssh ubuntu@192.168.2.13'   # raspberru  16GB
+alias vbox='ssh boscp08@192.168.2.15' #virtual box on mac mini
+alias html='rsync -avz -e ssh root@192.168.2.90:/srv/www/htdocs/site/mcc-containers /home/boscp08/Projects/scratch/virtual-insanity/mcc-containers'
+alias nordvpn='nordvpn connect'
+alias onedrive='rclone --vfs-cache-mode writes mount onedrive: ~/OneDrive'
+#alias mount_ha='sudo mount -t cifs -o user=ha //HOMEASSISTANT/config /mnt/share'
+alias mntha5='sudo mount -t cifs -o user=ha,password=ha //192.168.2.5/config /mnt/share'
+alias mntha55='sudo mount -t cifs -o user=homeassistant,password=homeassistant //192.168.2.55/config /mnt/nfsshare'
+alias cha='cp /mnt/share/*.yaml /home/boscp08/Projects/scratch/virtual-insanity/homeautomation/HOMEASSISTANT-CONFIG'
+
+
+alias gg='ssh boscp08@192.168.2.14'
+alias ub2='ssh ubuntu@192.168.2.17'
+alias ub3='ssh ubuntu@192.168.2.13'
+alias hp1='ssh ubuntu@192.168.2.61'
+alias vm1='ssh ubuntu@192.168.2.16'
+alias vb1='ssh ubuntu@192.168.2.22'
+alias oc1='ssh ubuntu@158.101.192.41'
+alias oh2='ssh openhabian@192.168.2.54' # ssh-copy-id -i ~/.ssh/id_rsa.pub  openhabian@192.168.2.15 openhabian
+alias mm='ssh ubuntu@192.168.2.18'    # pi2GB  32GB mattermost boscp08 ThisIsCool_2020
+alias nc='ssh pi@192.168.2.12'   #  nextcloud   pi    admin Nw2xdirh
+# alias ha  IP:	192.168.2.5 Hostname:	homeassistant.home http://192.168.2.5:8123/lovelace/default_view  ha ha
+#alias mp='mv /home/boscp08/Pictures/*.png   /home/boscp08/Projects/scratch/virtual-insanity/Microsoft-Learn/pictures/'
+# alias mp='mv /home/boscp08/Pictures/*.png  /home/boscp08/Projects/scratch/virtual-insanity/Azure-Active-Directory/pictures'
+alias mp='mv /home/boscp08/Pictures/*.png   /home/boscp08/Projects/scratch/virtual-insanity/MicrosoftIntune/pictures'
+#alias az='az login --username bosch.peter@outlook.com -t 69aaa45e-5377-432d-9882-57d002892515 --allow-no-subscription'
+#alias bd='az login --username p.bosch@bdmcc.net -t adc7bffd-2d17-4df5-af5c-f450dcf3e6f7 --allow-no-subscriptions'
+alias as='az account show'
+alias getupn='az ad user list | grep userPrincipalName | grep bosch'
+alias lt='az login --username bosch.peter@outlook.com -t 69aaa45e-5377-432d-9882-57d002892515 --allow-no-subscriptions'
